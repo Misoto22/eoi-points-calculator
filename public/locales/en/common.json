@@ -1,0 +1,58 @@
+{
+  "title": "Australia EOI Points Calculator",
+  "language": {
+    "en": "English",
+    "zh": "简体中文"
+  },
+  "sections": {
+    "age": "Age",
+    "english": "English Proficiency",
+    "ausWork": "Australian Work Experience",
+    "overseasWork": "Overseas Work Experience",
+    "education": "Educational Qualifications",
+    "stem": "STEM/IT Masters by Research or PhD (2 years)",
+    "ausStudy": "Australian Study (2 years full-time)",
+    "communityLanguage": "NAATI Certification (CCL/Interpreter/Translator)",
+    "partnerStatus": "Partner Status",
+    "professionalYear": "Professional Year (Accounting/Engineering/IT)",
+    "stateNomination": "State Nomination (190 visa)",
+    "regionalNomination": "Regional Nomination (491 visa)",
+    "regionalStudy": "Regional Study (2 years)"
+  },
+  "groupTitles": {
+    "educationBonus": "Educational Bonus Points",
+    "languageSkillsBonus": "Language & Skills Bonus",
+    "nominationBonus": "Nomination Bonus"
+  },
+  "select": {
+    "age": "Select Age Range",
+    "english": "Select English Level",
+    "years": "Select Years",
+    "education": "Select Qualification",
+    "partner": "Select Status"
+  },
+  "english": {
+    "competent": "Competent English",
+    "proficient": "Proficient English",
+    "superior": "Superior English"
+  },
+  "education": {
+    "apprenticeship": "Overseas Recognized Trade Qualification",
+    "cert3": "Australian Certificate III/IV",
+    "diploma": "Australian Diploma",
+    "bachelor": "Bachelor/Honours/Masters Degree",
+    "phd": "Doctorate"
+  },
+  "partner": {
+    "single": "Single Applicant",
+    "skills": "Partner with Skills Assessment",
+    "citizen": "Partner is Australian Citizen/PR",
+    "english": "Partner with Competent English"
+  },
+  "years": "years",
+  "age": "years old",
+  "points": "points",
+  "total": "Total Points",
+  "minimum": "Minimum Required Points",
+  "generate": "Generate Summary"
+} 

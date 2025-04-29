@@ -1,0 +1,58 @@
+{
+  "title": "澳大利亚EOI分数计算器",
+  "language": {
+    "en": "English",
+    "zh": "简体中文"
+  },
+  "sections": {
+    "age": "年龄",
+    "english": "英语能力",
+    "ausWork": "澳大利亚工作经验",
+    "overseasWork": "海外工作经验",
+    "education": "教育背景",
+    "stem": "STEM/IT领域2年研究型硕士或博士学位",
+    "ausStudy": "在澳大利亚完成至少2年全日制学习",
+    "communityLanguage": "NAATI认证（CCL/口译/笔译）",
+    "partnerStatus": "伴侣或单身状态",
+    "professionalYear": "职业年（会计/工程/IT）",
+    "stateNomination": "州担保（190签证）",
+    "regionalNomination": "偏远地区担保（491签证）",
+    "regionalStudy": "在偏远地区学习2年"
+  },
+  "groupTitles": {
+    "educationBonus": "教育相关加分",
+    "languageSkillsBonus": "语言与专业技能加分",
+    "nominationBonus": "担保加分"
+  },
+  "select": {
+    "age": "选择年龄范围",
+    "english": "选择英语水平",
+    "years": "选择年数",
+    "education": "选择学历",
+    "partner": "选择状态"
+  },
+  "english": {
+    "competent": "普通英语",
+    "proficient": "熟练英语",
+    "superior": "精通英语"
+  },
+  "education": {
+    "apprenticeship": "海外认可的职业培训",
+    "cert3": "澳大利亚三级/四级证书",
+    "diploma": "澳大利亚文凭",
+    "bachelor": "学士学位/荣誉学位/硕士学位",
+    "phd": "博士学位"
+  },
+  "partner": {
+    "single": "单身申请人",
+    "skills": "伴侣有技术评估",
+    "citizen": "伴侣是澳大利亚公民/永居",
+    "english": "伴侣达到普通英语水平"
+  },
+  "years": "年",
+  "age": "岁",
+  "points": "分",
+  "total": "总分",
+  "minimum": "最低要求分数",
+  "generate": "生成总结"
+} 
