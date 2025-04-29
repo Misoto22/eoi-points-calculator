@@ -2,6 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { 
+  FaUser, 
+  FaLanguage, 
+  FaBriefcase, 
+  FaGraduationCap, 
+  FaUsers,
+  FaAward,
+  FaGlobe,
+  FaMapMarkedAlt
+} from 'react-icons/fa';
 
 interface CalculatorFormProps {
   onPointsChange: (points: number) => void;
@@ -136,13 +146,15 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
   };
 
   return (
-    <form className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Age */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('sections.age')}
-          </label>
+    <form className="space-y-6 max-w-5xl mx-auto">
+      {/* Main Form Fields */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Age Section */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex items-center space-x-2 mb-4 text-primary">
+            <FaUser className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('sections.age')}</h3>
+          </div>
           <select
             name="age"
             value={formData.age}
@@ -157,11 +169,12 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           </select>
         </div>
 
-        {/* English */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('sections.english')}
-          </label>
+        {/* English Section */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex items-center space-x-2 mb-4 text-primary">
+            <FaLanguage className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('sections.english')}</h3>
+          </div>
           <select
             name="english"
             value={formData.english}
@@ -169,17 +182,18 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
           >
             <option value="">{t('select.english')}</option>
-            <option value="ielts6">IELTS 6 ({t('english.competent')})</option>
-            <option value="ielts7">IELTS 7 ({t('english.proficient')})</option>
-            <option value="ielts8">IELTS 8 ({t('english.superior')})</option>
+            <option value="ielts6">{t('english.competent')}</option>
+            <option value="ielts7">{t('english.proficient')}</option>
+            <option value="ielts8">{t('english.superior')}</option>
           </select>
         </div>
 
-        {/* Australian Work Experience */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('sections.ausWork')}
-          </label>
+        {/* Work Experience Sections */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex items-center space-x-2 mb-4 text-primary">
+            <FaBriefcase className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('sections.ausWork')}</h3>
+          </div>
           <select
             name="ausWork"
             value={formData.ausWork}
@@ -194,11 +208,11 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           </select>
         </div>
 
-        {/* Overseas Work Experience */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('sections.overseasWork')}
-          </label>
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex items-center space-x-2 mb-4 text-primary">
+            <FaGlobe className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('sections.overseasWork')}</h3>
+          </div>
           <select
             name="overseasWork"
             value={formData.overseasWork}
@@ -212,11 +226,12 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           </select>
         </div>
 
-        {/* Education */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('sections.education')}
-          </label>
+        {/* Education Section */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex items-center space-x-2 mb-4 text-primary">
+            <FaGraduationCap className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('sections.education')}</h3>
+          </div>
           <select
             name="education"
             value={formData.education}
@@ -232,11 +247,12 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           </select>
         </div>
 
-        {/* Partner Status */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('sections.partnerStatus')}
-          </label>
+        {/* Partner Status Section */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex items-center space-x-2 mb-4 text-primary">
+            <FaUsers className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('sections.partnerStatus')}</h3>
+          </div>
           <select
             name="partnerStatus"
             value={formData.partnerStatus}
@@ -252,13 +268,16 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
         </div>
       </div>
 
-      {/* Checkboxes */}
+      {/* Bonus Points Sections */}
       <div className="space-y-6">
         {/* Education Related */}
         <div className="bg-white rounded-lg shadow p-4 space-y-3">
-          <h3 className="font-medium text-gray-900 border-b pb-2">{t('groupTitles.educationBonus')}</h3>
+          <div className="flex items-center space-x-2 pb-2 border-b text-primary">
+            <FaAward className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('groupTitles.educationBonus')}</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-start space-x-2">
+            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
               <input
                 type="checkbox"
                 name="stem"
@@ -266,10 +285,10 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 onChange={handleChange}
                 className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
               />
-              <label className="text-sm text-gray-700">{t('sections.stem')}</label>
-            </div>
+              <span className="text-sm text-gray-700">{t('sections.stem')}</span>
+            </label>
 
-            <div className="flex items-start space-x-2">
+            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
               <input
                 type="checkbox"
                 name="ausStudy"
@@ -277,10 +296,10 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 onChange={handleChange}
                 className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
               />
-              <label className="text-sm text-gray-700">{t('sections.ausStudy')}</label>
-            </div>
+              <span className="text-sm text-gray-700">{t('sections.ausStudy')}</span>
+            </label>
 
-            <div className="flex items-start space-x-2">
+            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
               <input
                 type="checkbox"
                 name="regionalStudy"
@@ -288,10 +307,10 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 onChange={handleChange}
                 className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
               />
-              <label className="text-sm text-gray-700">{t('sections.regionalStudy')}</label>
-            </div>
+              <span className="text-sm text-gray-700">{t('sections.regionalStudy')}</span>
+            </label>
 
-            <div className="flex items-start space-x-2">
+            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
               <input
                 type="checkbox"
                 name="professionalYear"
@@ -299,15 +318,18 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 onChange={handleChange}
                 className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
               />
-              <label className="text-sm text-gray-700">{t('sections.professionalYear')}</label>
-            </div>
+              <span className="text-sm text-gray-700">{t('sections.professionalYear')}</span>
+            </label>
           </div>
         </div>
 
         {/* Language and Skills */}
         <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="font-medium text-gray-900 border-b pb-2 mb-3">{t('groupTitles.languageSkillsBonus')}</h3>
-          <div className="flex items-start space-x-2">
+          <div className="flex items-center space-x-2 pb-2 border-b text-primary">
+            <FaLanguage className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('groupTitles.languageSkillsBonus')}</h3>
+          </div>
+          <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors mt-3 cursor-pointer">
             <input
               type="checkbox"
               name="communityLanguage"
@@ -315,15 +337,18 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
               onChange={handleChange}
               className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
             />
-            <label className="text-sm text-gray-700">{t('sections.communityLanguage')}</label>
-          </div>
+            <span className="text-sm text-gray-700">{t('sections.communityLanguage')}</span>
+          </label>
         </div>
 
         {/* Nomination */}
         <div className="bg-white rounded-lg shadow p-4 space-y-3">
-          <h3 className="font-medium text-gray-900 border-b pb-2">{t('groupTitles.nominationBonus')}</h3>
+          <div className="flex items-center space-x-2 pb-2 border-b text-primary">
+            <FaMapMarkedAlt className="text-xl" />
+            <h3 className="font-medium text-gray-900">{t('groupTitles.nominationBonus')}</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-start space-x-2">
+            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
               <input
                 type="checkbox"
                 name="stateNomination"
@@ -331,10 +356,10 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 onChange={handleChange}
                 className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
               />
-              <label className="text-sm text-gray-700">{t('sections.stateNomination')}</label>
-            </div>
+              <span className="text-sm text-gray-700">{t('sections.stateNomination')}</span>
+            </label>
 
-            <div className="flex items-start space-x-2">
+            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
               <input
                 type="checkbox"
                 name="regionalNomination"
@@ -342,8 +367,8 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 onChange={handleChange}
                 className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
               />
-              <label className="text-sm text-gray-700">{t('sections.regionalNomination')}</label>
-            </div>
+              <span className="text-sm text-gray-700">{t('sections.regionalNomination')}</span>
+            </label>
           </div>
         </div>
       </div>
