@@ -32,9 +32,9 @@
     "partner": "Select Status"
   },
   "english": {
-    "competent": "Competent English",
-    "proficient": "Proficient English",
-    "superior": "Superior English"
+    "competent": "Competent English (IELTS 6 in each band)",
+    "proficient": "Proficient English (IELTS 7 in each band)",
+    "superior": "Superior English (IELTS 8 in each band)"
   },
   "education": {
     "apprenticeship": "Overseas Recognized Trade Qualification",

@@ -32,9 +32,9 @@
     "partner": "选择状态"
   },
   "english": {
-    "competent": "普通英语",
-    "proficient": "熟练英语",
-    "superior": "精通英语"
+    "competent": "普通英语（雅思单项4个6分）",
+    "proficient": "熟练英语（雅思单项4个7分）",
+    "superior": "精通英语（雅思单项4个8分）"
   },
   "education": {
     "apprenticeship": "海外认可的职业培训",

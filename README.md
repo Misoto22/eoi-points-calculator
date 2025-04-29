@@ -34,7 +34,3 @@ A web application for calculating points for Australian Expression of Interest (
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
-
-## License
-
-MIT
