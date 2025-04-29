@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 import { 
   FaUser, 
   FaLanguage, 
@@ -16,6 +17,20 @@ import {
 interface CalculatorFormProps {
   onPointsChange: (points: number) => void;
 }
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
+};
+
+const cardHover = {
+  hover: { 
+    scale: 1.02,
+    boxShadow: "0 8px 30px rgba(124, 58, 237, 0.08)",
+    transition: { duration: 0.2 }
+  }
+};
 
 export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) {
   const { t } = useTranslation();
@@ -146,97 +161,157 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
   };
 
   return (
-    <form className="space-y-6 max-w-5xl mx-auto">
+    <motion.form 
+      className="space-y-4 md:space-y-6 px-4 md:px-0 max-w-5xl mx-auto pb-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Main Form Fields */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Age Section */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex items-center space-x-2 mb-4 text-primary">
-            <FaUser className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('sections.age')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaUser className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('sections.age')}</h3>
           </div>
-          <select
+          <motion.select
             name="age"
             value={formData.age}
             onChange={handleChange}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.age')}</option>
             <option value="18-24">18-24 {t('age')}</option>
             <option value="25-32">25-32 {t('age')}</option>
             <option value="33-39">33-39 {t('age')}</option>
             <option value="40-44">40-44 {t('age')}</option>
-          </select>
-        </div>
+          </motion.select>
+        </motion.div>
 
         {/* English Section */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex items-center space-x-2 mb-4 text-primary">
-            <FaLanguage className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('sections.english')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaLanguage className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('sections.english')}</h3>
           </div>
-          <select
+          <motion.select
             name="english"
             value={formData.english}
             onChange={handleChange}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.english')}</option>
             <option value="ielts6">{t('english.competent')}</option>
             <option value="ielts7">{t('english.proficient')}</option>
             <option value="ielts8">{t('english.superior')}</option>
-          </select>
-        </div>
+          </motion.select>
+        </motion.div>
 
         {/* Work Experience Sections */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex items-center space-x-2 mb-4 text-primary">
-            <FaBriefcase className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('sections.ausWork')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaBriefcase className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('sections.ausWork')}</h3>
           </div>
-          <select
+          <motion.select
             name="ausWork"
             value={formData.ausWork}
             onChange={handleChange}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.years')}</option>
             <option value="1-3">1-3 {t('years')}</option>
             <option value="3-5">3-5 {t('years')}</option>
             <option value="5-8">5-8 {t('years')}</option>
             <option value="8-10">8-10 {t('years')}</option>
-          </select>
-        </div>
+          </motion.select>
+        </motion.div>
 
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex items-center space-x-2 mb-4 text-primary">
-            <FaGlobe className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('sections.overseasWork')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaGlobe className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('sections.overseasWork')}</h3>
           </div>
-          <select
+          <motion.select
             name="overseasWork"
             value={formData.overseasWork}
             onChange={handleChange}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.years')}</option>
             <option value="3-5">3-5 {t('years')}</option>
             <option value="5-8">5-8 {t('years')}</option>
             <option value="8-10">8-10 {t('years')}</option>
-          </select>
-        </div>
+          </motion.select>
+        </motion.div>
 
         {/* Education Section */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex items-center space-x-2 mb-4 text-primary">
-            <FaGraduationCap className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('sections.education')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaGraduationCap className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('sections.education')}</h3>
           </div>
-          <select
+          <motion.select
             name="education"
             value={formData.education}
             onChange={handleChange}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.education')}</option>
             <option value="apprenticeship">{t('education.apprenticeship')}</option>
@@ -244,134 +319,203 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             <option value="diploma">{t('education.diploma')}</option>
             <option value="bachelor">{t('education.bachelor')}</option>
             <option value="phd">{t('education.phd')}</option>
-          </select>
-        </div>
+          </motion.select>
+        </motion.div>
 
         {/* Partner Status Section */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex items-center space-x-2 mb-4 text-primary">
-            <FaUsers className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('sections.partnerStatus')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaUsers className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('sections.partnerStatus')}</h3>
           </div>
-          <select
+          <motion.select
             name="partnerStatus"
             value={formData.partnerStatus}
             onChange={handleChange}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.partner')}</option>
             <option value="single">{t('partner.single')}</option>
             <option value="partnerSkills">{t('partner.skills')}</option>
             <option value="partnerCitizen">{t('partner.citizen')}</option>
             <option value="partnerEnglish">{t('partner.english')}</option>
-          </select>
-        </div>
+          </motion.select>
+        </motion.div>
       </div>
 
       {/* Bonus Points Sections */}
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Education Related */}
-        <div className="bg-white rounded-lg shadow p-4 space-y-3">
-          <div className="flex items-center space-x-2 pb-2 border-b text-primary">
-            <FaAward className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('groupTitles.educationBonus')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4 space-y-3"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaAward className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('groupTitles.educationBonus')}</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
+            <motion.label 
+              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 transition-colors cursor-pointer touch-manipulation"
+              whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
+              whileTap={{ scale: 0.98 }}
+            >
               <input
                 type="checkbox"
                 name="stem"
                 checked={formData.stem}
                 onChange={handleChange}
-                className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                className="mt-1 w-5 h-5 rounded border-primary-300 text-primary-600 focus:ring-primary-200"
               />
-              <span className="text-sm text-gray-700">{t('sections.stem')}</span>
-            </label>
+              <span className="text-sm md:text-base text-gray-700 leading-tight">{t('sections.stem')}</span>
+            </motion.label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+            <motion.label 
+              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 transition-colors cursor-pointer touch-manipulation"
+              whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
+              whileTap={{ scale: 0.98 }}
+            >
               <input
                 type="checkbox"
                 name="ausStudy"
                 checked={formData.ausStudy}
                 onChange={handleChange}
-                className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                className="mt-1 w-5 h-5 rounded border-primary-300 text-primary-600 focus:ring-primary-200"
               />
-              <span className="text-sm text-gray-700">{t('sections.ausStudy')}</span>
-            </label>
+              <span className="text-sm md:text-base text-gray-700 leading-tight">{t('sections.ausStudy')}</span>
+            </motion.label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+            <motion.label 
+              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 transition-colors cursor-pointer touch-manipulation"
+              whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
+              whileTap={{ scale: 0.98 }}
+            >
               <input
                 type="checkbox"
                 name="regionalStudy"
                 checked={formData.regionalStudy}
                 onChange={handleChange}
-                className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                className="mt-1 w-5 h-5 rounded border-primary-300 text-primary-600 focus:ring-primary-200"
               />
-              <span className="text-sm text-gray-700">{t('sections.regionalStudy')}</span>
-            </label>
+              <span className="text-sm md:text-base text-gray-700 leading-tight">{t('sections.regionalStudy')}</span>
+            </motion.label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+            <motion.label 
+              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 transition-colors cursor-pointer touch-manipulation"
+              whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
+              whileTap={{ scale: 0.98 }}
+            >
               <input
                 type="checkbox"
                 name="professionalYear"
                 checked={formData.professionalYear}
                 onChange={handleChange}
-                className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                className="mt-1 w-5 h-5 rounded border-primary-300 text-primary-600 focus:ring-primary-200"
               />
-              <span className="text-sm text-gray-700">{t('sections.professionalYear')}</span>
-            </label>
+              <span className="text-sm md:text-base text-gray-700 leading-tight">{t('sections.professionalYear')}</span>
+            </motion.label>
           </div>
-        </div>
+        </motion.div>
 
         {/* Language and Skills */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex items-center space-x-2 pb-2 border-b text-primary">
-            <FaLanguage className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('groupTitles.languageSkillsBonus')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaLanguage className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('groupTitles.languageSkillsBonus')}</h3>
           </div>
-          <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors mt-3 cursor-pointer">
+          <motion.label 
+            className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 transition-colors mt-3 cursor-pointer touch-manipulation"
+            whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
+            whileTap={{ scale: 0.98 }}
+          >
             <input
               type="checkbox"
               name="communityLanguage"
               checked={formData.communityLanguage}
               onChange={handleChange}
-              className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+              className="mt-1 w-5 h-5 rounded border-primary-300 text-primary-600 focus:ring-primary-200"
             />
-            <span className="text-sm text-gray-700">{t('sections.communityLanguage')}</span>
-          </label>
-        </div>
+            <span className="text-sm md:text-base text-gray-700 leading-tight">{t('sections.communityLanguage')}</span>
+          </motion.label>
+        </motion.div>
 
         {/* Nomination */}
-        <div className="bg-white rounded-lg shadow p-4 space-y-3">
-          <div className="flex items-center space-x-2 pb-2 border-b text-primary">
-            <FaMapMarkedAlt className="text-xl" />
-            <h3 className="font-medium text-gray-900">{t('groupTitles.nominationBonus')}</h3>
+        <motion.div 
+          className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 md:p-4 space-y-3"
+          variants={cardHover}
+          whileHover="hover"
+          {...fadeInUp}
+        >
+          <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
+            >
+              <FaMapMarkedAlt className="text-lg" />
+            </motion.div>
+            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('groupTitles.nominationBonus')}</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
+            <motion.label 
+              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 transition-colors cursor-pointer touch-manipulation"
+              whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
+              whileTap={{ scale: 0.98 }}
+            >
               <input
                 type="checkbox"
                 name="stateNomination"
                 checked={formData.stateNomination}
                 onChange={handleChange}
-                className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                className="mt-1 w-5 h-5 rounded border-primary-300 text-primary-600 focus:ring-primary-200"
               />
-              <span className="text-sm text-gray-700">{t('sections.stateNomination')}</span>
-            </label>
+              <span className="text-sm md:text-base text-gray-700 leading-tight">{t('sections.stateNomination')}</span>
+            </motion.label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+            <motion.label 
+              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 transition-colors cursor-pointer touch-manipulation"
+              whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
+              whileTap={{ scale: 0.98 }}
+            >
               <input
                 type="checkbox"
                 name="regionalNomination"
                 checked={formData.regionalNomination}
                 onChange={handleChange}
-                className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                className="mt-1 w-5 h-5 rounded border-primary-300 text-primary-600 focus:ring-primary-200"
               />
-              <span className="text-sm text-gray-700">{t('sections.regionalNomination')}</span>
-            </label>
+              <span className="text-sm md:text-base text-gray-700 leading-tight">{t('sections.regionalNomination')}</span>
+            </motion.label>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </form>
+    </motion.form>
   );
 } 
