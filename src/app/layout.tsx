@@ -12,6 +12,27 @@ export async function generateStaticParams() {
 export const metadata = {
   title: 'EOI Points Calculator',
   description: 'The EOI Points Calculator is a tool designed to help potential immigrants to Australia calculate their points based on their personal and professional background.',
+  metadataBase: new URL('https://eoi-points-calculator.vercel.app'),
+  openGraph: {
+    title: 'EOI Points Calculator',
+    description: 'Calculate your EOI points for Australian immigration easily and accurately',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'EOI Points Calculator Preview',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EOI Points Calculator',
+    description: 'Calculate your EOI points for Australian immigration easily and accurately',
+    images: ['/og-image.png'],
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },                         // Default
