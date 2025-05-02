@@ -16,6 +16,7 @@ export const metadata = {
   openGraph: {
     title: 'EOI Points Calculator',
     description: 'Calculate your EOI points for Australian immigration easily and accurately',
+    siteName: 'EOI Points Calculator',
     images: [
       {
         url: '/og-image.png',
