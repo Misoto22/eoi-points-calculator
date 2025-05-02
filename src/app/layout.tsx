@@ -11,7 +11,19 @@ export async function generateStaticParams() {
 export const metadata = {
   title: 'EOI Points Calculator',
   description: 'The EOI Points Calculator is a tool designed to help potential immigrants to Australia calculate their points based on their personal and professional background.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },                         // Default
+      { url: '/favicon-32x32.png', sizes: '32x32' },   // Browser icon
+      { url: '/favicon-16x16.png', sizes: '16x16' },   // Small browser icon
+      { url: '/apple-touch-icon.png', rel: 'apple-touch-icon', sizes: '180x180' }, // iOS
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/site.webmanifest',
 }
+
 
 export default function RootLayout({
   children,
