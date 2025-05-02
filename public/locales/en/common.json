@@ -54,5 +54,7 @@
   "points": "points",
   "total": "Total Points",
   "minimum": "Minimum Required Points",
+  "goal": "Goal Points",
+  "pointsWarning": "You need {{points}} more points to reach your goal",
   "generate": "Generate Summary"
 } 

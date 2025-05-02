@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import { Inter } from 'next/font/google';
 import { languages } from './i18n/settings';
+import { ThemeProvider } from '../components/ThemeProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,7 +25,6 @@ export const metadata = {
   manifest: '/site.webmanifest',
 }
 
-
 export default function RootLayout({
   children,
   params: { lng },
@@ -33,8 +33,16 @@ export default function RootLayout({
   params: { lng: string };
 }) {
   return (
-    <html lang={lng}>
-      <body className={inter.className}>{children}</body>
+    <html lang={lng} suppressHydrationWarning>
+      <body className={`${inter.className} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
+        <ThemeProvider
+          defaultTheme="system"
+          enableSystem
+          attribute="class"
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

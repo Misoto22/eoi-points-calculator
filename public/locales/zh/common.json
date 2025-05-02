@@ -54,5 +54,7 @@
   "points": "分",
   "total": "总分",
   "minimum": "最低要求分数",
+  "goal": "目标分数",
+  "pointsWarning": "您还需要{{points}}分才能达到目标分数",
   "generate": "生成总结"
 } 
