@@ -370,7 +370,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             >
               <FaAward className="text-lg" />
             </motion.div>
-            <h3 className="font-medium text-gray-900 text-base md:text-lg">{t('groupTitles.educationBonus')}</h3>
+            <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('groupTitles.educationBonus')}</h3>
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
             <motion.label 
