@@ -82,36 +82,27 @@ const PageContent = () => {
                 
                 <div className="flex items-center justify-between">
                   <span>{t('goal')}:</span>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center h-8">
+                  <div className="flex items-center space-x-2">
+                    <div className="inline-flex items-center h-8 bg-white dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
                       <button
                         onClick={() => setGoalPoints(prev => Math.max(MIN_POINTS, prev - 5))}
-                        className="w-8 h-full flex items-center justify-center rounded-l border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm"
+                        className="w-8 h-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-600 dark:text-gray-300"
                         aria-label="Decrease goal points"
                       >
                         -
                       </button>
-                      <input
-                        type="number"
-                        min={MIN_POINTS}
-                        max={120}
-                        step={5}
-                        value={goalPoints}
-                        onChange={handleGoalPointsChange}
-                        className="w-14 h-full px-1 border-t border-b border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-center text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        readOnly
-                      />
+                      <span className="px-3 font-medium text-gray-900 dark:text-gray-100">
+                        {goalPoints}
+                      </span>
                       <button
                         onClick={() => setGoalPoints(prev => Math.min(120, prev + 5))}
-                        className="w-8 h-full flex items-center justify-center rounded-r border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm"
+                        className="w-8 h-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-600 dark:text-gray-300"
                         aria-label="Increase goal points"
                       >
                         +
                       </button>
                     </div>
-                    <span>{t('points')}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('points')}</span>
                   </div>
                 </div>
               </div>
