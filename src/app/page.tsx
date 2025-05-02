@@ -56,7 +56,9 @@ export default function Home() {
                     step={5}
                     value={goalPoints}
                     onChange={(e) => setGoalPoints(Math.max(MIN_POINTS, Math.min(100, parseInt(e.target.value) || MIN_POINTS)))}
-                    className="w-16 px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
+                    className="w-20 px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                   />
                   <span>{t('points')}</span>
                 </div>
