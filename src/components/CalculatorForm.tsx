@@ -154,6 +154,26 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
+    
+    // Handle nomination mutual exclusivity
+    if (name === 'stateNomination' && (e.target as HTMLInputElement).checked) {
+      setFormData(prev => ({
+        ...prev,
+        stateNomination: true,
+        regionalNomination: false
+      }));
+      return;
+    }
+    
+    if (name === 'regionalNomination' && (e.target as HTMLInputElement).checked) {
+      setFormData(prev => ({
+        ...prev,
+        regionalNomination: true,
+        stateNomination: false
+      }));
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
