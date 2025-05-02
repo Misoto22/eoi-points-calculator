@@ -2,7 +2,7 @@
 
 A modern web application for calculating points for Australian Expression of Interest (EOI) for skilled migration visas. Built with Next.js and TypeScript.
 
-![EOI Points Calculator Preview](/images/desktop-preview.jpeg)
+![EOI Points Calculator Preview](https://raw.githubusercontent.com/Misoto22/eoi-points-calculator/main/public/images/desktop-preview.jpeg)
 
 ## 🌟 Features
 
