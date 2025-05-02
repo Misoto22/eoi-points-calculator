@@ -121,7 +121,7 @@ const PageContent = () => {
                   <motion.div 
                     className={`mt-4 p-3 rounded-md text-sm ${
                       totalPoints < MIN_POINTS 
-                        ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                        ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300'
                         : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                     }`}
                     initial={{ opacity: 0, height: 0 }}
