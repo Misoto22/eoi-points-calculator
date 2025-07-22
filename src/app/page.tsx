@@ -48,7 +48,7 @@ const PageContent = () => {
 
   return (
     <div className="max-w-4xl mx-auto flex flex-col min-h-[calc(100vh-2rem)]">
-      <div className="flex-grow">
+      <div className="grow">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
           <h1 className="text-2xl font-bold text-center md:text-left">{t('title')}</h1>
           <div className="flex items-center justify-center md:justify-end space-x-4">
