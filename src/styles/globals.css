@@ -4,6 +4,8 @@
   strategy: "base";
 }
 
+@variant dark (.dark &);
+
 @theme {
   /* Primary colors */
   --color-primary-50: #f5f3ff;
@@ -35,6 +37,18 @@
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 243, 244, 246;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 17, 24, 39;
+  }
+}
+
+.dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 17, 24, 39;
 }
 
 body {

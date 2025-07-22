@@ -31,7 +31,12 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === 'undefined') return defaultTheme;
-    return (localStorage.getItem('theme') as Theme) || defaultTheme;
+    try {
+      const stored = localStorage.getItem('theme') as Theme;
+      return stored && ['dark', 'light', 'system'].includes(stored) ? stored : defaultTheme;
+    } catch {
+      return defaultTheme;
+    }
   });
 
   useEffect(() => {
@@ -67,7 +72,11 @@ export function ThemeProvider({
     theme,
     setTheme: (newTheme: Theme) => {
       setTheme(newTheme);
-      localStorage.setItem('theme', newTheme);
+      try {
+        localStorage.setItem('theme', newTheme);
+      } catch {
+        // Ignore localStorage errors
+      }
     },
   };
 

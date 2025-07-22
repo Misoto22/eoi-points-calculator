@@ -58,7 +58,9 @@ export default function RootLayout({
                 const storedTheme = localStorage.getItem('theme');
                 const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                 const theme = storedTheme || 'system';
-                document.documentElement.classList.add(theme === 'system' ? systemTheme : theme);
+                const root = document.documentElement;
+                root.classList.remove('light', 'dark');
+                root.classList.add(theme === 'system' ? systemTheme : theme);
               } catch (e) {}
             `,
           }}
