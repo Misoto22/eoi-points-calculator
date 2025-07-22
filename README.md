@@ -1,28 +1,44 @@
-# <div align="center">Australia EOI Points Calculator</div>
-
 <div align="center">
+
+# Australia EOI Points Calculator
+
 <img src="https://github.com/user-attachments/assets/b7728407-c7db-4ccb-aba2-e34cadd1eb75" alt="eoi-calculator" width="600"/>
+
+*A comprehensive tool for calculating Expression of Interest points for Australian immigration, featuring real-time calculations, bilingual support, and modern responsive design.*
+
+[![Next.js](https://img.shields.io/badge/Next.js-15.0.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.0.0-blue?style=for-the-badge&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3.3-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.11-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+
 </div>
 
-## 🌟 Features
+## ✨ Features
 
-- 📊 Real-time points calculation
-- 🌐 Bilingual support (English/简体中文)
-- 📱 Responsive design for all devices
-- 🎨 Dark/Light mode support
-- 🔄 Automatic language detection
-- 💾 Local storage for form data
-- 🔍 SEO optimized with Open Graph support
+- 📊 **Real-time Calculation**: Instant EOI points calculation based on current immigration rules
+- 🌐 **Bilingual Support**: Full support for English and Simplified Chinese (简体中文)
+- 📱 **Responsive Design**: Optimized for all devices from mobile to desktop
+- 🎨 **Dark/Light Mode**: System preference detection with manual override
+- 🔄 **Auto Language Detection**: Automatic browser language detection
+- 💾 **Persistent Storage**: Form data saved locally for convenience
+- 🔍 **SEO Optimized**: Complete Open Graph and Twitter Cards integration
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **State Management**: React Hooks
-- **Animation**: Framer Motion
-- **Internationalization**: i18next
-- **Deployment**: Vercel
+<div align="center">
+
+| Category       | Technologies                             |
+|----------------|------------------------------------------|
+| **Framework**  | Next.js 15.0.0 (App Router)            |
+| **Language**   | TypeScript 5.3.3 (Strict Mode)         |
+| **UI Library** | React 19.0.0                           |
+| **Styling**    | Tailwind CSS 4.1.11 (CSS-first config) |
+| **Animation**  | Framer Motion 12.9.2                   |
+| **i18n**       | i18next + react-i18next                |
+| **Icons**      | React Icons 5.5.0                      |
+| **Deployment** | Vercel                                  |
+
+</div>
 
 ## 🚀 Getting Started
 
