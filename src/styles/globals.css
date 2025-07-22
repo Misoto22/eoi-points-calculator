@@ -7,18 +7,18 @@
 @variant dark (.dark &);
 
 @theme {
-  /* Primary colors */
-  --color-primary-50: #f5f3ff;
-  --color-primary-100: #ede9fe;
-  --color-primary-200: #ddd6fe;
-  --color-primary-300: #c4b5fd;
-  --color-primary-400: #a78bfa;
-  --color-primary-500: #8b5cf6;
-  --color-primary-600: #7c3aed;
-  --color-primary-700: #6d28d9;
-  --color-primary-800: #5b21b6;
-  --color-primary-900: #4c1d95;
-  --color-primary: #7c3aed;
+  /* Primary colors - Premium Teal */
+  --color-primary-50: #f0fdfa;
+  --color-primary-100: #ccfbf1;
+  --color-primary-200: #99f6e4;
+  --color-primary-300: #5eead4;
+  --color-primary-400: #2dd4bf;
+  --color-primary-500: #14b8a6;
+  --color-primary-600: #0d9488;
+  --color-primary-700: #0f766e;
+  --color-primary-800: #115e59;
+  --color-primary-900: #134e4a;
+  --color-primary: #0d9488;
   
   /* Secondary colors */
   --color-secondary-50: #f8fafc;
@@ -36,23 +36,160 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-rgb: 243, 244, 246;
+  --background-rgb: 249, 250, 251;
+  
+  /* Light mode semantic colors */
+  --surface-rgb: 255, 255, 255;
+  --surface-secondary-rgb: 248, 249, 250;
+  --text-primary-rgb: 17, 24, 39;
+  --text-secondary-rgb: 75, 85, 99;
+  --border-rgb: 229, 231, 235;
+  
+  /* Semantic color variables */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-surface: #ffffff;
+  --bg-surface-secondary: #f8f9fa;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --border-primary: #e5e7eb;
+  --border-secondary: #d1d5db;
+  --hover-bg: #f3f4f6;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    /* Material Design Dark Theme - using #121212 base */
     --foreground-rgb: 255, 255, 255;
-    --background-rgb: 17, 24, 39;
+    --background-rgb: 18, 18, 18;
+    
+    /* Dark mode surfaces with proper elevation */
+    --surface-rgb: 30, 30, 30;
+    --surface-secondary-rgb: 42, 42, 42;
+    --text-primary-rgb: 255, 255, 255;
+    --text-secondary-rgb: 189, 189, 189;
+    --border-rgb: 64, 64, 64;
+    
+    /* Semantic color variables - Dark Mode */
+    --bg-primary: #121212;
+    --bg-secondary: #121212;
+    --bg-surface: #1e1e1e;
+    --bg-surface-secondary: #2a2a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #bdbdbd;
+    --border-primary: #404040;
+    --border-secondary: #404040;
+    --hover-bg: #2a2a2a;
   }
 }
 
 .dark {
+  /* Material Design Dark Theme - using #121212 base */
   --foreground-rgb: 255, 255, 255;
-  --background-rgb: 17, 24, 39;
+  --background-rgb: 18, 18, 18;
+  
+  /* Dark mode surfaces with proper elevation */
+  --surface-rgb: 30, 30, 30;
+  --surface-secondary-rgb: 42, 42, 42;
+  --text-primary-rgb: 255, 255, 255;
+  --text-secondary-rgb: 189, 189, 189;
+  --border-rgb: 64, 64, 64;
+  
+  /* Semantic color variables - Dark Mode */
+  --bg-primary: #121212;
+  --bg-secondary: #121212;
+  --bg-surface: #1e1e1e;
+  --bg-surface-secondary: #2a2a2a;
+  --text-primary: #ffffff;
+  --text-secondary: #bdbdbd;
+  --border-primary: #404040;
+  --border-secondary: #404040;
+  --hover-bg: #2a2a2a;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
   min-height: 100vh;
+}
+
+/* Utility classes using CSS variables */
+.bg-surface {
+  background-color: var(--bg-surface);
+}
+
+.bg-surface-secondary {
+  background-color: var(--bg-surface-secondary);
+}
+
+.text-theme-primary {
+  color: var(--text-primary);
+}
+
+.text-theme-secondary {
+  color: var(--text-secondary);
+}
+
+.border-theme {
+  border-color: var(--border-primary);
+}
+
+.border-theme-secondary {
+  border-color: var(--border-secondary);
+}
+
+.hover-bg-theme:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Primary theme color utilities */
+.text-theme-accent {
+  color: var(--color-primary-600);
+}
+
+.bg-theme-accent {
+  background-color: var(--color-primary-600);
+}
+
+.bg-theme-accent-light {
+  background-color: var(--color-primary-50);
+}
+
+.bg-theme-accent-hover:hover {
+  background-color: var(--color-primary-50);
+}
+
+.dark .bg-theme-accent-hover:hover {
+  background-color: rgba(13, 148, 136, 0.15);
+}
+
+.border-theme-accent {
+  border-color: var(--color-primary-100);
+}
+
+.border-theme-accent-focus:focus {
+  border-color: var(--color-primary-500);
+}
+
+.ring-theme-accent:focus {
+  --tw-ring-color: var(--color-primary-200);
+  --tw-ring-opacity: 0.5;
+}
+
+.checkbox-theme-accent {
+  border-color: var(--color-primary-300);
+  color: var(--color-primary-600);
+}
+
+.dark .checkbox-theme-accent {
+  border-color: var(--color-primary-700);
+  color: var(--color-primary-400);
+}
+
+.checkbox-theme-accent:focus {
+  --tw-ring-color: var(--color-primary-200);
+}
+
+.dark .checkbox-theme-accent:focus {
+  --tw-ring-color: var(--color-primary-800);
 } 
