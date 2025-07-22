@@ -66,7 +66,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
+      <body className={`${inter.className} bg-gray-50 dark:bg-[#121212] text-gray-900 dark:text-white transition-colors duration-200`}>
         <ThemeProvider
           defaultTheme="system"
           enableSystem
