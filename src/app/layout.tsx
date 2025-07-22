@@ -1,13 +1,9 @@
+import React from 'react';
 import '../styles/globals.css';
 import { Inter } from 'next/font/google';
-import { languages } from './i18n/settings';
 import { ThemeProvider } from '../components/ThemeProvider';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export async function generateStaticParams() {
-  return languages.map((lng) => ({ lng }));
-}
 
 export const metadata = {
   title: 'EOI Points Calculator',
@@ -49,13 +45,11 @@ export const metadata = {
 
 export default function RootLayout({
   children,
-  params: { lng },
 }: {
   children: React.ReactNode;
-  params: { lng: string };
 }) {
   return (
-    <html lang={lng} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
