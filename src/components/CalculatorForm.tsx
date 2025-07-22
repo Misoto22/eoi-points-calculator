@@ -190,13 +190,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Age Section */}
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaUser className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.age')}</h3>
@@ -205,7 +205,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             name="age"
             value={formData.age}
             onChange={handleChange}
-            className="w-full h-12 md:h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 border-theme bg-surface-secondary text-theme-primary shadow-sm border-theme-accent-focus ring-theme-accent text-base md:text-sm"
             whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.age')}</option>
@@ -218,13 +218,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
 
         {/* English Section */}
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaLanguage className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.english')}</h3>
@@ -233,7 +233,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             name="english"
             value={formData.english}
             onChange={handleChange}
-            className="w-full h-12 md:h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 border-theme bg-surface-secondary text-theme-primary shadow-sm border-theme-accent-focus ring-theme-accent text-base md:text-sm"
             whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.english')}</option>
@@ -245,13 +245,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
 
         {/* Work Experience Sections */}
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaBriefcase className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.ausWork')}</h3>
@@ -260,7 +260,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             name="ausWork"
             value={formData.ausWork}
             onChange={handleChange}
-            className="w-full h-12 md:h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 border-theme bg-surface-secondary text-theme-primary shadow-sm border-theme-accent-focus ring-theme-accent text-base md:text-sm"
             whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.years')}</option>
@@ -272,13 +272,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
         </motion.div>
 
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaGlobe className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.overseasWork')}</h3>
@@ -287,7 +287,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             name="overseasWork"
             value={formData.overseasWork}
             onChange={handleChange}
-            className="w-full h-12 md:h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 border-theme bg-surface-secondary text-theme-primary shadow-sm border-theme-accent-focus ring-theme-accent text-base md:text-sm"
             whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.years')}</option>
@@ -299,13 +299,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
 
         {/* Education Section */}
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaGraduationCap className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.education')}</h3>
@@ -314,7 +314,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             name="education"
             value={formData.education}
             onChange={handleChange}
-            className="w-full h-12 md:h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 border-theme bg-surface-secondary text-theme-primary shadow-sm border-theme-accent-focus ring-theme-accent text-base md:text-sm"
             whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.education')}</option>
@@ -328,13 +328,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
 
         {/* Partner Status Section */}
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 mb-3 md:mb-4 text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaUsers className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.partnerStatus')}</h3>
@@ -343,7 +343,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
             name="partnerStatus"
             value={formData.partnerStatus}
             onChange={handleChange}
-            className="w-full h-12 md:h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-base md:text-sm"
+            className="w-full h-12 md:h-10 rounded-md border-gray-300 border-theme bg-surface-secondary text-theme-primary shadow-sm border-theme-accent-focus ring-theme-accent text-base md:text-sm"
             whileTap={{ scale: 0.98 }}
           >
             <option value="">{t('select.partner')}</option>
@@ -359,20 +359,20 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
       <div className="space-y-4 md:space-y-6">
         {/* Education Related */}
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4 space-y-3"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4 space-y-3"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 pb-2 border-b border-theme-accent text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaAward className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('groupTitles.educationBonus')}</h3>
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
             <motion.label 
-              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer touch-manipulation"
+              className="flex items-start space-x-3 p-3 rounded-lg bg-theme-accent-hover transition-colors cursor-pointer touch-manipulation"
               whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
               whileTap={{ scale: 0.98 }}
             >
@@ -381,13 +381,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 name="stem"
                 checked={formData.stem}
                 onChange={handleChange}
-                className="mt-1 w-5 h-5 rounded border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 focus:ring-primary-200 dark:focus:ring-primary-800"
+                className="mt-1 w-5 h-5 rounded checkbox-theme-accent"
               />
               <span className="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-tight">{t('sections.stem')}</span>
             </motion.label>
 
             <motion.label 
-              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer touch-manipulation"
+              className="flex items-start space-x-3 p-3 rounded-lg bg-theme-accent-hover transition-colors cursor-pointer touch-manipulation"
               whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
               whileTap={{ scale: 0.98 }}
             >
@@ -396,13 +396,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 name="ausStudy"
                 checked={formData.ausStudy}
                 onChange={handleChange}
-                className="mt-1 w-5 h-5 rounded border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 focus:ring-primary-200 dark:focus:ring-primary-800"
+                className="mt-1 w-5 h-5 rounded checkbox-theme-accent"
               />
               <span className="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-tight">{t('sections.ausStudy')}</span>
             </motion.label>
 
             <motion.label 
-              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer touch-manipulation"
+              className="flex items-start space-x-3 p-3 rounded-lg bg-theme-accent-hover transition-colors cursor-pointer touch-manipulation"
               whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
               whileTap={{ scale: 0.98 }}
             >
@@ -411,13 +411,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 name="regionalStudy"
                 checked={formData.regionalStudy}
                 onChange={handleChange}
-                className="mt-1 w-5 h-5 rounded border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 focus:ring-primary-200 dark:focus:ring-primary-800"
+                className="mt-1 w-5 h-5 rounded checkbox-theme-accent"
               />
               <span className="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-tight">{t('sections.regionalStudy')}</span>
             </motion.label>
 
             <motion.label 
-              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer touch-manipulation"
+              className="flex items-start space-x-3 p-3 rounded-lg bg-theme-accent-hover transition-colors cursor-pointer touch-manipulation"
               whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
               whileTap={{ scale: 0.98 }}
             >
@@ -426,7 +426,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 name="professionalYear"
                 checked={formData.professionalYear}
                 onChange={handleChange}
-                className="mt-1 w-5 h-5 rounded border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 focus:ring-primary-200 dark:focus:ring-primary-800"
+                className="mt-1 w-5 h-5 rounded checkbox-theme-accent"
               />
               <span className="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-tight">{t('sections.professionalYear')}</span>
             </motion.label>
@@ -435,13 +435,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
 
         {/* Language and Skills */}
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 pb-2 border-b border-theme-accent text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaLanguage className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('groupTitles.languageSkillsBonus')}</h3>
@@ -464,20 +464,20 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
 
         {/* Nomination */}
         <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary-100 dark:border-primary-900 p-3 md:p-4 space-y-3"
+          className="bg-surface rounded-lg shadow-sm border border-theme-accent p-3 md:p-4 space-y-3"
           variants={cardHover}
           whileHover="hover"
           {...fadeInUp}
         >
-          <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
+          <div className="flex items-center space-x-2 pb-2 border-b border-theme-accent text-theme-accent">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-accent-light">
               <FaMapMarkedAlt className="text-lg" />
             </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('groupTitles.nominationBonus')}</h3>
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
             <motion.label 
-              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer touch-manipulation"
+              className="flex items-start space-x-3 p-3 rounded-lg bg-theme-accent-hover transition-colors cursor-pointer touch-manipulation"
               whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
               whileTap={{ scale: 0.98 }}
             >
@@ -486,13 +486,13 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 name="stateNomination"
                 checked={formData.stateNomination}
                 onChange={handleChange}
-                className="mt-1 w-5 h-5 rounded border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 focus:ring-primary-200 dark:focus:ring-primary-800"
+                className="mt-1 w-5 h-5 rounded checkbox-theme-accent"
               />
               <span className="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-tight">{t('sections.stateNomination')}</span>
             </motion.label>
 
             <motion.label 
-              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer touch-manipulation"
+              className="flex items-start space-x-3 p-3 rounded-lg bg-theme-accent-hover transition-colors cursor-pointer touch-manipulation"
               whileHover={{ backgroundColor: "rgb(245, 243, 255)" }}
               whileTap={{ scale: 0.98 }}
             >
@@ -501,7 +501,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
                 name="regionalNomination"
                 checked={formData.regionalNomination}
                 onChange={handleChange}
-                className="mt-1 w-5 h-5 rounded border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 focus:ring-primary-200 dark:focus:ring-primary-800"
+                className="mt-1 w-5 h-5 rounded checkbox-theme-accent"
               />
               <span className="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-tight">{t('sections.regionalNomination')}</span>
             </motion.label>

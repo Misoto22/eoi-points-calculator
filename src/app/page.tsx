@@ -57,20 +57,20 @@ const PageContent = () => {
           </div>
         </div>
         
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="bg-surface rounded-lg shadow-md p-6">
           <CalculatorForm onPointsChange={setTotalPoints} />
           
           <motion.div 
-            className="mt-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-lg"
+            className="mt-8 p-6 bg-surface-secondary rounded-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <div className="text-center mt-4">
               <h2 className="text-2xl font-bold mb-2">{t('total')}: {totalPoints}</h2>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-4">
+              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-[#404040] mb-4">
                 <div
-                  className="bg-primary h-2.5 rounded-full transition-all duration-500"
+                  className="bg-theme-accent h-2.5 rounded-full transition-all duration-500"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -83,10 +83,10 @@ const PageContent = () => {
                 <div className="flex items-center justify-between">
                   <span>{t('goal')}:</span>
                   <div className="flex items-center space-x-2">
-                    <div className="inline-flex items-center h-8 bg-white dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+                    <div className="inline-flex items-center h-8 bg-white dark:bg-[#1e1e1e] rounded-lg overflow-hidden border border-gray-300 dark:border-[#404040]">
                       <button
                         onClick={() => setGoalPoints(prev => Math.max(MIN_POINTS, prev - 5))}
-                        className="w-8 h-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-600 dark:text-gray-300"
+                        className="w-8 h-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-colors text-gray-600 dark:text-gray-300"
                         aria-label="Decrease goal points"
                       >
                         -
@@ -96,7 +96,7 @@ const PageContent = () => {
                       </span>
                       <button
                         onClick={() => setGoalPoints(prev => Math.min(120, prev + 5))}
-                        className="w-8 h-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-600 dark:text-gray-300"
+                        className="w-8 h-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-colors text-gray-600 dark:text-gray-300"
                         aria-label="Increase goal points"
                       >
                         +

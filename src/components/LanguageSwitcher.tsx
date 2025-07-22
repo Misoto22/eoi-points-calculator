@@ -16,7 +16,7 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="flex items-center space-x-2">
-      <FaGlobe className="text-primary-600 dark:text-primary-400 text-lg" />
+      <FaGlobe className="text-theme-accent text-lg" />
       <div className="flex space-x-2">
         {languages.map((lng) => (
           <motion.button
@@ -24,8 +24,8 @@ export default function LanguageSwitcher() {
             onClick={() => changeLanguage(lng)}
             className={`px-3 py-1 rounded-md transition-colors duration-200 ${
               i18n.language === lng
-                ? 'bg-primary text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                ? 'bg-primary-600 text-white'
+                : 'bg-surface hover-bg-theme text-theme-primary'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
