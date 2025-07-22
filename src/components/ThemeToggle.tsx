@@ -24,7 +24,7 @@ export function ThemeToggle() {
       case 'light':
         return <FaMoon className="w-5 h-5 text-gray-700 dark:text-gray-300" />;
       case 'system':
-        return <FaDesktop className="w-5 h-5 text-blue-500" />;
+        return <FaDesktop className="w-5 h-5 text-blue-500 dark:text-blue-400" />;
       default:
         return <FaMoon className="w-5 h-5 text-gray-700 dark:text-gray-300" />;
     }
@@ -33,7 +33,7 @@ export function ThemeToggle() {
   const getLabel = () => {
     switch (theme) {
       case 'dark':
-        return 'Switch to light mode';
+        return 'Switch to system mode';
       case 'light':
         return 'Switch to dark mode';
       case 'system':
@@ -46,13 +46,29 @@ export function ThemeToggle() {
   return (
     <motion.button
       onClick={cycleTheme}
-      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-      whileHover={{ scale: 1.05 }}
+      className="relative p-3 rounded-xl bg-surface border border-gray-200 border-theme shadow-sm hover:shadow-md hover-bg-theme transition-all duration-200"
+      whileHover={{ scale: 1.05, y: -1 }}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}
       title={`Current: ${theme} theme`}
     >
-      {getIcon()}
+      <motion.div
+        key={theme}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      >
+        {getIcon()}
+      </motion.div>
+      
+      {/* Theme indicator dot */}
+      <div className="absolute -top-1 -right-1">
+        <div className={`w-3 h-3 rounded-full border-2 border-white dark:border-[#1e1e1e] ${
+          theme === 'light' ? 'bg-blue-500' : 
+          theme === 'dark' ? 'bg-[#121212]' : 
+          'bg-purple-500'
+        }`} />
+      </div>
     </motion.button>
   );
 } 
