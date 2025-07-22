@@ -20,9 +20,9 @@
     "regionalStudy": "Regional Study (2 years)"
   },
   "groupTitles": {
-    "educationBonus": "Educational Bonus Points",
-    "languageSkillsBonus": "Language & Skills Bonus",
-    "nominationBonus": "Nomination Bonus"
+    "educationBonus": "Education",
+    "languageSkillsBonus": "Language",
+    "nominationBonus": "State Nomination"
   },
   "select": {
     "age": "Select Age Range",

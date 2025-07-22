@@ -20,9 +20,9 @@
     "regionalStudy": "在偏远地区学习2年"
   },
   "groupTitles": {
-    "educationBonus": "教育相关加分",
-    "languageSkillsBonus": "语言与专业技能加分",
-    "nominationBonus": "担保加分"
+    "educationBonus": "教育",
+    "languageSkillsBonus": "语言",
+    "nominationBonus": "州担保"
   },
   "select": {
     "age": "选择年龄范围",
