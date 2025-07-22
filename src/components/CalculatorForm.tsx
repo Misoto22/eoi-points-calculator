@@ -26,7 +26,6 @@ const fadeInUp = {
 
 const cardHover = {
   hover: { 
-    scale: 1.02,
     boxShadow: "0 8px 30px rgba(124, 58, 237, 0.08)",
     transition: { duration: 0.2 }
   }
@@ -197,12 +196,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaUser className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.age')}</h3>
           </div>
           <motion.select
@@ -228,12 +224,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaLanguage className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.english')}</h3>
           </div>
           <motion.select
@@ -258,12 +251,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaBriefcase className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.ausWork')}</h3>
           </div>
           <motion.select
@@ -288,12 +278,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaGlobe className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.overseasWork')}</h3>
           </div>
           <motion.select
@@ -318,12 +305,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaGraduationCap className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.education')}</h3>
           </div>
           <motion.select
@@ -350,12 +334,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 mb-3 md:mb-4 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaUsers className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('sections.partnerStatus')}</h3>
           </div>
           <motion.select
@@ -384,12 +365,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaAward className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('groupTitles.educationBonus')}</h3>
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
@@ -463,12 +441,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaLanguage className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('groupTitles.languageSkillsBonus')}</h3>
           </div>
           <motion.label 
@@ -495,12 +470,9 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
           {...fadeInUp}
         >
           <div className="flex items-center space-x-2 pb-2 border-b border-primary-100 text-primary-600">
-            <motion.div 
-              whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50"
-            >
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-50">
               <FaMapMarkedAlt className="text-lg" />
-            </motion.div>
+            </div>
             <h3 className="font-medium text-gray-900 dark:text-gray-100 text-base md:text-lg">{t('groupTitles.nominationBonus')}</h3>
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
