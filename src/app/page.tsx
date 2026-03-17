@@ -90,8 +90,14 @@ const PageContent = () => {
       labels,
       title: t('title'),
       date: new Date().toLocaleDateString(i18n.language === 'zh' ? 'zh-CN' : 'en-AU'),
+      goalPoints,
+      visaStatus: [
+        { code: '189', name: t('visa.189'), eligible: totalPoints >= 65 && !formData.stateNomination && !formData.regionalNomination },
+        { code: '190', name: t('visa.190'), eligible: totalPoints >= 65 && formData.stateNomination },
+        { code: '491', name: t('visa.491'), eligible: totalPoints >= 65 && formData.regionalNomination },
+      ],
     });
-  }, [breakdown, t, i18n.language]);
+  }, [breakdown, t, i18n.language, goalPoints, totalPoints, formData]);
 
   if (!ready) return <PageSkeleton />;
 

@@ -1,6 +1,6 @@
 // 技术移民职业清单 — 来源: immi.homeaffairs.gov.au
 // MLTSSL = 189/190/491, STSOL = 190/491, ROL = 491 only
-// 最后更新: 2025-03
+// 最后更新: 2026-03
 export interface Occupation {
   anzsco: string;
   en: string;
