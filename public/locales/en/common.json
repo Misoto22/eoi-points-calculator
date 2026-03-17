@@ -32,7 +32,7 @@
     "partner": "Select Status"
   },
   "english": {
-    "competent": "Competent English (IELTS 6 in each band) — 0 pts, minimum requirement",
+    "competent": "Competent English (IELTS 6 each) — 0 pts, minimum requirement",
     "proficient": "Proficient English (IELTS 7 in each band)",
     "superior": "Superior English (IELTS 8 in each band)"
   },
@@ -56,5 +56,48 @@
   "minimum": "Minimum Required Points",
   "goal": "Goal Points",
   "pointsWarning": "You need {{points}} more points to reach your goal",
-  "generate": "Generate Summary"
-} 
+  "breakdown": {
+    "title": "Points Breakdown",
+    "age": "Age",
+    "english": "English",
+    "ausWork": "AU Work",
+    "overseasWork": "Overseas Work",
+    "education": "Education",
+    "stem": "STEM",
+    "ausStudy": "AU Study",
+    "communityLanguage": "NAATI",
+    "professionalYear": "Prof. Year",
+    "stateNomination": "State (190)",
+    "regionalNomination": "Regional (491)",
+    "regionalStudy": "Regional Study",
+    "partnerStatus": "Partner"
+  },
+  "visa": {
+    "title": "Visa Eligibility",
+    "189": "Skilled Independent",
+    "190": "State Nominated",
+    "491": "Regional"
+  },
+  "share": {
+    "copyLink": "Copy Link",
+    "copied": "Copied!"
+  },
+  "export": {
+    "button": "Export PDF"
+  },
+  "rounds": {
+    "title": "Recent Invitation Rounds",
+    "date": "Date",
+    "visa": "Visa",
+    "minimumPoints": "Min. Points",
+    "invitations": "Invitations",
+    "qualified": "Your score meets this round",
+    "notQualified": "Below minimum for this round"
+  },
+  "occupation": {
+    "title": "Occupation List Check",
+    "search": "Search by occupation name or ANZSCO code",
+    "noResults": "No matching occupations found",
+    "hint": "MLTSSL = 189/190/491 · STSOL = 190/491 · ROL = 491 only"
+  }
+}

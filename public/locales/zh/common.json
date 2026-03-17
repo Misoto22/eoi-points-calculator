@@ -56,5 +56,48 @@
   "minimum": "最低要求分数",
   "goal": "目标分数",
   "pointsWarning": "您还需要{{points}}分才能达到目标分数",
-  "generate": "生成总结"
-} 
+  "breakdown": {
+    "title": "分数明细",
+    "age": "年龄",
+    "english": "英语",
+    "ausWork": "澳洲工作",
+    "overseasWork": "海外工作",
+    "education": "学历",
+    "stem": "STEM",
+    "ausStudy": "澳洲学习",
+    "communityLanguage": "NAATI",
+    "professionalYear": "职业年",
+    "stateNomination": "州担保(190)",
+    "regionalNomination": "偏远地区(491)",
+    "regionalStudy": "偏远地区学习",
+    "partnerStatus": "伴侣"
+  },
+  "visa": {
+    "title": "签证资格",
+    "189": "独立技术移民",
+    "190": "州担保",
+    "491": "偏远地区"
+  },
+  "share": {
+    "copyLink": "复制链接",
+    "copied": "已复制！"
+  },
+  "export": {
+    "button": "导出PDF"
+  },
+  "rounds": {
+    "title": "近期邀请轮次",
+    "date": "日期",
+    "visa": "签证",
+    "minimumPoints": "最低分数",
+    "invitations": "发放数量",
+    "qualified": "您的分数达到此轮要求",
+    "notQualified": "低于此轮最低分数"
+  },
+  "occupation": {
+    "title": "职业清单查询",
+    "search": "按职业名称或ANZSCO代码搜索",
+    "noResults": "未找到匹配的职业",
+    "hint": "MLTSSL = 189/190/491 · STSOL = 190/491 · ROL = 仅491"
+  }
+}
