@@ -1,6 +1,20 @@
 import React from 'react';
 import '../styles/globals.css';
+import { DM_Sans, DM_Serif_Display } from 'next/font/google';
 import { ThemeProvider } from '../components/ThemeProvider';
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+});
+
+const dmSerifDisplay = DM_Serif_Display({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-dm-serif',
+  display: 'swap',
+});
 
 export const metadata = {
   title: 'EOI Points Calculator',
@@ -46,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${dmSerifDisplay.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
