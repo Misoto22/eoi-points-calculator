@@ -16,6 +16,10 @@ const dmSerifDisplay = DM_Serif_Display({
   display: 'swap',
 });
 
+export const viewport = {
+  themeColor: '#ffffff',
+};
+
 export const metadata = {
   title: 'EOI Points Calculator',
   description: 'The EOI Points Calculator is a tool designed to help potential immigrants to Australia calculate their points based on their personal and professional background.',

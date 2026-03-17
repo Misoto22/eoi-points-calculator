@@ -9,7 +9,7 @@ i18next
   .use(initReactI18next)
   .use(LanguageDetector)
   .use(resourcesToBackend((language: string, namespace: string) => {
-    return import(`/public/locales/${language}/${namespace}.json`);
+    return import(`../../../public/locales/${language}/${namespace}.json`);
   }))
   .init({
     fallbackLng: 'en',

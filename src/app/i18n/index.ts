@@ -8,7 +8,7 @@ const initI18next = async (lng: string, ns: string) => {
   await i18nInstance
     .use(initReactI18next)
     .use(resourcesToBackend((language: string, namespace: string) => {
-      return import(`/public/locales/${language}/${namespace}.json`);
+      return import(`../../../public/locales/${language}/${namespace}.json`);
     }))
     .init(getOptions(lng, ns));
   return i18nInstance;
