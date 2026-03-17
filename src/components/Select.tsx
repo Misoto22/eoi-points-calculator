@@ -13,10 +13,11 @@ interface SelectProps {
   value: string;
   options: SelectOption[];
   placeholder: string;
+  label?: string;
   onChange: (e: { target: { name: string; value: string; type: string } }) => void;
 }
 
-export default function Select({ name, value, options, placeholder, onChange }: SelectProps) {
+export default function Select({ name, value, options, placeholder, label, onChange }: SelectProps) {
   const [open, setOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
@@ -121,6 +122,7 @@ export default function Select({ name, value, options, placeholder, onChange }: 
       <button
         type="button"
         role="combobox"
+        aria-label={label || placeholder}
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-controls={listboxId}

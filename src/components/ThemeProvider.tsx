@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -29,7 +29,7 @@ export function ThemeProvider({
   enableSystem = true,
   attribute = 'class',
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window === 'undefined') return defaultTheme;
     try {
       const stored = localStorage.getItem('theme') as Theme;
@@ -56,7 +56,7 @@ export function ThemeProvider({
   useEffect(() => {
     if (theme === 'system' && enableSystem) {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      
+
       const handleChange = () => {
         const root = window.document.documentElement;
         root.classList.remove('light', 'dark');
@@ -68,17 +68,16 @@ export function ThemeProvider({
     }
   }, [theme, enableSystem]);
 
-  const value = {
-    theme,
-    setTheme: (newTheme: Theme) => {
-      setTheme(newTheme);
-      try {
-        localStorage.setItem('theme', newTheme);
-      } catch {
-        // Ignore localStorage errors
-      }
-    },
-  };
+  const setTheme = useCallback((newTheme: Theme) => {
+    setThemeState(newTheme);
+    try {
+      localStorage.setItem('theme', newTheme);
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, []);
+
+  const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
 
   return (
     <ThemeProviderContext.Provider value={value}>
@@ -94,4 +93,4 @@ export const useTheme = () => {
     throw new Error('useTheme must be used within a ThemeProvider');
 
   return context;
-}; 
+};

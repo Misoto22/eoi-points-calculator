@@ -1,10 +1,16 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { languages } from '@/app/i18n/settings';
 
 export default function LanguageSwitcher() {
   const { t, i18n } = useTranslation();
+
+  // 同步 html lang 属性
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);

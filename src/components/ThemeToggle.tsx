@@ -51,9 +51,7 @@ export function ThemeToggle() {
   return (
     <motion.button
       onClick={cycleTheme}
-      className="p-2 rounded-lg transition-colors duration-150"
-      style={{ color: 'var(--text-secondary)' }}
-      whileHover={{ color: 'var(--text-primary)' }}
+      className="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-150"
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}
       title={`Current: ${theme} theme`}

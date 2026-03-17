@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Select from './Select';
@@ -27,7 +27,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
     regionalStudy: false,
   });
 
-  const calculatePoints = () => {
+  const calculatePoints = useCallback(() => {
     let points = 0;
 
     switch (formData.age) {
@@ -79,34 +79,21 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
     }
 
     return points;
-  };
-
-  useEffect(() => {
-    const points = calculatePoints();
-    onPointsChange(points);
   }, [formData]);
 
-  const handleChange = (e: { target: { name: string; value: string; type: string } }) => {
-    const { name, value, type } = e.target;
+  // #2 fix: include all dependencies
+  useEffect(() => {
+    onPointsChange(calculatePoints());
+  }, [calculatePoints, onPointsChange]);
 
-    if (type === 'checkbox') {
-      const checked = (e.target as unknown as HTMLInputElement).checked;
-      if (name === 'stateNomination' && checked) {
-        setFormData(prev => ({ ...prev, stateNomination: true, regionalNomination: false }));
-        return;
-      }
-      if (name === 'regionalNomination' && checked) {
-        setFormData(prev => ({ ...prev, regionalNomination: true, stateNomination: false }));
-        return;
-      }
-      setFormData(prev => ({ ...prev, [name]: checked }));
-      return;
-    }
-
+  // Select handler — only handles select events
+  const handleSelectChange = useCallback((e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Checkbox handler — handles mutual exclusion for nominations
+  const handleCheckboxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
 
     if (name === 'stateNomination' && checked) {
@@ -118,7 +105,7 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
       return;
     }
     setFormData(prev => ({ ...prev, [name]: checked }));
-  };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -223,7 +210,8 @@ export default function CalculatorForm({ onPointsChange }: CalculatorFormProps) 
               value={formData[field.name as keyof typeof formData] as string}
               options={field.options}
               placeholder={field.placeholder}
-              onChange={handleChange}
+              label={field.label}
+              onChange={handleSelectChange}
             />
           </motion.div>
         ))}

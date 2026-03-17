@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -8,28 +8,35 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import CalculatorForm from '@/components/CalculatorForm';
 import '@/app/i18n/client';
 
-const ClientOnly = ({ children }: { children: React.ReactNode }) => {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => { setIsClient(true); }, []);
-  if (!isClient) return null;
-  return <>{children}</>;
-};
+// SSR 骨架 — 搜索引擎可抓取的静态内容
+function PageSkeleton() {
+  return (
+    <div className="max-w-2xl mx-auto pt-8 md:pt-12">
+      <div className="h-5 w-32 rounded mb-6" style={{ backgroundColor: 'var(--border-primary)' }} />
+      <div className="h-9 w-3/4 rounded mb-16" style={{ backgroundColor: 'var(--border-primary)' }} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i}>
+            <div className="h-3 w-24 rounded mb-2" style={{ backgroundColor: 'var(--border-primary)' }} />
+            <div className="h-11 rounded-lg" style={{ backgroundColor: 'var(--border-primary)', opacity: 0.5 }} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const PageContent = () => {
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
   const [totalPoints, setTotalPoints] = useState(0);
   const [goalPoints, setGoalPoints] = useState(65);
   const MIN_POINTS = 65;
 
-  const handleGoalPointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === '') { setGoalPoints(MIN_POINTS); return; }
-    const numValue = parseInt(value);
-    if (!isNaN(numValue)) setGoalPoints(Math.max(MIN_POINTS, Math.min(120, numValue)));
-  };
-
   const progress = Math.min((totalPoints / goalPoints) * 100, 100);
   const isBelow = totalPoints < MIN_POINTS;
+
+  // i18n 加载完成前显示骨架
+  if (!ready) return <PageSkeleton />;
 
   return (
     <div className="max-w-2xl mx-auto flex flex-col min-h-screen">
@@ -226,11 +233,8 @@ const PageContent = () => {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-150"
-              style={{ color: 'var(--text-tertiary)' }}
+              className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors duration-150"
               aria-label={link.label}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-tertiary)'}
             >
               {link.icon}
             </a>
@@ -244,9 +248,9 @@ const PageContent = () => {
 export default function Home() {
   return (
     <main className="min-h-screen px-6 md:px-8">
-      <ClientOnly>
+      <Suspense fallback={<PageSkeleton />}>
         <PageContent />
-      </ClientOnly>
+      </Suspense>
     </main>
   );
 }
