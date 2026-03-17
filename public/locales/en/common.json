@@ -92,7 +92,8 @@
     "minimumPoints": "Min. Points",
     "invitations": "Invitations",
     "qualified": "Your score meets this round",
-    "notQualified": "Below minimum for this round"
+    "notQualified": "Below minimum for this round",
+    "note": "Since 2024-25, invitations are tiered by occupation. 65 is the minimum, but competitive occupations (ICT, accounting) may need 90+ points."
   },
   "occupation": {
     "title": "Occupation List Check",

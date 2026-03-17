@@ -92,7 +92,8 @@
     "minimumPoints": "最低分数",
     "invitations": "发放数量",
     "qualified": "您的分数达到此轮要求",
-    "notQualified": "低于此轮最低分数"
+    "notQualified": "低于此轮最低分数",
+    "note": "自2024-25年起，邀请按职业层级分配。65分为最低门槛，但热门职业（ICT、会计）可能需要90+分。"
   },
   "occupation": {
     "title": "职业清单查询",

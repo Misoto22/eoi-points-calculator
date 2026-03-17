@@ -57,6 +57,9 @@ export default function InvitationRounds({ totalPoints }: Props) {
           </tbody>
         </table>
       </div>
+      <p className="text-xs mt-3 leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+        {t('rounds.note')}
+      </p>
     </CollapsibleSection>
   );
 }
