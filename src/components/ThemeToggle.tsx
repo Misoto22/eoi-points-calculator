@@ -2,73 +2,70 @@
 
 import { useTheme } from './ThemeProvider';
 import { motion } from 'framer-motion';
-import { FaSun, FaMoon, FaDesktop } from 'react-icons/fa';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   const cycleTheme = () => {
-    if (theme === 'light') {
-      setTheme('dark');
-    } else if (theme === 'dark') {
-      setTheme('system');
-    } else {
-      setTheme('light');
-    }
+    if (theme === 'light') setTheme('dark');
+    else if (theme === 'dark') setTheme('system');
+    else setTheme('light');
   };
 
   const getIcon = () => {
     switch (theme) {
       case 'dark':
-        return <FaSun className="w-5 h-5 text-yellow-500" />;
+        return (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="8" cy="8" r="3.5" />
+            <path d="M8 1.5v1M8 13.5v1M2.75 2.75l.7.7M12.55 12.55l.7.7M1.5 8h1M13.5 8h1M2.75 13.25l.7-.7M12.55 3.45l.7-.7" />
+          </svg>
+        );
       case 'light':
-        return <FaMoon className="w-5 h-5 text-gray-700 dark:text-gray-300" />;
+        return (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M13.5 8.5a5.5 5.5 0 0 1-7-7 5.5 5.5 0 1 0 7 7Z" />
+          </svg>
+        );
       case 'system':
-        return <FaDesktop className="w-5 h-5 text-blue-500 dark:text-blue-400" />;
+        return (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="3" width="12" height="9" rx="1.5" />
+            <path d="M6 14.5h4M8 12v2.5" />
+          </svg>
+        );
       default:
-        return <FaMoon className="w-5 h-5 text-gray-700 dark:text-gray-300" />;
+        return null;
     }
   };
 
   const getLabel = () => {
     switch (theme) {
-      case 'dark':
-        return 'Switch to system mode';
-      case 'light':
-        return 'Switch to dark mode';
-      case 'system':
-        return 'Switch to light mode';
-      default:
-        return 'Toggle theme';
+      case 'dark': return 'Switch to system mode';
+      case 'light': return 'Switch to dark mode';
+      case 'system': return 'Switch to light mode';
+      default: return 'Toggle theme';
     }
   };
 
   return (
     <motion.button
       onClick={cycleTheme}
-      className="relative p-3 rounded-xl bg-surface border border-gray-200 border-theme shadow-sm hover:shadow-md hover-bg-theme transition-all duration-200"
-      whileHover={{ scale: 1.05, y: -1 }}
+      className="p-2 rounded-lg transition-colors duration-150"
+      style={{ color: 'var(--text-secondary)' }}
+      whileHover={{ color: 'var(--text-primary)' }}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}
       title={`Current: ${theme} theme`}
     >
       <motion.div
         key={theme}
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.2 }}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.15 }}
       >
         {getIcon()}
       </motion.div>
-      
-      {/* Theme indicator dot */}
-      <div className="absolute -top-1 -right-1">
-        <div className={`w-3 h-3 rounded-full border-2 border-white dark:border-[#1e1e1e] ${
-          theme === 'light' ? 'bg-blue-500' : 
-          theme === 'dark' ? 'bg-[#121212]' : 
-          'bg-purple-500'
-        }`} />
-      </div>
     </motion.button>
   );
-} 
+}

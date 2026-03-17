@@ -1,9 +1,6 @@
 import React from 'react';
 import '../styles/globals.css';
-import { Inter } from 'next/font/google';
 import { ThemeProvider } from '../components/ThemeProvider';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'EOI Points Calculator',
@@ -32,10 +29,10 @@ export const metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },                         // Default
-      { url: '/favicon-32x32.png', sizes: '32x32' },   // Browser icon
-      { url: '/favicon-16x16.png', sizes: '16x16' },   // Small browser icon
-      { url: '/apple-touch-icon.png', rel: 'apple-touch-icon', sizes: '180x180' }, // iOS
+      { url: '/favicon.ico' },
+      { url: '/favicon-32x32.png', sizes: '32x32' },
+      { url: '/favicon-16x16.png', sizes: '16x16' },
+      { url: '/apple-touch-icon.png', rel: 'apple-touch-icon', sizes: '180x180' },
     ],
     shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -66,7 +63,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-gray-50 dark:bg-[#121212] text-gray-900 dark:text-white transition-colors duration-200`}>
+      <body className="transition-colors duration-200">
         <ThemeProvider
           defaultTheme="system"
           enableSystem

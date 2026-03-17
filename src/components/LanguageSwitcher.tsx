@@ -1,39 +1,39 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { useRouter } from 'next/navigation';
 import { languages } from '@/app/i18n/settings';
-import { motion } from 'framer-motion';
-import { FaGlobe } from 'react-icons/fa';
 
 export default function LanguageSwitcher() {
   const { t, i18n } = useTranslation();
-  const router = useRouter();
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <FaGlobe className="text-theme-accent text-lg" />
-      <div className="flex space-x-2">
-        {languages.map((lng) => (
-          <motion.button
-            key={lng}
+    <div className="flex items-center gap-1">
+      {languages.map((lng, index) => (
+        <span key={lng} className="flex items-center gap-1">
+          {index > 0 && (
+            <span
+              className="text-xs select-none"
+              style={{ color: 'var(--text-tertiary)' }}
+            >
+              /
+            </span>
+          )}
+          <button
             onClick={() => changeLanguage(lng)}
-            className={`px-3 py-1 rounded-md transition-colors duration-200 ${
-              i18n.language === lng
-                ? 'bg-primary-600 text-white'
-                : 'bg-surface hover-bg-theme text-theme-primary'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="text-sm transition-colors duration-150"
+            style={{
+              color: i18n.language === lng ? 'var(--text-primary)' : 'var(--text-tertiary)',
+              fontWeight: i18n.language === lng ? 500 : 400,
+            }}
           >
             {t(`language.${lng}`)}
-          </motion.button>
-        ))}
-      </div>
+          </button>
+        </span>
+      ))}
     </div>
   );
-} 
+}
