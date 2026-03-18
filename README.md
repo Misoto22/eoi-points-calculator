@@ -2,7 +2,7 @@
 
 # Australia EOI Points Calculator
 
-<img src="https://github.com/user-attachments/assets/b7728407-c7db-4ccb-aba2-e34cadd1eb75" alt="eoi-calculator" width="600"/>
+<img width="2160" height="2160" alt="878_2x_shots_so" src="https://github.com/user-attachments/assets/f23703cf-0cf8-4848-ab24-82fc6c9a37aa" />
 
 *A comprehensive tool for calculating Expression of Interest points for Australian immigration, featuring real-time calculations, bilingual support, and modern responsive design.*
 
