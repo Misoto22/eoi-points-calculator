@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useMemo, useState, useCallback } from 'react';
+import { Suspense, lazy, useMemo, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -8,10 +8,12 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import CalculatorForm from '@/components/CalculatorForm';
 import PointsBreakdown from '@/components/PointsBreakdown';
 import VisaEligibility from '@/components/VisaEligibility';
-import InvitationRounds from '@/components/InvitationRounds';
-import OccupationSearch from '@/components/OccupationSearch';
 import PointsSuggestions from '@/components/PointsSuggestions';
 import ErrorBoundary from '@/components/ErrorBoundary';
+
+// 懒加载可折叠区块（含静态数据）
+const InvitationRounds = lazy(() => import('@/components/InvitationRounds'));
+const OccupationSearch = lazy(() => import('@/components/OccupationSearch'));
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { readFormFromUrl, useSyncFormToUrl, formToUrl } from '@/hooks/useUrlState';
 import { calculateBreakdown } from '@/lib/points';
@@ -288,10 +290,14 @@ const PageContent = () => {
           {/* Visa Eligibility */}
           <VisaEligibility formData={formData} totalPoints={totalPoints} />
 
-          {/* Expandable sections */}
+          {/* Expandable sections — lazy loaded */}
           <div className="space-y-4">
-            <InvitationRounds totalPoints={totalPoints} />
-            <OccupationSearch />
+            <Suspense fallback={null}>
+              <InvitationRounds totalPoints={totalPoints} />
+            </Suspense>
+            <Suspense fallback={null}>
+              <OccupationSearch />
+            </Suspense>
           </div>
         </motion.div>
       </div>

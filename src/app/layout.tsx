@@ -77,7 +77,30 @@ export default function RootLayout({
                 root.classList.remove('light', 'dark');
                 root.classList.add(theme === 'system' ? systemTheme : theme);
               } catch (e) {}
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+              }
             `,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebApplication',
+              name: 'EOI Points Calculator',
+              description: 'Calculate your Expression of Interest points for Australian skilled migration visas (189, 190, 491)',
+              url: 'https://eoi-points-calculator.vercel.app',
+              applicationCategory: 'UtilityApplication',
+              operatingSystem: 'Any',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'AUD',
+              },
+              inLanguage: ['en', 'zh-Hans'],
+            }),
           }}
         />
       </head>
