@@ -43,58 +43,61 @@ export default function CalculatorForm({ formData, onChange }: CalculatorFormPro
     show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' as const } }
   };
 
+  const pts = (n: number) => `(+${n})`;
+  const p0 = '(+0)';
+
   const selectFields = [
     {
       label: t('sections.age'), name: 'age', placeholder: t('select.age'),
       options: [
-        { value: '18-24', label: `18-24 ${t('age')}` },
-        { value: '25-32', label: `25-32 ${t('age')}` },
-        { value: '33-39', label: `33-39 ${t('age')}` },
-        { value: '40-44', label: `40-44 ${t('age')}` },
+        { value: '18-24', label: `18-24 ${t('age')} ${pts(25)}` },
+        { value: '25-32', label: `25-32 ${t('age')} ${pts(30)}` },
+        { value: '33-39', label: `33-39 ${t('age')} ${pts(25)}` },
+        { value: '40-44', label: `40-44 ${t('age')} ${pts(15)}` },
       ]
     },
     {
       label: t('sections.english'), name: 'english', placeholder: t('select.english'),
       options: [
-        { value: 'ielts6', label: t('english.competent') },
-        { value: 'ielts7', label: t('english.proficient') },
-        { value: 'ielts8', label: t('english.superior') },
+        { value: 'ielts6', label: `${t('english.competent')}` },
+        { value: 'ielts7', label: `${t('english.proficient')} ${pts(10)}` },
+        { value: 'ielts8', label: `${t('english.superior')} ${pts(20)}` },
       ]
     },
     {
       label: t('sections.ausWork'), name: 'ausWork', placeholder: t('select.years'),
       options: [
-        { value: '1-3', label: `1-3 ${t('years')}` },
-        { value: '3-5', label: `3-5 ${t('years')}` },
-        { value: '5-8', label: `5-8 ${t('years')}` },
-        { value: '8-10', label: `8-10 ${t('years')}` },
+        { value: '1-3', label: `1-3 ${t('years')} ${pts(5)}` },
+        { value: '3-5', label: `3-5 ${t('years')} ${pts(10)}` },
+        { value: '5-8', label: `5-8 ${t('years')} ${pts(15)}` },
+        { value: '8-10', label: `8-10 ${t('years')} ${pts(20)}` },
       ]
     },
     {
       label: t('sections.overseasWork'), name: 'overseasWork', placeholder: t('select.years'),
       options: [
-        { value: '3-5', label: `3-5 ${t('years')}` },
-        { value: '5-8', label: `5-8 ${t('years')}` },
-        { value: '8-10', label: `8-10 ${t('years')}` },
+        { value: '3-5', label: `3-5 ${t('years')} ${pts(5)}` },
+        { value: '5-8', label: `5-8 ${t('years')} ${pts(10)}` },
+        { value: '8-10', label: `8-10 ${t('years')} ${pts(15)}` },
       ]
     },
     {
       label: t('sections.education'), name: 'education', placeholder: t('select.education'),
       options: [
-        { value: 'apprenticeship', label: t('education.apprenticeship') },
-        { value: 'cert3', label: t('education.cert3') },
-        { value: 'diploma', label: t('education.diploma') },
-        { value: 'bachelor', label: t('education.bachelor') },
-        { value: 'phd', label: t('education.phd') },
+        { value: 'apprenticeship', label: `${t('education.apprenticeship')} ${pts(10)}` },
+        { value: 'cert3', label: `${t('education.cert3')} ${pts(10)}` },
+        { value: 'diploma', label: `${t('education.diploma')} ${pts(10)}` },
+        { value: 'bachelor', label: `${t('education.bachelor')} ${pts(15)}` },
+        { value: 'phd', label: `${t('education.phd')} ${pts(20)}` },
       ]
     },
     {
       label: t('sections.partnerStatus'), name: 'partnerStatus', placeholder: t('select.partner'),
       options: [
-        { value: 'single', label: t('partner.single') },
-        { value: 'partnerSkills', label: t('partner.skills') },
-        { value: 'partnerCitizen', label: t('partner.citizen') },
-        { value: 'partnerEnglish', label: t('partner.english') },
+        { value: 'single', label: `${t('partner.single')} ${pts(10)}` },
+        { value: 'partnerSkills', label: `${t('partner.skills')} ${pts(10)}` },
+        { value: 'partnerCitizen', label: `${t('partner.citizen')} ${pts(10)}` },
+        { value: 'partnerEnglish', label: `${t('partner.english')} ${pts(5)}` },
       ]
     },
   ];

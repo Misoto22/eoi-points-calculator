@@ -10,6 +10,8 @@ import PointsBreakdown from '@/components/PointsBreakdown';
 import VisaEligibility from '@/components/VisaEligibility';
 import InvitationRounds from '@/components/InvitationRounds';
 import OccupationSearch from '@/components/OccupationSearch';
+import PointsSuggestions from '@/components/PointsSuggestions';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { readFormFromUrl, useSyncFormToUrl, formToUrl } from '@/hooks/useUrlState';
 import { calculateBreakdown } from '@/lib/points';
@@ -66,6 +68,11 @@ const PageContent = () => {
       setTimeout(() => setCopied(false), 2000);
     } catch { /* fallback: do nothing */ }
   }, [formData]);
+
+  const handleReset = useCallback(() => {
+    setFormData(defaultFormData);
+    setGoalPoints(65);
+  }, [setFormData, setGoalPoints]);
 
   const handleExportPdf = useCallback(async () => {
     const { exportPdf } = await import('@/lib/exportPdf');
@@ -225,8 +232,11 @@ const PageContent = () => {
             )}
           </AnimatePresence>
 
+          {/* Suggestions */}
+          <PointsSuggestions formData={formData} breakdown={breakdown} goalPoints={goalPoints} />
+
           {/* Action buttons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 no-print">
             <button
               type="button"
               onClick={handleCopyLink}
@@ -257,6 +267,22 @@ const PageContent = () => {
               </svg>
               {t('export.button')}
             </button>
+            {breakdown.total > 0 && (
+              <button
+                type="button"
+                onClick={handleReset}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs border transition-colors duration-150 hover:bg-[var(--bg-surface-hover)]"
+                style={{ borderColor: 'var(--border-primary)', color: 'var(--text-tertiary)' }}
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 8a6 6 0 0 1 10.2-4.3" />
+                  <path d="M14 8a6 6 0 0 1-10.2 4.3" />
+                  <path d="M10 2l2.5 1.7L10 5.5" />
+                  <path d="M6 14l-2.5-1.7L6 10.5" />
+                </svg>
+                {t('reset')}
+              </button>
+            )}
           </div>
 
           {/* Visa Eligibility */}
@@ -272,9 +298,13 @@ const PageContent = () => {
 
       {/* Footer */}
       <footer
-        className="py-8 mt-4 flex flex-col md:flex-row justify-between items-center gap-3"
+        className="py-8 mt-4 space-y-4"
         style={{ borderTop: '1px solid var(--border-primary)' }}
       >
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+          {t('disclaimer')}
+        </p>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-3">
         <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
           &copy; 2025 Built by Henry Chen
         </span>
@@ -296,6 +326,7 @@ const PageContent = () => {
             </a>
           ))}
         </div>
+        </div>
       </footer>
     </div>
   );
@@ -303,10 +334,12 @@ const PageContent = () => {
 
 export default function Home() {
   return (
-    <main className="min-h-screen px-6 md:px-8">
-      <Suspense fallback={<PageSkeleton />}>
-        <PageContent />
-      </Suspense>
-    </main>
+    <ErrorBoundary>
+      <main className="min-h-screen px-6 md:px-8">
+        <Suspense fallback={<PageSkeleton />}>
+          <PageContent />
+        </Suspense>
+      </main>
+    </ErrorBoundary>
   );
 }

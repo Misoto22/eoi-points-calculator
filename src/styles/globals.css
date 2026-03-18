@@ -152,3 +152,31 @@ input[type="checkbox"]:focus-visible {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-tertiary);
 }
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: #1a1a1a !important;
+  }
+
+  /* 隐藏交互元素 */
+  header, footer,
+  button, [role="combobox"],
+  .no-print {
+    display: none !important;
+  }
+
+  /* 强制显示所有折叠内容 */
+  [data-collapsed] {
+    height: auto !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+  }
+
+  /* 移除动画 */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

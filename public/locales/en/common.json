@@ -100,5 +100,19 @@
     "search": "Search by occupation name or ANZSCO code",
     "noResults": "No matching occupations found",
     "hint": "MLTSSL = 189/190/491 · STSOL = 190/491 · ROL = 491 only"
+  },
+  "reset": "Reset",
+  "disclaimer": "This calculator is for reference only. Immigration rules change frequently — always verify with the official Department of Home Affairs website or a registered migration agent.",
+  "suggestion": {
+    "title": "How to gain more points",
+    "english": {
+      "ielts7": "Improve English to Proficient (IELTS 7 each)",
+      "ielts8": "Improve English to Superior (IELTS 8 each)"
+    },
+    "stem": "Complete a STEM research Masters or PhD",
+    "professionalYear": "Complete a Professional Year program",
+    "naati": "Obtain NAATI community language certification",
+    "ausStudy": "Complete 2 years of full-time study in Australia",
+    "regional": "Consider Regional (491) nomination instead of State (190) for +10 pts"
   }
 }

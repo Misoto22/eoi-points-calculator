@@ -20,10 +20,16 @@ interface SelectProps {
 export default function Select({ name, value, options, placeholder, label, onChange }: SelectProps) {
   const [open, setOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const id = useId();
   const listboxId = `${id}-listbox`;
+
+  // 检测触屏设备
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
 
   const selectedLabel = options.find(o => o.value === value)?.label;
 
@@ -116,6 +122,39 @@ export default function Select({ name, value, options, placeholder, label, onCha
         break;
     }
   }, [open, highlightedIndex, options, handleSelect]);
+
+  // 移动端使用原生 select
+  if (isTouchDevice) {
+    return (
+      <div className="relative">
+        <select
+          name={name}
+          value={value}
+          onChange={(e) => onChange({ target: { name, value: e.target.value, type: 'select' } })}
+          aria-label={label || placeholder}
+          className="w-full h-11 px-3 pr-9 rounded-lg text-sm border appearance-none transition-colors duration-150"
+          style={{
+            backgroundColor: 'var(--bg-surface)',
+            borderColor: 'var(--border-primary)',
+            color: value ? 'var(--text-primary)' : 'var(--text-tertiary)',
+          }}
+        >
+          <option value="">{placeholder}</option>
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+        <svg
+          className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+          style={{ color: 'var(--text-tertiary)' }}
+          width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+          strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+        >
+          <path d="m4 6 4 4 4-4" />
+        </svg>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} className="relative">
