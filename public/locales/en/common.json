@@ -1,118 +1,194 @@
 {
-  "title": "EOI Points Calculator for Immigration to Australia",
-  "language": {
-    "en": "English",
-    "zh": "简体中文"
-  },
+  "title": "EOI Points Calculator for Skilled Migration to Australia",
+  "subtitle": "Visa subclasses 189 · 190 · 491 — compare multiple skills assessments side by side",
+  "themeHint": "Toggle theme",
+  "chipHint": "View result",
+  "placeholder": "Select",
   "sections": {
+    "shared": "Shared criteria",
+    "jobs": "Skills assessments",
+    "result": "Result",
+    "reference": "Reference"
+  },
+  "sharedNote": "These belong to you as the applicant and apply to every assessment: age, English, qualification, partner status, plus STEM, Australian study, regional study and NAATI bonuses.",
+  "jobsNote": "An applicant may hold several skills assessments. Work experience and the Professional Year must relate to the nominated occupation, so they are entered per occupation.",
+  "fields": {
     "age": "Age",
-    "english": "English Proficiency",
-    "ausWork": "Australian Work Experience",
-    "overseasWork": "Overseas Work Experience",
-    "education": "Educational Qualifications",
-    "stem": "STEM/IT Masters by Research or PhD (2 years)",
-    "ausStudy": "Australian Study (2 years full-time)",
-    "communityLanguage": "NAATI Certification (CCL/Interpreter/Translator)",
-    "partnerStatus": "Partner Status",
-    "professionalYear": "Professional Year (Accounting/Engineering/IT)",
-    "stateNomination": "State Nomination (190 visa)",
-    "regionalNomination": "Regional Nomination (491 visa)",
-    "regionalStudy": "Regional Study (2 years)"
+    "english": "English proficiency",
+    "education": "Highest qualification",
+    "partnerStatus": "Partner status",
+    "ausWork": "Australian work (related)",
+    "overseasWork": "Overseas work (related)"
   },
-  "groupTitles": {
-    "educationBonus": "Education",
-    "languageSkillsBonus": "Language",
-    "nominationBonus": "State Nomination"
+  "groups": {
+    "edu": "Education & training",
+    "lang": "Language"
   },
-  "select": {
-    "age": "Select Age Range",
-    "english": "Select English Level",
-    "years": "Select Years",
-    "education": "Select Qualification",
-    "partner": "Select Status"
+  "boxes": {
+    "stem": "STEM / IT Masters by research or PhD (2 yrs)",
+    "ausStudy": "Australian study (2 yrs full-time)",
+    "regionalStudy": "Regional study (2 yrs)",
+    "communityLanguage": "NAATI certification (CCL / Interpreter / Translator)"
   },
-  "english": {
-    "competent": "Competent English (IELTS 6 each) — 0 pts, minimum requirement",
-    "proficient": "Proficient English (IELTS 7 in each band)",
-    "superior": "Superior English (IELTS 8 in each band)"
+  "options": {
+    "age": {
+      "18-24": "18–24 years",
+      "25-32": "25–32 years",
+      "33-39": "33–39 years",
+      "40-44": "40–44 years"
+    },
+    "english": {
+      "ielts6": "Competent · IELTS 6 each",
+      "ielts7": "Proficient · IELTS 7 each",
+      "ielts8": "Superior · IELTS 8 each"
+    },
+    "education": {
+      "none": "No recognised qualification",
+      "apprenticeship": "Recognised trade qualification",
+      "cert3": "Australian Certificate III/IV",
+      "diploma": "Australian Diploma",
+      "bachelor": "Bachelor / Honours / Masters",
+      "phd": "Doctorate"
+    },
+    "partnerStatus": {
+      "none": "Partner without claimable points",
+      "single": "Single applicant",
+      "partnerSkills": "Partner with skills assessment",
+      "partnerCitizen": "Partner is AU citizen / PR",
+      "partnerEnglish": "Partner with competent English"
+    },
+    "ausWork": {
+      "none": "Less than 1 year",
+      "1-3": "1–3 years",
+      "3-5": "3–5 years",
+      "5-8": "5–8 years",
+      "8-10": "8–10 years"
+    },
+    "overseasWork": {
+      "none": "Less than 3 years",
+      "3-5": "3–5 years",
+      "5-8": "5–8 years",
+      "8-10": "8–10 years"
+    }
   },
-  "education": {
-    "apprenticeship": "Overseas Recognized Trade Qualification",
-    "cert3": "Australian Certificate III/IV",
-    "diploma": "Australian Diploma",
-    "bachelor": "Bachelor/Honours/Masters Degree",
-    "phd": "Doctorate"
-  },
-  "partner": {
-    "single": "Single Applicant",
-    "skills": "Partner with Skills Assessment",
-    "citizen": "Partner is Australian Citizen/PR",
-    "english": "Partner with Competent English"
-  },
-  "years": "years",
-  "age": "years old",
-  "points": "points",
-  "total": "Total Points",
-  "minimum": "Minimum Required Points",
-  "goal": "Goal Points",
-  "pointsWarning": "You need {{points}} more points to reach your goal",
-  "breakdown": {
-    "title": "Points Breakdown",
+  "jobCaps": "ASSESSMENT",
+  "jobSubtotal": "Base",
+  "jobBase": "Base",
+  "jobField": "Nominated occupation",
+  "jobSearch": "Search occupation or ANZSCO code…",
+  "clearOcc": "Clear occupation",
+  "removeJob": "Remove assessment",
+  "addJob": "ADD SKILLS ASSESSMENT",
+  "noOccName": "No occupation selected",
+  "pyLabel": "Professional Year (Accounting / Eng / IT, related to this occupation)",
+  "occNo": "No matching occupations",
+  "occHint": "MLTSSL = 189/190/491 · STSOL = 190/491 · ROL = 491 only",
+  "occCount": "{{n}} of {{m}}",
+  "totalCaps": "BEST TOTAL",
+  "points": "pts",
+  "minimum": "Minimum",
+  "goal": "Goal",
+  "statusOk": "Goal reached",
+  "statusMin": "{{n}} points short of your goal",
+  "statusBelowMin": "Below the 65-point threshold by {{n}}",
+  "noBestPath": "Select a nominated occupation to compute visa pathways",
+  "bestPathPrefix": "Best pathway",
+  "sharedCaps": "SHARED BREAKDOWN",
+  "sharedSubtotal": "Shared subtotal",
+  "bd": {
     "age": "Age",
     "english": "English",
-    "ausWork": "AU Work",
-    "overseasWork": "Overseas Work",
     "education": "Education",
+    "partnerStatus": "Partner",
     "stem": "STEM",
-    "ausStudy": "AU Study",
+    "ausStudy": "AU study",
+    "regionalStudy": "Regional study",
     "communityLanguage": "NAATI",
-    "professionalYear": "Prof. Year",
-    "stateNomination": "State (190)",
-    "regionalNomination": "Regional (491)",
-    "regionalStudy": "Regional Study",
-    "partnerStatus": "Partner"
+    "ausWork": "AU work",
+    "overseasWork": "Overseas work",
+    "professionalYear": "Professional Year"
   },
-  "visa": {
-    "title": "Visa Eligibility",
-    "189": "Skilled Independent",
-    "190": "State Nominated",
-    "491": "Regional"
+  "pathNoteByCode": {
+    "189": "Skilled Independent · MLTSSL only",
+    "190": "State nominated +5 · MLTSSL / STSOL",
+    "491": "Regional +15 · all lists"
   },
-  "share": {
-    "copyLink": "Copy Link",
-    "copied": "Copied!"
-  },
-  "export": {
-    "button": "Export PDF"
-  },
-  "rounds": {
-    "title": "Recent Invitation Rounds",
-    "date": "Date",
-    "visa": "Visa",
-    "minimumPoints": "Min. Points",
-    "invitations": "Invitations",
-    "qualified": "Your score meets this round",
-    "notQualified": "Below minimum for this round",
-    "note": "Since 2024-25, invitations are tiered by occupation. 65 is the minimum, but competitive occupations (ICT, accounting) may need 90+ points."
-  },
-  "occupation": {
-    "title": "Occupation List Check",
-    "search": "Search by occupation name or ANZSCO code",
-    "noResults": "No matching occupations found",
-    "hint": "MLTSSL = 189/190/491 · STSOL = 190/491 · ROL = 491 only"
-  },
-  "reset": "Reset",
-  "disclaimer": "This calculator is for reference only. Immigration rules change frequently — always verify with the official Department of Home Affairs website or a registered migration agent.",
-  "suggestion": {
-    "title": "How to gain more points",
-    "english": {
-      "ielts7": "Improve English to Proficient (IELTS 7 each)",
-      "ielts8": "Improve English to Superior (IELTS 8 each)"
+  "pathOk": "Eligible",
+  "pathLow": "Points low",
+  "pathListNo": "Not on list",
+  "pathNoOcc": "No occupation",
+  "pathNoState": "No state list",
+  "pathNote": "189 requires an MLTSSL occupation. 190 requires state nomination (+5 pts) and accepts MLTSSL / STSOL. 491 requires state or family regional nomination (+15 pts) and accepts all lists including ROL. Every pathway needs 65+ points to lodge an EOI. Note: each state also keeps its own 190/491 occupation list — the tags on the right show which states can nominate your chosen occupation. See \"State list differences\" under Reference.",
+  "statesTitle": "State list differences (190 / 491)",
+  "statesIntro": "Federal lists (MLTSSL / STSOL / ROL) are only the entry ticket: each state and territory keeps its own occupation list, selection method and extra requirements (residence, local work, higher English or points), adjusted through the year. 20,350 nomination places nationally in 2025–26. Once you pick an occupation, the states that can nominate it are tagged below.",
+  "statesNote": "A 2025–26 snapshot — always check each state's official page.",
+  "visit": "Website",
+  "states": {
+    "NSW": {
+      "how": "190 Priority Skilled Occupation List (High / Med / Low tiers)",
+      "tip": "NSW work valued; ICT, health, engineering, construction first"
     },
+    "VIC": {
+      "how": "No fixed list · ROI selection (Live in Melbourne)",
+      "tip": "Health, teaching, STEM prioritised; local work & study count"
+    },
+    "QLD": {
+      "how": "QSOL · onshore / offshore / graduate streams",
+      "tip": "Onshore usually needs 6+ months of QLD work"
+    },
+    "WA": {
+      "how": "WASMOL Schedule 1 / 2 + graduate list",
+      "tip": "General stream often needs a 6-month WA contract; mining, construction, health"
+    },
+    "SA": {
+      "how": "Broadest state list (hundreds of onshore roles)",
+      "tip": "Per-occupation extra requirements; monthly invitation data"
+    },
+    "TAS": {
+      "how": "Pathway-based (employment / residence), no single list",
+      "tip": "Usually 6–9 months of TAS work; settlement focus"
+    },
+    "ACT": {
+      "how": "Critical Skills List + Canberra Matrix scoring",
+      "tip": "Canberra residence & work history required; mostly local invitees"
+    },
+    "NT": {
+      "how": "Offshore MOL · onshore needs NT connection",
+      "tip": "Very limited places in 2025–26, exceptions only"
+    }
+  },
+  "suggestionCaps": "HOW TO GAIN MORE POINTS",
+  "sug": {
+    "ielts7": "Improve English to Proficient (IELTS 7 each)",
+    "ielts8": "Improve English to Superior (IELTS 8 each)",
     "stem": "Complete a STEM research Masters or PhD",
-    "professionalYear": "Complete a Professional Year program",
+    "professionalYear": "Complete a Professional Year for this occupation",
     "naati": "Obtain NAATI community language certification",
     "ausStudy": "Complete 2 years of full-time study in Australia",
-    "regional": "Consider Regional (491) nomination instead of State (190) for +10 pts"
-  }
+    "mltssl": "Add an MLTSSL occupation assessment to unlock subclass 189"
+  },
+  "exportBtn": "EXPORT IMAGE",
+  "copyLink": "COPY LINK",
+  "copied": "COPIED",
+  "reset": "Reset",
+  "download": "DOWNLOAD",
+  "close": "CLOSE",
+  "generating": "Generating…",
+  "cardCream": "Cream",
+  "cardCharcoal": "Charcoal",
+  "roundsTitle": "Recent invitation rounds (189)",
+  "roundsDate": "Date",
+  "roundsVisa": "Visa",
+  "roundsMin": "Min. points",
+  "roundsInv": "Invitations",
+  "roundsHitYes": "Your score meets this round",
+  "roundsHitNo": "Below minimum for this round",
+  "roundsNote": "Since 2024–25, invitations are tiered by occupation. 65 is the floor; competitive occupations (ICT, accounting) may need 90+.",
+  "disclaimer": "This calculator is for reference only. Immigration rules change frequently — always verify with the Department of Home Affairs or a registered migration agent.",
+  "cardFoot": "Reference only · verify with the Department of Home Affairs",
+  "cardGoal": "Goal",
+  "cardMin": "Minimum",
+  "cardEmpty": "No criteria selected yet",
+  "cardPathways": "PATHWAYS",
+  "cardShared": "SHARED"
 }

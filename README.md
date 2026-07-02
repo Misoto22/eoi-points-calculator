@@ -16,12 +16,17 @@
 ## ✨ Features
 
 - 📊 **Real-time Calculation**: Instant EOI points calculation based on current immigration rules
+- 🧭 **Multiple Skills Assessments**: Hold several nominated occupations side by side — shared criteria (age, English, education, partner, bonuses) apply to all, while work experience and Professional Year are entered per occupation
+- 🗺️ **Per-state Pathways**: 189 / 190 / 491 evaluated per assessment, including each state & territory's own 190/491 occupation list — the tool tags which states can nominate your occupation
+- 🖼️ **Share Card Export**: Generate a Cream or Charcoal PNG summary card of your result
 - 🌐 **Bilingual Support**: Full support for English and Simplified Chinese (简体中文)
 - 📱 **Responsive Design**: Optimized for all devices from mobile to desktop
 - 🎨 **Dark/Light Mode**: System preference detection with manual override
-- 🔄 **Auto Language Detection**: Automatic browser language detection
+- 🔗 **Shareable Links**: Full form state encoded in the URL for one-click sharing
 - 💾 **Persistent Storage**: Form data saved locally for convenience
 - 🔍 **SEO Optimized**: Complete Open Graph and Twitter Cards integration
+
+All point values, pathway rules and per-state occupation lists live in `src/data/` (`pointsCriteria.ts`, `occupations.ts`, `stateLists.ts`) — nothing is hardcoded in the UI or the calculation engine.
 
 ## 🛠️ Tech Stack
 
@@ -29,13 +34,14 @@
 
 | Category       | Technologies                             |
 |----------------|------------------------------------------|
-| **Framework**  | Next.js 15.0.0 (App Router)            |
-| **Language**   | TypeScript 5.3.3 (Strict Mode)         |
-| **UI Library** | React 19.0.0                           |
-| **Styling**    | Tailwind CSS 4.1.11 (CSS-first config) |
-| **Animation**  | Framer Motion 12.9.2                   |
+| **Framework**  | Next.js 16 (App Router)                |
+| **Language**   | TypeScript 5.9 (Strict Mode)           |
+| **UI Library** | React 19                               |
+| **Styling**    | Tailwind CSS 4 (CSS-first config)      |
+| **Type**       | Noto Serif SC + system sans            |
+| **Export**     | Canvas share-card renderer             |
 | **i18n**       | i18next + react-i18next                |
-| **Icons**      | React Icons 5.5.0                      |
+| **Testing**    | Vitest                                 |
 | **Deployment** | Vercel                                  |
 
 </div>
@@ -72,7 +78,7 @@
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+- `npm run test` - Run the Vitest unit suite
 
 ## 🌐 Deployment
 

@@ -1,0 +1,29 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+/** Animate a number towards `target` with an ease-out cubic curve */
+export function useAnimatedNumber(target: number, duration = 650): number {
+  const [display, setDisplay] = useState(target);
+  const rafRef = useRef<number | null>(null);
+  const displayRef = useRef(display);
+  displayRef.current = display;
+
+  useEffect(() => {
+    const from = displayRef.current;
+    if (from === target) return;
+    const start = performance.now();
+    const ease = (x: number) => 1 - Math.pow(1 - x, 3);
+    const step = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      setDisplay(Math.round(from + (target - from) * ease(p)));
+      if (p < 1) rafRef.current = requestAnimationFrame(step);
+    };
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [target, duration]);
+
+  return display;
+}

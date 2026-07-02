@@ -1,0 +1,37 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
+
+interface FloatingChipProps {
+  visible: boolean;
+  total: number;
+  onClick: () => void;
+}
+
+export default function FloatingChip({ visible, total, onClick }: FloatingChipProps) {
+  const { t } = useTranslation();
+  if (!visible) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={t('chipHint')}
+      className="fixed right-[22px] bottom-[22px] z-40 flex items-baseline gap-2.5 px-[18px] py-[11px] cursor-pointer"
+      style={{
+        background: 'var(--band-bg)',
+        color: 'var(--band-ink)',
+        border: '1px solid var(--band-border)',
+        boxShadow: 'var(--shadow)',
+        animation: 'eoiFadeUp 0.35s ease both',
+      }}
+    >
+      <span className="text-[10.5px] tracking-[0.18em] font-medium" style={{ color: 'var(--band-muted)' }}>
+        {t('totalCaps')}
+      </span>
+      <span className="text-[21px] leading-none tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>
+        {total}
+      </span>
+    </button>
+  );
+}
