@@ -82,17 +82,27 @@ const PREFIX_RULES: Record<string, AuthorityInfo> = {
   '2723': { authority: 'APS', validityYears: 3 },
 
   // ── Social Workers ── AASW, 3 years ─────────────────────────────────────
-  // Source: https://www.aasw.asn.au/
+  // Source: https://www.aasw.asn.au/education-employment/migration-eligibility-assessment/
+  // ("On behalf of the Australian Government, as a nominated assessing
+  //  authority, the AASW assesses academic social work qualifications";
+  //  positive assessment valid 3 years from issue.)
   '2725': { authority: 'AASW', validityYears: 3 }, // Social Workers (272511)
 
   // ── Science/Medical Technicians ── VETASSESS, 3 years ───────────────────
   // ANZSCO minor group 311 (Medical/Science Technicians) are assessed by
-  // VETASSESS, not TRA; overrides the major-group-3 TRA fallback below.
+  // VETASSESS as professional occupations, not TRA; overrides the
+  // major-group-3 TRA fallback below.
+  // Source: https://www.vetassess.com.au/check-my-occupation/professional-occupations/medical-technicians-nec
+  //   (Medical Technicians nec, ANZSCO 311299) and
+  // https://www.vetassess.com.au/check-my-occupation/professional-occupations/life-science-technician
+  //   (Life Science Technician, ANZSCO 311413)
   '311':  { authority: 'VETASSESS', validityYears: 3 },
 
   // ── Building/Engineering Technicians ── VETASSESS, 3 years ──────────────
   // ANZSCO minor group 312 are technical, not trade, workers; VETASSESS
   // is the correct authority, overriding the major-group-3 TRA fallback.
+  // Source: https://www.vetassess.com.au/check-my-occupation/professional-occupations/civil-engineering-technician
+  //   (Civil Engineering Technician, ANZSCO 312212, VETASSESS Group C)
   '312':  { authority: 'VETASSESS', validityYears: 3 },
 };
 
