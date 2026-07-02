@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { mergeQueryString, stateToQueryString } from '@/lib/urlState';
+import { mergeQueryString, parseStateFromParams, stateToQueryString } from '@/lib/urlState';
 import type { JobAssessment, SharedCriteria } from '@/lib/types';
-import { defaultSharedCriteria } from '@/lib/types';
+import { defaultPlanningDates, defaultSharedCriteria } from '@/lib/types';
+import type { PlanningDates } from '@/lib/types';
 
 function job(overrides: Partial<JobAssessment> = {}): JobAssessment {
-  return { id: 'j1', anzsco: '', ausWork: '', overseasWork: '', professionalYear: false, ...overrides };
+  return { id: 'j1', anzsco: '', ausWork: '', overseasWork: '', professionalYear: false, ausWorkStart: '', overseasWorkStart: '', assessmentDate: '', ...overrides };
+}
+
+function dates(overrides: Partial<PlanningDates> = {}): PlanningDates {
+  return { ...defaultPlanningDates, ...overrides };
 }
 
 function shared(overrides: Partial<SharedCriteria> = {}): SharedCriteria {
@@ -50,5 +55,42 @@ describe('mergeQueryString', () => {
 
   it('returns an empty string when there is nothing to keep', () => {
     expect(mergeQueryString('', shared(), [job()])).toBe('');
+  });
+});
+
+describe('date serialisation', () => {
+  it('round-trips shared dates via b/et/nc params', () => {
+    const qs = stateToQueryString(shared({ age: '25-32' }), [job()], dates({ birth: '1995-03', englishTest: '2024-03' }));
+    const params = new URLSearchParams(qs);
+    expect(params.get('b')).toBe('1995-03');
+    expect(params.get('et')).toBe('2024-03');
+    expect(params.get('nc')).toBeNull();
+    const state = parseStateFromParams(params);
+    expect(state?.dates).toEqual(dates({ birth: '1995-03', englishTest: '2024-03' }));
+  });
+
+  it('appends job dates as segments 5-7 and trims trailing empties', () => {
+    const j = job({ anzsco: '261313', ausWorkStart: '2026-06', overseasWorkStart: '2021-11' });
+    const qs = stateToQueryString(shared(), [j], dates());
+    expect(new URLSearchParams(qs).get('jobs')).toBe('261313:::0:2026-06:2021-11');
+  });
+
+  it('parses old-format jobs params without date segments', () => {
+    const state = parseStateFromParams(new URLSearchParams('jobs=261313:3-5::1'));
+    expect(state?.jobs[0].anzsco).toBe('261313');
+    expect(state?.jobs[0].ausWorkStart).toBe('');
+    expect(state?.jobs[0].assessmentDate).toBe('');
+  });
+
+  it('rejects malformed date params instead of storing them', () => {
+    const state = parseStateFromParams(new URLSearchParams('b=hello&a=25-32'));
+    expect(state?.dates.birth).toBe('');
+  });
+
+  it('mergeQueryString keeps foreign params alongside dates', () => {
+    const qs = mergeQueryString('?lng=zh', shared(), [job()], dates({ birth: '1995-03' }));
+    const params = new URLSearchParams(qs);
+    expect(params.get('lng')).toBe('zh');
+    expect(params.get('b')).toBe('1995-03');
   });
 });

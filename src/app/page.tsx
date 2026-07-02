@@ -15,7 +15,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { evaluate } from '@/lib/points';
-import type { JobAssessment, SharedCriteria } from '@/lib/types';
+import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
 import { defaultSharedCriteria, newJob } from '@/lib/types';
 import { mergeQueryString, persistState, readInitialState } from '@/lib/urlState';
 import { GOAL_RANGE, MAX_JOBS } from '@/data/pointsCriteria';
@@ -47,6 +47,8 @@ const PageContent = () => {
   const initial = useMemo(() => readInitialState(), []);
   const [shared, setShared] = useState<SharedCriteria>(initial.shared);
   const [jobs, setJobs] = useState<JobAssessment[]>(initial.jobs);
+  // dates wired to UI in Task 4; initialised here for URL/storage round-trip
+  const [dates, setDates] = useState<PlanningDates>(initial.dates);
   const [goalPoints, setGoalPoints] = useLocalStorage<number>('eoi-goal', GOAL_RANGE.min);
 
   const [openSelect, setOpenSelect] = useState<string | null>(null);
@@ -66,12 +68,12 @@ const PageContent = () => {
   useEffect(() => {
     if (firstRender.current) { firstRender.current = false; return; }
     const id = setTimeout(() => {
-      persistState(shared, jobs);
-      const qs = mergeQueryString(window.location.search, shared, jobs);
+      persistState(shared, jobs, dates);
+      const qs = mergeQueryString(window.location.search, shared, jobs, dates);
       window.history.replaceState(null, '', window.location.pathname + (qs ? `?${qs}` : '') + window.location.hash);
     }, 250);
     return () => clearTimeout(id);
-  }, [shared, jobs]);
+  }, [shared, jobs, dates]);
 
   // Close dropdowns on outside click / Escape
   useEffect(() => {

@@ -16,6 +16,23 @@ export interface JobAssessment {
   ausWork: string;
   overseasWork: string;
   professionalYear: boolean;
+  ausWorkStart: string;
+  overseasWorkStart: string;
+  assessmentDate: string;
+}
+
+/** Optional month-precision dates powering the score timeline (all YYYY-MM or '') */
+export interface PlanningDates {
+  birth: string;
+  englishTest: string;
+  naatiCert: string;
+}
+
+export const defaultPlanningDates: PlanningDates = { birth: '', englishTest: '', naatiCert: '' };
+
+/** Month-string guard shared by url parsing, timeline math and inputs */
+export function isYm(s: string): boolean {
+  return /^\d{4}-(0[1-9]|1[0-2])$/.test(s);
 }
 
 export const defaultSharedCriteria: SharedCriteria = {
@@ -39,5 +56,8 @@ export function newJob(): JobAssessment {
     ausWork: '',
     overseasWork: '',
     professionalYear: false,
+    ausWorkStart: '',
+    overseasWorkStart: '',
+    assessmentDate: '',
   };
 }
