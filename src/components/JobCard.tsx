@@ -1,5 +1,6 @@
 'use client';
 
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import SelectField, { pointsTag } from './SelectField';
 import CheckRow from './CheckRow';
@@ -48,6 +49,8 @@ export default function JobCard({
 }: JobCardProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
+  const searchId = useId();
+  const searchListId = `${searchId}-list`;
 
   const occ = evaluation.occupation;
   const tag = String.fromCharCode(65 + evaluation.index);
@@ -68,7 +71,7 @@ export default function JobCard({
         background: 'var(--surface)',
         padding: 'clamp(18px, 3.4vw, 28px)',
         zIndex: cardActive ? 30 : 1,
-        animation: 'eoiFadeUp 0.4s ease both',
+        animation: 'eoiFadeUp 0.4s ease backwards',
       }}
     >
       <div className="flex justify-between items-baseline gap-3.5">
@@ -90,7 +93,8 @@ export default function JobCard({
               type="button"
               onClick={onRemove}
               title={t('removeJob')}
-              className="cursor-pointer text-[17px] leading-none px-1 py-0.5 hover:text-[var(--danger)]"
+              aria-label={t('removeJob')}
+              className="cursor-pointer text-[17px] leading-none w-8 h-8 -my-2 flex items-center justify-center hover:text-[var(--danger)]"
               style={{ background: 'none', border: 'none', color: 'var(--muted)' }}
             >
               ×
@@ -101,7 +105,11 @@ export default function JobCard({
 
       {/* Occupation: searchable dropdown */}
       <div data-dd="true" className="relative mt-[18px]">
-        <label className="block text-[11.5px] tracking-[0.16em] font-medium mb-2.5" style={{ color: 'var(--muted)' }}>
+        <label
+          htmlFor={searchId}
+          className="block text-[11.5px] tracking-[0.16em] font-medium mb-2.5"
+          style={{ color: 'var(--muted)' }}
+        >
           {t('jobField')}
         </label>
         {showDisplay && occ && (
@@ -122,7 +130,8 @@ export default function JobCard({
               type="button"
               onClick={(e) => { e.stopPropagation(); onPatch({ anzsco: '' }); onUIPatch({ open: false, q: '' }); }}
               title={t('clearOcc')}
-              className="cursor-pointer text-[15px] px-3 hover:text-[var(--danger)]"
+              aria-label={t('clearOcc')}
+              className="cursor-pointer text-[15px] px-4 hover:text-[var(--danger)]"
               style={{ background: 'none', border: 'none', borderLeft: '1px solid var(--hair)', color: 'var(--muted)' }}
             >
               ×
@@ -131,6 +140,11 @@ export default function JobCard({
         )}
         {showSearch && (
           <input
+            id={searchId}
+            role="combobox"
+            aria-expanded={ui.open}
+            aria-controls={ui.open ? searchListId : undefined}
+            aria-autocomplete="list"
             value={ui.q}
             onChange={(e) => onUIPatch({ q: e.target.value, open: true })}
             onFocus={() => onUIPatch({ open: true })}
@@ -147,19 +161,23 @@ export default function JobCard({
         )}
         {ui.open && (
           <div
+            id={searchListId}
+            role="listbox"
             className="absolute z-50 left-0 right-0 max-h-[296px] overflow-auto"
             style={{
               top: 'calc(100% + 6px)',
               background: 'var(--surface)',
               border: '1px solid var(--hair)',
               boxShadow: 'var(--shadow)',
-              animation: 'eoiDropIn 0.18s ease both',
+              animation: 'eoiDropIn 0.18s ease backwards',
             }}
           >
             {filtered.slice(0, MAX_RESULTS).map((o) => (
               <button
                 key={o.anzsco}
                 type="button"
+                role="option"
+                aria-selected={job.anzsco === o.anzsco}
                 onClick={() => { onPatch({ anzsco: o.anzsco }); onUIPatch({ open: false, q: '' }); }}
                 className="grid items-baseline gap-3 w-full px-3.5 py-3 cursor-pointer text-[13px] text-left leading-[1.45] hover:bg-[var(--hover)]"
                 style={{
@@ -188,7 +206,7 @@ export default function JobCard({
         )}
       </div>
 
-      <div className="grid gap-x-7 gap-y-[22px] mt-[22px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}>
+      <div className="grid gap-x-7 gap-y-[22px] mt-[22px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))' }}>
         {SELECT_FIELDS.map((field) => {
           const key = `${job.id}:${field}`;
           return (

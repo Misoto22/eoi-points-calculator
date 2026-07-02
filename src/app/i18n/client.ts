@@ -25,4 +25,11 @@ i18next
     },
   });
 
-export default i18next; 
+// Keep <html lang> in sync so screen readers pick the right voice
+i18next.on('languageChanged', (lng) => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = lng.startsWith('zh') ? 'zh-Hans' : 'en';
+  }
+});
+
+export default i18next;

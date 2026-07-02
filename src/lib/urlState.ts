@@ -63,6 +63,21 @@ export function readStateFromUrl(): AppState | null {
   return { shared, jobs: jobs.length ? jobs : [newJob()] };
 }
 
+/** State-owned query params; anything else (e.g. i18next's ?lng=) is preserved on rewrite */
+const STATE_PARAM_KEYS = [...Object.keys(SHARED_PARAMS), ...Object.keys(FLAG_PARAMS), 'jobs'];
+
+/**
+ * Rebuild the query string from app state while keeping foreign params intact.
+ * Returns the query string without the leading '?', or '' when empty.
+ */
+export function mergeQueryString(currentSearch: string, shared: SharedCriteria, jobs: JobAssessment[]): string {
+  const params = new URLSearchParams(currentSearch);
+  for (const key of STATE_PARAM_KEYS) params.delete(key);
+  const stateParams = new URLSearchParams(stateToQueryString(shared, jobs));
+  for (const [k, v] of stateParams) params.set(k, v);
+  return params.toString();
+}
+
 export function stateToQueryString(shared: SharedCriteria, jobs: JobAssessment[]): string {
   const params = new URLSearchParams();
   for (const [param, field] of Object.entries(SHARED_PARAMS)) {

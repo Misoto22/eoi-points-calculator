@@ -102,10 +102,10 @@ export default function ResultsBand({
     .map((k) => ({ key: k, label: t(`bd.${k}`), value: evaluation.shared[k] }));
 
   const suggestions = suggestionsFor(evaluation, shared, goal);
-  const progressPct = `${Math.min((displayTotal / goal) * 100, 100).toFixed(1)}%`;
+  const progressScale = Math.min(displayTotal / goal, 1);
 
   return (
-    <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.24s both' }}>
+    <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.24s backwards' }}>
       <SectionHeading num="03" title={t('sections.result')} side="RESULT" />
 
       <div
@@ -147,8 +147,13 @@ export default function ResultsBand({
 
         <div className="mt-[26px] h-0.5 relative" style={{ background: 'var(--band-hair)' }}>
           <div
-            className="absolute top-0 bottom-0 left-0"
-            style={{ width: progressPct, background: 'var(--band-ink)', transition: 'width 0.7s cubic-bezier(0.22, 1, 0.36, 1)' }}
+            className="absolute inset-0"
+            style={{
+              background: 'var(--band-ink)',
+              transform: `scaleX(${progressScale})`,
+              transformOrigin: 'left',
+              transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
+            }}
           />
         </div>
 
@@ -161,7 +166,7 @@ export default function ResultsBand({
                 type="button"
                 onClick={onGoalDec}
                 aria-label="Decrease goal"
-                className="w-7 h-[26px] cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
+                className="w-9 h-8 cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
                 style={{ background: 'none', border: 'none', color: 'var(--band-soft)' }}
               >
                 −
@@ -176,7 +181,7 @@ export default function ResultsBand({
                 type="button"
                 onClick={onGoalInc}
                 aria-label="Increase goal"
-                className="w-7 h-[26px] cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
+                className="w-9 h-8 cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
                 style={{ background: 'none', border: 'none', color: 'var(--band-soft)' }}
               >
                 +

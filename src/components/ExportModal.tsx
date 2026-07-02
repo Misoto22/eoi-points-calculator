@@ -30,6 +30,34 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
   const [loading, setLoading] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const genSeqRef = useRef(0);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
+
+  // Move focus into the dialog on open, give it back on close
+  useEffect(() => {
+    if (!open) return;
+    restoreFocusRef.current = document.activeElement as HTMLElement | null;
+    panelRef.current?.focus();
+    return () => restoreFocusRef.current?.focus();
+  }, [open]);
+
+  const trapTab = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab' || !panelRef.current) return;
+    const focusables = Array.from(
+      panelRef.current.querySelectorAll<HTMLElement>('button, a[href], input, [tabindex]:not([tabindex="-1"])'),
+    );
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement;
+    if (e.shiftKey && (active === first || active === panelRef.current)) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -100,12 +128,19 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
     <div className="fixed inset-0 z-60 flex items-center justify-center p-[22px]">
       <div
         onClick={onClose}
+        aria-hidden="true"
         className="absolute inset-0"
-        style={{ background: 'var(--overlay-bg)', backdropFilter: 'blur(7px)', animation: 'eoiFadeIn 0.25s ease both' }}
+        style={{ background: 'var(--overlay-bg)', backdropFilter: 'blur(7px)', animation: 'eoiFadeIn 0.25s ease backwards' }}
       />
       <div
-        className="relative flex flex-col gap-3.5"
-        style={{ width: 'min(86vw, 380px)', animation: 'eoiModalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both' }}
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('exportBtn')}
+        tabIndex={-1}
+        onKeyDown={trapTab}
+        className="relative flex flex-col gap-3.5 outline-none"
+        style={{ width: 'min(86vw, 380px)', animation: 'eoiModalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards' }}
       >
         <div className="flex justify-between items-center">
           <div className="flex gap-3.5 text-xs">
