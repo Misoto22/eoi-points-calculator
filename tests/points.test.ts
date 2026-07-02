@@ -8,7 +8,7 @@ import {
 import { defaultSharedCriteria, newJob } from '@/lib/types';
 import type { JobAssessment, SharedCriteria } from '@/lib/types';
 import { occupations } from '@/data/occupations';
-import { statesListing, stateOccupationLists } from '@/data/stateLists';
+import { openListStates, statesListing, stateOccupationLists } from '@/data/stateLists';
 
 function makeShared(overrides: Partial<SharedCriteria> = {}): SharedCriteria {
   return { ...defaultSharedCriteria, ...overrides };
@@ -219,6 +219,39 @@ describe('evaluate', () => {
     const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
     expect(ev.jobs[0].pathways.every((p) => !p.eligible)).toBe(true);
     expect(ev.best).toBeNull();
+  });
+});
+
+// --- occupation list audit (2026-07) ---
+describe('federal classification audit', () => {
+  it.each([
+    ['262113', 'Systems Administrator'],
+    ['261314', 'Software Tester'],
+    ['262111', 'Database Administrator'],
+  ])('%s (%s) is STSOL: not 189-eligible, still 190/491-eligible', (anzsco) => {
+    expect(findOccupation(anzsco)?.list).toBe('STSOL');
+    // 65-point applicant so points are not the limiting factor
+    const shared = makeShared({ age: '25-32', english: 'ielts7', education: 'bachelor', partnerStatus: 'single' });
+    const paths = evaluate(shared, [makeJob({ anzsco })]).jobs[0].pathways;
+    const by = (code: string) => paths.find((p) => p.code === code)!;
+    expect(by('189').listOk).toBe(false);
+    expect(by('189').eligible).toBe(false);
+    expect(by('190').listOk).toBe(true);
+    expect(by('491').listOk).toBe(true);
+  });
+});
+
+describe('open-list states (VIC / TAS / NT)', () => {
+  it('nominate any occupation, even outside their priority sector groups', () => {
+    // 271311 Solicitor is not in the VIC/TAS/NT priority groups, but they have no fixed list
+    const states = statesListing('271311', '190');
+    for (const s of openListStates) expect(states).toContain(s);
+  });
+
+  it('fixed-list states still gate by their curated list', () => {
+    const states = statesListing('271311', '190');
+    expect(states).toContain('SA'); // SA lists LEGAL
+    expect(states).not.toContain('NSW'); // NSW does not
   });
 });
 

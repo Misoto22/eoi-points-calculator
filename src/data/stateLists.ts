@@ -1,13 +1,19 @@
 // State / territory nomination lists for subclass 190 and 491.
 // Each state keeps its OWN occupation list on top of the federal
 // MLTSSL / STSOL / ROL gate — an occupation eligible federally may still
-// be absent from a given state's list.
+// be absent from a given state's fixed list.
 //
-// Snapshot of the 2025–26 program year, curated from each state's official
-// migration site (see `url` per state). States without a fixed published
-// list (VIC ROI, TAS pathways) are represented by their published priority
-// sectors. Reference only — always verify on the official page.
-// Last updated: 2026-03
+// Snapshot of the 2025–26 program year. IMPORTANT: for the FIXED-LIST states
+// (NSW, QLD, WA, SA, ACT) the code sets below are curated sector-group
+// APPROXIMATIONS, not the verbatim published lists — reference only, verify on
+// each state's official page (`url`). Program STRUCTURE per state is verified;
+// exact ANZSCO membership is not.
+//
+// VIC, TAS and NT do NOT gate on a fixed occupation list: they accept any
+// occupation on the relevant federal SOL and select competitively (ROI / matrix).
+// They are handled as `openListStates` below — their entries here are indicative
+// PRIORITY sectors only, not an eligibility gate. Being listed ≠ likely invitation.
+// Last audited: 2026-07 (see docs / audit report)
 
 import type { VisaCode } from './pointsCriteria';
 
@@ -107,8 +113,24 @@ export const stateOccupationLists: Record<StateCode, Record<Extract<VisaCode, '1
   },
 };
 
-/** States whose 190/491 list includes the given occupation (federal gate NOT applied here) */
+/**
+ * States/territories with NO fixed occupation list — they accept any occupation
+ * on the relevant federal SOL and select competitively (ROI / Canberra-style matrix).
+ * Modelled as "open": listed for any occupation that passes the federal gate.
+ * (NT is open onshore; its offshore Priority stream uses NTOMOL — simplified here to
+ * open, erring toward inclusion, matching the onshore reality.)
+ */
+export const openListStates: StateCode[] = ['VIC', 'TAS', 'NT'];
+
+/**
+ * States whose 190/491 list includes the given occupation.
+ * The caller applies the federal MLTSSL/STSOL/ROL gate first, so open-list states
+ * are returned for any occupation reaching this function; fixed-list states are
+ * returned only when their curated list includes the code.
+ */
 export function statesListing(anzsco: string, visa: '190' | '491'): StateCode[] {
   if (!anzsco) return [];
-  return stateCodes.filter((s) => stateOccupationLists[s][visa].includes(anzsco));
+  return stateCodes.filter(
+    (s) => openListStates.includes(s) || stateOccupationLists[s][visa].includes(anzsco),
+  );
 }
