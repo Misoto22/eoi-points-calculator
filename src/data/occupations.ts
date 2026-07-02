@@ -1,6 +1,9 @@
-// 技术移民职业清单 — 来源: immi.homeaffairs.gov.au
-// MLTSSL = 189/190/491, STSOL = 190/491, ROL = 491 only
-// 最后更新: 2026-03
+// 技术移民职业清单 (points-tested GSM visas)
+// Legal basis: Migration (LIN 19/051) Instrument 2019 — register ID F2019L00278
+//   (still in force; latest compilation F2026C00265, 28 Mar 2026). s8/s9/s10 define MLTSSL/STSOL/ROL.
+// Gate: MLTSSL = 189/190/491, STSOL = 190/491, ROL = 491 only.
+// NOTE: the CSOL (Dec 2024) applies to the Skills in Demand subclass 482 only — NOT to 189/190/491.
+// This is a curated subset for the calculator, not the full instrument. 最后审计: 2026-07
 export interface Occupation {
   anzsco: string;
   en: string;
@@ -13,15 +16,15 @@ export const occupations: Occupation[] = [
   { anzsco: '261313', en: 'Software Engineer', zh: '软件工程师', list: 'MLTSSL' },
   { anzsco: '261311', en: 'Analyst Programmer', zh: '分析程序员', list: 'MLTSSL' },
   { anzsco: '263111', en: 'Computer Network and Systems Engineer', zh: '网络与系统工程师', list: 'MLTSSL' },
-  { anzsco: '262113', en: 'Systems Administrator', zh: '系统管理员', list: 'MLTSSL' },
+  { anzsco: '262113', en: 'Systems Administrator', zh: '系统管理员', list: 'STSOL' },
   { anzsco: '262112', en: 'ICT Security Specialist', zh: 'ICT安全专家', list: 'MLTSSL' },
   { anzsco: '261111', en: 'ICT Business Analyst', zh: 'ICT业务分析师', list: 'MLTSSL' },
   { anzsco: '261112', en: 'Systems Analyst', zh: '系统分析师', list: 'MLTSSL' },
   { anzsco: '263312', en: 'Telecommunications Network Engineer', zh: '电信网络工程师', list: 'MLTSSL' },
-  { anzsco: '261314', en: 'Software Tester', zh: '软件测试员', list: 'MLTSSL' },
+  { anzsco: '261314', en: 'Software Tester', zh: '软件测试员', list: 'STSOL' },
   { anzsco: '135112', en: 'ICT Project Manager', zh: 'ICT项目经理', list: 'STSOL' },
   { anzsco: '135111', en: 'Chief Information Officer', zh: '首席信息官', list: 'STSOL' },
-  { anzsco: '262111', en: 'Database Administrator', zh: '数据库管理员', list: 'MLTSSL' },
+  { anzsco: '262111', en: 'Database Administrator', zh: '数据库管理员', list: 'STSOL' },
   { anzsco: '224711', en: 'Management Consultant', zh: '管理咨询师', list: 'STSOL' },
   { anzsco: '221111', en: 'Accountant (General)', zh: '会计师（综合）', list: 'MLTSSL' },
   { anzsco: '221112', en: 'Management Accountant', zh: '管理会计师', list: 'MLTSSL' },
