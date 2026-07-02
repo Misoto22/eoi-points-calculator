@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eoi-calc-v1';
+const CACHE_NAME = 'eoi-calc-v2';
 const STATIC_ASSETS = [
   '/',
   '/locales/en/common.json',

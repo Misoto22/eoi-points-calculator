@@ -1,68 +1,133 @@
-import type { FormData, PointsBreakdown } from './types';
+import type { JobAssessment, SharedCriteria } from './types';
+import type { Occupation } from '@/data/occupations';
+import { occupations } from '@/data/occupations';
+import {
+  MIN_POINTS,
+  jobSelectCriteria,
+  optionPoints,
+  pathways,
+  professionalYearPoints,
+  sharedBonusCriteria,
+  sharedSelectCriteria,
+} from '@/data/pointsCriteria';
+import type { VisaCode } from '@/data/pointsCriteria';
+import type { StateCode } from '@/data/stateLists';
+import { statesListing } from '@/data/stateLists';
 
-export function calculateBreakdown(data: FormData): PointsBreakdown {
-  let age = 0;
-  switch (data.age) {
-    case '18-24': age = 25; break;
-    case '25-32': age = 30; break;
-    case '33-39': age = 25; break;
-    case '40-44': age = 15; break;
-  }
+export interface SharedPoints {
+  age: number;
+  english: number;
+  education: number;
+  partnerStatus: number;
+  stem: number;
+  ausStudy: number;
+  regionalStudy: number;
+  communityLanguage: number;
+}
 
-  let english = 0;
-  switch (data.english) {
-    case 'ielts7': english = 10; break;
-    case 'ielts8': english = 20; break;
-  }
+export interface JobPoints {
+  ausWork: number;
+  overseasWork: number;
+  professionalYear: number;
+}
 
-  let ausWork = 0;
-  switch (data.ausWork) {
-    case '1-3': ausWork = 5; break;
-    case '3-5': ausWork = 10; break;
-    case '5-8': ausWork = 15; break;
-    case '8-10': ausWork = 20; break;
-  }
+export interface PathwayResult {
+  code: VisaCode;
+  bonus: number;
+  total: number;
+  hasOccupation: boolean;
+  /** Federal MLTSSL / STSOL / ROL gate */
+  listOk: boolean;
+  /** States whose own 190/491 list includes the occupation; empty for 189 */
+  states: StateCode[];
+  eligible: boolean;
+}
 
-  let overseasWork = 0;
-  switch (data.overseasWork) {
-    case '3-5': overseasWork = 5; break;
-    case '5-8': overseasWork = 10; break;
-    case '8-10': overseasWork = 15; break;
-  }
+export interface JobEvaluation {
+  job: JobAssessment;
+  index: number;
+  points: JobPoints;
+  /** Shared subtotal + job-specific points, before any nomination bonus */
+  base: number;
+  occupation: Occupation | null;
+  pathways: PathwayResult[];
+}
 
-  let education = 0;
-  switch (data.education) {
-    case 'apprenticeship':
-    case 'cert3':
-    case 'diploma': education = 10; break;
-    case 'bachelor': education = 15; break;
-    case 'phd': education = 20; break;
-  }
+export interface Evaluation {
+  shared: SharedPoints;
+  sharedTotal: number;
+  jobs: JobEvaluation[];
+  best: { total: number; code: VisaCode; job: JobEvaluation } | null;
+  /** Best eligible pathway total, or highest base when nothing is eligible yet */
+  bestTotal: number;
+}
 
-  const stem = data.stem ? 10 : 0;
-  const ausStudy = data.ausStudy ? 5 : 0;
-  const communityLanguage = data.communityLanguage ? 5 : 0;
-  const professionalYear = data.professionalYear ? 5 : 0;
-  const stateNomination = data.stateNomination ? 5 : 0;
-  const regionalNomination = data.regionalNomination ? 15 : 0;
-  const regionalStudy = data.regionalStudy ? 5 : 0;
-
-  let partnerStatus = 0;
-  switch (data.partnerStatus) {
-    case 'single':
-    case 'partnerSkills':
-    case 'partnerCitizen': partnerStatus = 10; break;
-    case 'partnerEnglish': partnerStatus = 5; break;
-  }
-
-  const total = age + english + ausWork + overseasWork + education +
-    stem + ausStudy + communityLanguage + professionalYear +
-    stateNomination + regionalNomination + regionalStudy + partnerStatus;
-
+export function calculateSharedPoints(shared: SharedCriteria): SharedPoints {
   return {
-    age, english, ausWork, overseasWork, education,
-    stem, ausStudy, communityLanguage, professionalYear,
-    stateNomination, regionalNomination, regionalStudy,
-    partnerStatus, total,
+    age: optionPoints(sharedSelectCriteria.age, shared.age),
+    english: optionPoints(sharedSelectCriteria.english, shared.english),
+    education: optionPoints(sharedSelectCriteria.education, shared.education),
+    partnerStatus: optionPoints(sharedSelectCriteria.partnerStatus, shared.partnerStatus),
+    stem: shared.stem ? sharedBonusCriteria.stem : 0,
+    ausStudy: shared.ausStudy ? sharedBonusCriteria.ausStudy : 0,
+    regionalStudy: shared.regionalStudy ? sharedBonusCriteria.regionalStudy : 0,
+    communityLanguage: shared.communityLanguage ? sharedBonusCriteria.communityLanguage : 0,
   };
+}
+
+export function calculateJobPoints(job: JobAssessment): JobPoints {
+  return {
+    ausWork: optionPoints(jobSelectCriteria.ausWork, job.ausWork),
+    overseasWork: optionPoints(jobSelectCriteria.overseasWork, job.overseasWork),
+    professionalYear: job.professionalYear ? professionalYearPoints : 0,
+  };
+}
+
+export function findOccupation(anzsco: string): Occupation | null {
+  if (!anzsco) return null;
+  return occupations.find((o) => o.anzsco === anzsco) ?? null;
+}
+
+/**
+ * Evaluate every skills assessment against every visa pathway.
+ * 189 is gated by the federal MLTSSL list; 190/491 additionally require at
+ * least one state/territory whose own list includes the occupation.
+ */
+export function evaluate(shared: SharedCriteria, jobs: JobAssessment[]): Evaluation {
+  const sharedPoints = calculateSharedPoints(shared);
+  const sharedTotal = Object.values(sharedPoints).reduce((sum, v) => sum + v, 0);
+
+  const jobEvaluations: JobEvaluation[] = jobs.map((job, index) => {
+    const points = calculateJobPoints(job);
+    const base = sharedTotal + points.ausWork + points.overseasWork + points.professionalYear;
+    const occupation = findOccupation(job.anzsco);
+
+    const pathwayResults: PathwayResult[] = pathways.map((p) => {
+      const total = base + p.bonus;
+      const listOk = occupation ? p.lists.includes(occupation.list) : false;
+      const states = p.perState && occupation && listOk && (p.code === '190' || p.code === '491')
+        ? statesListing(occupation.anzsco, p.code)
+        : [];
+      const stateOk = !p.perState || states.length > 0;
+      const eligible = !!occupation && listOk && stateOk && total >= MIN_POINTS;
+      return { code: p.code, bonus: p.bonus, total, hasOccupation: !!occupation, listOk, states, eligible };
+    });
+
+    return { job, index, points, base, occupation, pathways: pathwayResults };
+  });
+
+  let best: Evaluation['best'] = null;
+  for (const je of jobEvaluations) {
+    for (const p of je.pathways) {
+      if (p.eligible && (!best || p.total > best.total)) {
+        best = { total: p.total, code: p.code, job: je };
+      }
+    }
+  }
+
+  const bestTotal = best
+    ? best.total
+    : jobEvaluations.reduce((max, je) => Math.max(max, je.base), 0);
+
+  return { shared: sharedPoints, sharedTotal, jobs: jobEvaluations, best, bestTotal };
 }

@@ -1,28 +1,22 @@
 import React from 'react';
 import '../styles/globals.css';
-import { DM_Sans, DM_Serif_Display } from 'next/font/google';
+import { Noto_Serif_SC } from 'next/font/google';
 import { ThemeProvider } from '../components/ThemeProvider';
 
-const dmSans = DM_Sans({
+const notoSerifSC = Noto_Serif_SC({
+  weight: ['300', '400', '500', '600'],
   subsets: ['latin'],
-  variable: '--font-dm-sans',
-  display: 'swap',
-});
-
-const dmSerifDisplay = DM_Serif_Display({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-dm-serif',
+  variable: '--font-noto-serif',
   display: 'swap',
 });
 
 export const viewport = {
-  themeColor: '#ffffff',
+  themeColor: '#F2EFE6',
 };
 
 export const metadata = {
   title: 'EOI Points Calculator',
-  description: 'The EOI Points Calculator is a tool designed to help potential immigrants to Australia calculate their points based on their personal and professional background.',
+  description: 'Calculate Expression of Interest points for Australian skilled migration (189 / 190 / 491) and compare multiple skills assessments side by side.',
   metadataBase: new URL('https://eoi-points-calculator.vercel.app'),
   openGraph: {
     title: 'EOI Points Calculator',
@@ -64,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${dmSerifDisplay.variable}`}>
+    <html lang="en" suppressHydrationWarning className={notoSerifSC.variable}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -104,7 +98,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="transition-colors duration-200">
+      <body>
         <ThemeProvider
           defaultTheme="system"
           enableSystem

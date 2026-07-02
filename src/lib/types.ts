@@ -1,48 +1,43 @@
-export interface FormData {
+export interface SharedCriteria {
   age: string;
   english: string;
-  ausWork: string;
-  overseasWork: string;
   education: string;
+  partnerStatus: string;
   stem: boolean;
   ausStudy: boolean;
-  communityLanguage: boolean;
-  partnerStatus: string;
-  professionalYear: boolean;
-  stateNomination: boolean;
-  regionalNomination: boolean;
   regionalStudy: boolean;
+  communityLanguage: boolean;
 }
 
-export interface PointsBreakdown {
-  age: number;
-  english: number;
-  ausWork: number;
-  overseasWork: number;
-  education: number;
-  stem: number;
-  ausStudy: number;
-  communityLanguage: number;
-  professionalYear: number;
-  stateNomination: number;
-  regionalNomination: number;
-  regionalStudy: number;
-  partnerStatus: number;
-  total: number;
+/** One skills assessment — occupation-bound criteria are entered per job */
+export interface JobAssessment {
+  id: string;
+  anzsco: string;
+  ausWork: string;
+  overseasWork: string;
+  professionalYear: boolean;
 }
 
-export const defaultFormData: FormData = {
+export const defaultSharedCriteria: SharedCriteria = {
   age: '',
   english: '',
-  ausWork: '',
-  overseasWork: '',
   education: '',
+  partnerStatus: '',
   stem: false,
   ausStudy: false,
-  communityLanguage: false,
-  partnerStatus: '',
-  professionalYear: false,
-  stateNomination: false,
-  regionalNomination: false,
   regionalStudy: false,
+  communityLanguage: false,
 };
+
+let jobSeq = 0;
+
+export function newJob(): JobAssessment {
+  jobSeq += 1;
+  return {
+    id: `j${Date.now().toString(36)}${jobSeq}`,
+    anzsco: '',
+    ausWork: '',
+    overseasWork: '',
+    professionalYear: false,
+  };
+}

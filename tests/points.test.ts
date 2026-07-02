@@ -1,208 +1,236 @@
 import { describe, it, expect } from 'vitest';
-import { calculateBreakdown } from '@/lib/points';
-import { defaultFormData } from '@/lib/types';
-import type { FormData } from '@/lib/types';
+import {
+  calculateSharedPoints,
+  calculateJobPoints,
+  evaluate,
+  findOccupation,
+} from '@/lib/points';
+import { defaultSharedCriteria, newJob } from '@/lib/types';
+import type { JobAssessment, SharedCriteria } from '@/lib/types';
+import { occupations } from '@/data/occupations';
+import { statesListing, stateOccupationLists } from '@/data/stateLists';
 
-function makeForm(overrides: Partial<FormData> = {}): FormData {
-  return { ...defaultFormData, ...overrides };
+function makeShared(overrides: Partial<SharedCriteria> = {}): SharedCriteria {
+  return { ...defaultSharedCriteria, ...overrides };
 }
 
-describe('calculateBreakdown', () => {
-  // --- 空表单 ---
-  it('returns 0 for empty form', () => {
-    const result = calculateBreakdown(defaultFormData);
-    expect(result.total).toBe(0);
-    expect(result.age).toBe(0);
-    expect(result.english).toBe(0);
+function makeJob(overrides: Partial<JobAssessment> = {}): JobAssessment {
+  return { ...newJob(), ...overrides };
+}
+
+describe('calculateSharedPoints', () => {
+  it('returns 0 for empty shared criteria', () => {
+    const p = calculateSharedPoints(defaultSharedCriteria);
+    expect(Object.values(p).reduce((s, v) => s + v, 0)).toBe(0);
   });
 
-  // --- 年龄分数 ---
-  describe('age points', () => {
+  describe('age', () => {
     it.each([
       ['18-24', 25],
       ['25-32', 30],
       ['33-39', 25],
       ['40-44', 15],
     ])('age %s gives %d points', (age, expected) => {
-      const result = calculateBreakdown(makeForm({ age }));
-      expect(result.age).toBe(expected);
+      expect(calculateSharedPoints(makeShared({ age })).age).toBe(expected);
     });
 
     it('invalid age gives 0 points', () => {
-      const result = calculateBreakdown(makeForm({ age: '45-49' }));
-      expect(result.age).toBe(0);
+      expect(calculateSharedPoints(makeShared({ age: '45-49' })).age).toBe(0);
     });
   });
 
-  // --- 英语分数 ---
-  describe('english points', () => {
+  describe('english', () => {
     it('competent (ielts6) gives 0 points', () => {
-      const result = calculateBreakdown(makeForm({ english: 'ielts6' }));
-      expect(result.english).toBe(0);
+      expect(calculateSharedPoints(makeShared({ english: 'ielts6' })).english).toBe(0);
     });
-
     it('proficient (ielts7) gives 10 points', () => {
-      const result = calculateBreakdown(makeForm({ english: 'ielts7' }));
-      expect(result.english).toBe(10);
+      expect(calculateSharedPoints(makeShared({ english: 'ielts7' })).english).toBe(10);
     });
-
     it('superior (ielts8) gives 20 points', () => {
-      const result = calculateBreakdown(makeForm({ english: 'ielts8' }));
-      expect(result.english).toBe(20);
+      expect(calculateSharedPoints(makeShared({ english: 'ielts8' })).english).toBe(20);
     });
   });
 
-  // --- 澳洲工作经验 ---
-  describe('Australian work experience', () => {
-    it.each([
-      ['1-3', 5],
-      ['3-5', 10],
-      ['5-8', 15],
-      ['8-10', 20],
-    ])('%s years gives %d points', (years, expected) => {
-      const result = calculateBreakdown(makeForm({ ausWork: years }));
-      expect(result.ausWork).toBe(expected);
-    });
-  });
-
-  // --- 海外工作经验 ---
-  describe('overseas work experience', () => {
-    it.each([
-      ['3-5', 5],
-      ['5-8', 10],
-      ['8-10', 15],
-    ])('%s years gives %d points', (years, expected) => {
-      const result = calculateBreakdown(makeForm({ overseasWork: years }));
-      expect(result.overseasWork).toBe(expected);
-    });
-
-    it('1-3 years overseas gives 0 points', () => {
-      const result = calculateBreakdown(makeForm({ overseasWork: '1-3' }));
-      expect(result.overseasWork).toBe(0);
-    });
-  });
-
-  // --- 教育分数 ---
-  describe('education points', () => {
+  describe('education', () => {
     it.each([
       ['apprenticeship', 10],
       ['cert3', 10],
       ['diploma', 10],
       ['bachelor', 15],
       ['phd', 20],
-    ])('%s gives %d points', (edu, expected) => {
-      const result = calculateBreakdown(makeForm({ education: edu }));
-      expect(result.education).toBe(expected);
+    ])('%s gives %d points', (education, expected) => {
+      expect(calculateSharedPoints(makeShared({ education })).education).toBe(expected);
     });
   });
 
-  // --- 伴侣分数 ---
   describe('partner status', () => {
     it.each([
       ['single', 10],
       ['partnerSkills', 10],
       ['partnerCitizen', 10],
       ['partnerEnglish', 5],
-    ])('%s gives %d points', (status, expected) => {
-      const result = calculateBreakdown(makeForm({ partnerStatus: status }));
-      expect(result.partnerStatus).toBe(expected);
+    ])('%s gives %d points', (partnerStatus, expected) => {
+      expect(calculateSharedPoints(makeShared({ partnerStatus })).partnerStatus).toBe(expected);
     });
-
     it('no partner status gives 0', () => {
-      const result = calculateBreakdown(makeForm({ partnerStatus: '' }));
-      expect(result.partnerStatus).toBe(0);
+      expect(calculateSharedPoints(makeShared({ partnerStatus: '' })).partnerStatus).toBe(0);
     });
   });
 
-  // --- 奖励分数 ---
-  describe('bonus points', () => {
+  describe('shared bonuses', () => {
     it('STEM gives 10', () => {
-      expect(calculateBreakdown(makeForm({ stem: true })).stem).toBe(10);
+      expect(calculateSharedPoints(makeShared({ stem: true })).stem).toBe(10);
     });
-
     it('Australian study gives 5', () => {
-      expect(calculateBreakdown(makeForm({ ausStudy: true })).ausStudy).toBe(5);
+      expect(calculateSharedPoints(makeShared({ ausStudy: true })).ausStudy).toBe(5);
     });
-
-    it('community language gives 5', () => {
-      expect(calculateBreakdown(makeForm({ communityLanguage: true })).communityLanguage).toBe(5);
-    });
-
-    it('professional year gives 5', () => {
-      expect(calculateBreakdown(makeForm({ professionalYear: true })).professionalYear).toBe(5);
-    });
-
-    it('state nomination gives 5', () => {
-      expect(calculateBreakdown(makeForm({ stateNomination: true })).stateNomination).toBe(5);
-    });
-
-    it('regional nomination gives 15', () => {
-      expect(calculateBreakdown(makeForm({ regionalNomination: true })).regionalNomination).toBe(15);
-    });
-
     it('regional study gives 5', () => {
-      expect(calculateBreakdown(makeForm({ regionalStudy: true })).regionalStudy).toBe(5);
+      expect(calculateSharedPoints(makeShared({ regionalStudy: true })).regionalStudy).toBe(5);
+    });
+    it('community language gives 5', () => {
+      expect(calculateSharedPoints(makeShared({ communityLanguage: true })).communityLanguage).toBe(5);
+    });
+  });
+});
+
+describe('calculateJobPoints', () => {
+  describe('Australian work experience', () => {
+    it.each([
+      ['1-3', 5],
+      ['3-5', 10],
+      ['5-8', 15],
+      ['8-10', 20],
+    ])('%s years gives %d points', (ausWork, expected) => {
+      expect(calculateJobPoints(makeJob({ ausWork })).ausWork).toBe(expected);
     });
   });
 
-  // --- 总分计算 ---
-  describe('total calculation', () => {
-    it('sums all categories correctly', () => {
-      const result = calculateBreakdown(makeForm({
-        age: '25-32',        // 30
-        english: 'ielts8',   // 20
-        ausWork: '8-10',     // 20
-        education: 'phd',    // 20
-        partnerStatus: 'single', // 10
-        stem: true,          // 10
-        ausStudy: true,      // 5
-      }));
-      expect(result.total).toBe(30 + 20 + 20 + 20 + 10 + 10 + 5);
-      expect(result.total).toBe(115);
+  describe('overseas work experience', () => {
+    it.each([
+      ['3-5', 5],
+      ['5-8', 10],
+      ['8-10', 15],
+    ])('%s years gives %d points', (overseasWork, expected) => {
+      expect(calculateJobPoints(makeJob({ overseasWork })).overseasWork).toBe(expected);
     });
-
-    it('maximum possible score', () => {
-      const result = calculateBreakdown(makeForm({
-        age: '25-32',              // 30
-        english: 'ielts8',         // 20
-        ausWork: '8-10',           // 20
-        overseasWork: '8-10',      // 15
-        education: 'phd',          // 20
-        stem: true,                // 10
-        ausStudy: true,            // 5
-        communityLanguage: true,   // 5
-        professionalYear: true,    // 5
-        regionalNomination: true,  // 15
-        regionalStudy: true,       // 5
-        partnerStatus: 'single',   // 10
-      }));
-      expect(result.total).toBe(160);
-    });
-
-    it('minimum passing score scenario', () => {
-      // 25-32岁(30) + bachelor(15) + proficient english(10) + single(10) = 65
-      const result = calculateBreakdown(makeForm({
-        age: '25-32',
-        education: 'bachelor',
-        english: 'ielts7',
-        partnerStatus: 'single',
-      }));
-      expect(result.total).toBe(65);
+    it('1-3 years overseas gives 0 points', () => {
+      expect(calculateJobPoints(makeJob({ overseasWork: '1-3' })).overseasWork).toBe(0);
     });
   });
 
-  // --- 互斥测试（数据层面） ---
-  describe('data integrity', () => {
-    it('both nominations can be set (form handles mutual exclusion)', () => {
-      // calculateBreakdown is a pure function — it doesn't enforce mutual exclusion
-      // The form component handles that; the function just calculates
-      const result = calculateBreakdown(makeForm({
-        stateNomination: true,
-        regionalNomination: true,
-      }));
-      expect(result.stateNomination).toBe(5);
-      expect(result.regionalNomination).toBe(15);
-      expect(result.total).toBe(20);
-    });
+  it('professional year gives 5', () => {
+    expect(calculateJobPoints(makeJob({ professionalYear: true })).professionalYear).toBe(5);
+  });
+});
+
+describe('findOccupation', () => {
+  it('finds an existing ANZSCO code', () => {
+    const occ = findOccupation('261313');
+    expect(occ?.en).toBe('Software Engineer');
+  });
+  it('returns null for empty or unknown codes', () => {
+    expect(findOccupation('')).toBeNull();
+    expect(findOccupation('999999')).toBeNull();
+  });
+});
+
+describe('evaluate', () => {
+  it('returns 0 best total for a completely empty form', () => {
+    const ev = evaluate(defaultSharedCriteria, [makeJob()]);
+    expect(ev.bestTotal).toBe(0);
+    expect(ev.best).toBeNull();
+    expect(ev.sharedTotal).toBe(0);
+  });
+
+  it('sums shared points into every job base', () => {
+    const shared = makeShared({ age: '25-32', english: 'ielts7', education: 'bachelor' }); // 30+10+15=55
+    const ev = evaluate(shared, [makeJob({ ausWork: '3-5' })]); // +10
+    expect(ev.sharedTotal).toBe(55);
+    expect(ev.jobs[0].base).toBe(65);
+  });
+
+  it('189 requires an MLTSSL occupation', () => {
+    const shared = makeShared({ age: '25-32', english: 'ielts7', education: 'bachelor', partnerStatus: 'single' }); // 65
+    // 261313 Software Engineer is MLTSSL
+    const evMltssl = evaluate(shared, [makeJob({ anzsco: '261313' })]);
+    const p189 = evMltssl.jobs[0].pathways.find((p) => p.code === '189')!;
+    expect(p189.listOk).toBe(true);
+    expect(p189.eligible).toBe(true);
+
+    // 135112 ICT Project Manager is STSOL — not valid for 189
+    const evStsol = evaluate(shared, [makeJob({ anzsco: '135112' })]);
+    const p189b = evStsol.jobs[0].pathways.find((p) => p.code === '189')!;
+    expect(p189b.listOk).toBe(false);
+    expect(p189b.eligible).toBe(false);
+  });
+
+  it('adds the pathway bonus to the base for 190 and 491', () => {
+    const shared = makeShared({ age: '25-32' }); // 30
+    const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
+    const paths = ev.jobs[0].pathways;
+    expect(paths.find((p) => p.code === '189')!.total).toBe(30);
+    expect(paths.find((p) => p.code === '190')!.total).toBe(35);
+    expect(paths.find((p) => p.code === '491')!.total).toBe(45);
+  });
+
+  it('190/491 list which states can nominate the occupation', () => {
+    // 261313 Software Engineer (ICT) is on several state lists
+    const ev = evaluate(makeShared({ age: '25-32' }), [makeJob({ anzsco: '261313' })]);
+    const p190 = ev.jobs[0].pathways.find((p) => p.code === '190')!;
+    expect(p190.states.length).toBeGreaterThan(0);
+    expect(p190.states).toEqual(statesListing('261313', '190'));
+    // 189 never carries state tags
+    expect(ev.jobs[0].pathways.find((p) => p.code === '189')!.states).toEqual([]);
+  });
+
+  it('190/491 is ineligible when no state lists the occupation', () => {
+    // 399999 (ROL) — not on any 190 state list, so 190 must be ineligible
+    const shared = makeShared({ age: '25-32', english: 'ielts8', education: 'phd', partnerStatus: 'single' }); // 80
+    const ev = evaluate(shared, [makeJob({ anzsco: '399999' })]);
+    const p190 = ev.jobs[0].pathways.find((p) => p.code === '190')!;
+    expect(p190.listOk).toBe(false); // ROL not in 190 federal lists
+    expect(p190.eligible).toBe(false);
+  });
+
+  it('picks the highest eligible pathway across multiple jobs', () => {
+    const shared = makeShared({ age: '25-32', english: 'ielts7', education: 'bachelor', partnerStatus: 'single' }); // 65
+    const jobs = [
+      makeJob({ anzsco: '261313' }),                 // MLTSSL, base 65
+      makeJob({ anzsco: '221111', ausWork: '3-5' }), // MLTSSL accountant, base 75
+    ];
+    const ev = evaluate(shared, jobs);
+    expect(ev.best).not.toBeNull();
+    // Best should come from job B via 491 (+15): 75 + 15 = 90
+    expect(ev.best!.total).toBe(90);
+    expect(ev.best!.code).toBe('491');
+    expect(ev.bestTotal).toBe(90);
+  });
+
+  it('falls back to highest base when nothing is eligible', () => {
+    // No occupation selected → no pathway eligible, bestTotal = base
+    const shared = makeShared({ age: '25-32', english: 'ielts8' }); // 50
+    const ev = evaluate(shared, [makeJob()]);
+    expect(ev.best).toBeNull();
+    expect(ev.bestTotal).toBe(50);
+  });
+
+  it('below 65 points is never eligible even with a valid occupation', () => {
+    const shared = makeShared({ age: '40-44' }); // 15
+    const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
+    expect(ev.jobs[0].pathways.every((p) => !p.eligible)).toBe(true);
+    expect(ev.best).toBeNull();
+  });
+});
+
+describe('data integrity', () => {
+  it('every state list only references known ANZSCO codes', () => {
+    const known = new Set(occupations.map((o) => o.anzsco));
+    for (const visaLists of Object.values(stateOccupationLists)) {
+      for (const codes of Object.values(visaLists)) {
+        for (const code of codes) {
+          expect(known.has(code)).toBe(true);
+        }
+      }
+    }
   });
 });
