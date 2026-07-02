@@ -183,13 +183,15 @@ describe('evaluate', () => {
     expect(ev.jobs[0].pathways.find((p) => p.code === '189')!.states).toEqual([]);
   });
 
-  it('190/491 is ineligible when no state lists the occupation', () => {
-    // 399999 (ROL) — not on any 190 state list, so 190 must be ineligible
+  it('a ROL occupation is ineligible for 190 (federal gate) but eligible for 491', () => {
+    // 121111 Aquaculture Farmer is ROL: allowed on 491 only, never 190
     const shared = makeShared({ age: '25-32', english: 'ielts8', education: 'phd', partnerStatus: 'single' }); // 80
-    const ev = evaluate(shared, [makeJob({ anzsco: '399999' })]);
-    const p190 = ev.jobs[0].pathways.find((p) => p.code === '190')!;
-    expect(p190.listOk).toBe(false); // ROL not in 190 federal lists
-    expect(p190.eligible).toBe(false);
+    const ev = evaluate(shared, [makeJob({ anzsco: '121111' })]);
+    const by = (code: string) => ev.jobs[0].pathways.find((p) => p.code === code)!;
+    expect(by('190').listOk).toBe(false); // ROL not in 190 federal lists
+    expect(by('190').eligible).toBe(false);
+    expect(by('491').listOk).toBe(true); // ROL is on the 491 gate
+    expect(by('491').eligible).toBe(true); // open-list states nominate it
   });
 
   it('picks the highest eligible pathway across multiple jobs', () => {
