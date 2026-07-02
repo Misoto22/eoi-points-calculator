@@ -1,7 +1,12 @@
-// SkillSelect 邀请轮次数据 — 来源: immi.homeaffairs.gov.au
-// 最后更新: 2026-03
-// 注意: 2024-25 起改为按职业层级分配，最低分因职业而异
-// 此处显示的是整体最低邀请分数，实际热门职业（ICT/会计）可能需要 90+ 分
+// SkillSelect subclass-189 invitation rounds — source: immi.homeaffairs.gov.au SkillSelect
+// Last audited: 2026-07 (corroborated across reputable migration sources; the official DHA
+//   SkillSelect page returns HTTP 403 to automated fetches).
+// NOTE: `minimumPoints` (65) is the per-occupation FLOOR — the lowest score invited for
+//   high-demand trades that round. It is NOT a general pass mark: since 2024-25, 189 runs a
+//   few large, roughly quarterly rounds ranked by occupation, and professional / STEM / medical
+//   occupations typically needed 85-115 points in the same round.
+// A June 2026 round is reported by some secondary sources but is unconfirmed/disputed
+//   (conflicts with the 2025-26 planning ceiling), so it is omitted pending official data.
 export interface InvitationRound {
   date: string;
   visa: '189';
@@ -12,8 +17,8 @@ export interface InvitationRound {
 export const invitationRounds: InvitationRound[] = [
   { date: '2025-11', visa: '189', minimumPoints: 65, invitations: 10000 },
   { date: '2025-08', visa: '189', minimumPoints: 65, invitations: 6887 },
+  { date: '2024-11', visa: '189', minimumPoints: 65, invitations: 15000 },
   { date: '2024-09', visa: '189', minimumPoints: 65, invitations: 7973 },
   { date: '2024-06', visa: '189', minimumPoints: 65, invitations: 5292 },
-  { date: '2024-03', visa: '189', minimumPoints: 65, invitations: 5000 },
-  { date: '2023-12', visa: '189', minimumPoints: 65, invitations: 5000 },
+  { date: '2023-12', visa: '189', minimumPoints: 65, invitations: 8300 },
 ];
