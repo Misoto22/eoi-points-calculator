@@ -82,6 +82,9 @@ All point values, pathway rules and per-state occupation lists live in `src/data
 
 ## 🌐 Deployment
 
-The application is automatically deployed to Vercel when changes are pushed to the main branch.
+Deployment runs **through the GitHub Actions pipeline** (`.github/workflows/ci.yml`): every push to
+`main` is type-checked, tested and built, then deployed to Vercel production; pull requests get preview
+deployments. See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the one-time secret setup
+(`VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`).
 
 - Production: [https://eoi-points-calculator.vercel.app](https://eoi-points-calculator.vercel.app)
