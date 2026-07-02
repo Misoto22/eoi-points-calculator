@@ -78,10 +78,13 @@ reference only.
 
 - **High:** federal legal basis, CSOL determination, the three reclassifications, per-state program structure.
 - **Low:** exact ANZSCO membership of each state's live list (sector-group approximations, unverified).
+- **Done since (follow-up):** the occupation list is now **complete** — all 504 occupations from the
+  LIN 19/051 schedules (MLTSSL 212 + STSOL 215 + ROL 77), replacing the earlier ~70-item curated subset.
+  Counts were verified against the official totals, and the retired codes the old subset carried
+  (`135111` Chief Information Officer, `399999` Technicians and Trades Workers nec — not on any current
+  list) were dropped. `immi.homeaffairs.gov.au` still returns HTTP 403 to automated fetches, so the list
+  was compiled from the LIN 19/051 schedule tables rather than the rendered Home Affairs page.
 - **Not done (future work):**
-  - Full code-by-code reconciliation of all 70 shipped occupations against the rendered primary
-    Home Affairs / F2019L00278 schedule (7 verified this pass; `immi.homeaffairs.gov.au` returns HTTP 403
-    to automated fetches, so a browser pass is needed).
   - Replace fixed-list-state sector approximations (NSW, QLD, WA, SA, ACT) with the actual published
     ANZSCO codes (NSW publishes at 4-digit unit-group level).
   - Program allocations for QLD/TAS/NT 2025–26 are already exhausted — consider surfacing a

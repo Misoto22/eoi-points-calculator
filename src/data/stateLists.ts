@@ -42,7 +42,7 @@ export const states: StateInfo[] = [
 // Codes must exist in occupations.ts.
 const ICT = [
   '261311', '261312', '261313', '261314', '261111', '261112',
-  '262111', '262112', '262113', '263111', '263312', '135111', '135112',
+  '262111', '262112', '262113', '263111', '263312', '135112',
 ];
 const ACCOUNTING = ['221111', '221112', '221113', '221213', '221214'];
 const ENGINEERING = [
@@ -61,7 +61,7 @@ const SCIENCE_AGRI = ['234111', '234112', '234711'];
 const TRADES = ['321211', '334111', '341111', '331111', '331211'];
 const HOSPITALITY = ['351311', '351411'];
 const BUSINESS = ['224711', '149212', '225113', '232411'];
-const ROL_TRADES = ['399999'];
+const ROL_TRADES = ['312999'];
 
 const group = (...groups: string[][]): string[] => Array.from(new Set(groups.flat()));
 
