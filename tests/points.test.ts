@@ -257,6 +257,25 @@ describe('open-list states (VIC / TAS / NT)', () => {
   });
 });
 
+describe('bareScore (裸分)', () => {
+  it('is the base before nomination, distinct from bestTotal', () => {
+    const shared = makeShared({ age: '25-32', english: 'ielts7', education: 'bachelor', partnerStatus: 'single' }); // 65
+    const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]); // MLTSSL, base 65
+    expect(ev.bareScore).toBe(65); // no +5/+15 nomination bonus
+    expect(ev.bestTotal).toBe(80); // best pathway 491 = 65 + 15
+    expect(ev.best?.code).toBe('491');
+  });
+
+  it('takes the highest base across multiple jobs', () => {
+    const shared = makeShared({ age: '25-32' }); // 30
+    const ev = evaluate(shared, [
+      makeJob({ anzsco: '261313' }), // base 30
+      makeJob({ anzsco: '221111', ausWork: '5-8' }), // base 30 + 15 = 45
+    ]);
+    expect(ev.bareScore).toBe(45);
+  });
+});
+
 describe('data integrity', () => {
   it('every state list only references known ANZSCO codes', () => {
     const known = new Set(occupations.map((o) => o.anzsco));

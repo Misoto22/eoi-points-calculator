@@ -101,7 +101,7 @@ export const pathways: Pathway[] = [
 
 export const MIN_POINTS = 65;
 export const GOAL_RANGE = { min: 65, max: 120, step: 5 } as const;
-export const MAX_JOBS = 4;
+export const MAX_JOBS = 5;
 
 export function optionPoints(options: PointOption[], value: string): number {
   const opt = options.find((o) => o.value === value && value !== '');
