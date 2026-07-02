@@ -17,7 +17,7 @@ import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { evaluate } from '@/lib/points';
 import type { JobAssessment, SharedCriteria } from '@/lib/types';
 import { defaultSharedCriteria, newJob } from '@/lib/types';
-import { persistState, readInitialState, stateToQueryString } from '@/lib/urlState';
+import { mergeQueryString, persistState, readInitialState } from '@/lib/urlState';
 import { GOAL_RANGE, MAX_JOBS } from '@/data/pointsCriteria';
 import '@/app/i18n/client';
 
@@ -26,7 +26,7 @@ function PageSkeleton() {
     <div className="max-w-[780px] mx-auto px-[26px] pt-[34px]">
       <div className="h-4 w-28 mb-[72px]" style={{ backgroundColor: 'var(--hair)' }} />
       <div className="h-10 w-3/4 mb-[60px]" style={{ backgroundColor: 'var(--hair)' }} />
-      <div className="grid gap-x-9 gap-y-[30px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))' }}>
+      <div className="grid gap-x-9 gap-y-[30px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(290px, 100%), 1fr))' }}>
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i}>
             <div className="h-3 w-24 mb-2.5" style={{ backgroundColor: 'var(--hair)' }} />
@@ -67,7 +67,7 @@ const PageContent = () => {
     if (firstRender.current) { firstRender.current = false; return; }
     const id = setTimeout(() => {
       persistState(shared, jobs);
-      const qs = stateToQueryString(shared, jobs);
+      const qs = mergeQueryString(window.location.search, shared, jobs);
       window.history.replaceState(null, '', window.location.pathname + (qs ? `?${qs}` : '') + window.location.hash);
     }, 250);
     return () => clearTimeout(id);
@@ -171,7 +171,7 @@ const PageContent = () => {
       {/* 02 — Skills assessments */}
       <section
         className="mt-[72px] relative"
-        style={{ zIndex: sec2Active ? 30 : 'auto', animation: 'eoiFadeUp 0.7s ease 0.16s both' }}
+        style={{ zIndex: sec2Active ? 30 : 'auto', animation: 'eoiFadeUp 0.7s ease 0.16s backwards' }}
       >
         <SectionHeading num="02" title={t('sections.jobs')} side="ASSESSMENTS" />
         <p className="mt-3.5 mb-0 text-[12.5px] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>

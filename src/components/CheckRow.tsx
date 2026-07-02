@@ -13,6 +13,8 @@ export default function CheckRow({ label, checked, points, onToggle }: CheckRowP
   return (
     <button
       type="button"
+      role="checkbox"
+      aria-checked={checked}
       onClick={onToggle}
       className="flex items-start gap-3 w-full px-1.5 py-[13px] cursor-pointer text-left hover:bg-[var(--hover)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:-outline-offset-1"
       style={{
@@ -24,6 +26,7 @@ export default function CheckRow({ label, checked, points, onToggle }: CheckRowP
       }}
     >
       <span
+        aria-hidden="true"
         className="w-[15px] h-[15px] flex-none mt-0.5 flex items-center justify-center"
         style={{
           border: '1px solid var(--muted)',

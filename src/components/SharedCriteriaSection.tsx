@@ -31,14 +31,14 @@ export default function SharedCriteriaSection({
   return (
     <section
       className="mt-[76px] relative"
-      style={{ zIndex: zActive ? 30 : 'auto', animation: 'eoiFadeUp 0.7s ease 0.08s both' }}
+      style={{ zIndex: zActive ? 30 : 'auto', animation: 'eoiFadeUp 0.7s ease 0.08s backwards' }}
     >
       <SectionHeading num="01" title={t('sections.shared')} side="SHARED" />
       <p className="mt-3.5 mb-0 text-[12.5px] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
         {t('sharedNote')}
       </p>
 
-      <div className="grid gap-x-9 gap-y-[30px] mt-[30px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))' }}>
+      <div className="grid gap-x-9 gap-y-[30px] mt-[30px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(290px, 100%), 1fr))' }}>
         {SELECT_FIELDS.map((field) => {
           const key = `sh:${field}`;
           return (
@@ -66,7 +66,7 @@ export default function SharedCriteriaSection({
           <div className="text-[11.5px] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
             {t(`groups.${group.id}`)}
           </div>
-          <div className="grid gap-x-9 mt-1.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))' }}>
+          <div className="grid gap-x-9 mt-1.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(290px, 100%), 1fr))' }}>
             {group.items.map((name: SharedBonusField) => (
               <CheckRow
                 key={name}

@@ -17,7 +17,8 @@
   --hover: #ece8da;
   --ink: #2b2a24;
   --ink-soft: #4a473d;
-  --muted: #8c8674;
+  /* ≥4.5:1 on both --bg and --surface (WCAG AA for the small text this tier carries) */
+  --muted: #6f6a54;
   --hair: #dcd7c6;
   --hair-soft: #e6e1d1;
   --danger: #a5502f;
@@ -50,13 +51,13 @@
   --hover: #2d2b22;
   --ink: #eae6d8;
   --ink-soft: #cfc9b8;
-  --muted: #8f8977;
+  --muted: #98927f;
   --hair: #39362c;
   --hair-soft: #2f2d24;
   --danger: #d89a7e;
   --band-bg: #efecdf;
   --band-ink: #2b2a24;
-  --band-muted: #8d8776;
+  --band-muted: #6f6a58;
   --band-soft: #575347;
   --band-hair: #d5cfbc;
   --band-hair-soft: #e2dcca;
@@ -71,13 +72,13 @@
     --hover: #2d2b22;
     --ink: #eae6d8;
     --ink-soft: #cfc9b8;
-    --muted: #8f8977;
+    --muted: #98927f;
     --hair: #39362c;
     --hair-soft: #2f2d24;
     --danger: #d89a7e;
     --band-bg: #efecdf;
     --band-ink: #2b2a24;
-    --band-muted: #8d8776;
+    --band-muted: #6f6a58;
     --band-soft: #575347;
     --band-hair: #d5cfbc;
     --band-hair-soft: #e2dcca;
@@ -112,7 +113,17 @@ body {
 
 input::placeholder {
   color: inherit;
-  opacity: 0.4;
+  opacity: 0.55;
+}
+
+/* Replace the browser's blue focus halo with a theme-aware ring; keep it keyboard-only */
+.theme-toggle:focus {
+  outline: none;
+}
+
+.theme-toggle:focus-visible {
+  outline: 1px solid var(--muted);
+  outline-offset: 3px;
 }
 
 /* Scrollbar */

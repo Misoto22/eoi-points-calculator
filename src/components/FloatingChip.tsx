@@ -23,7 +23,7 @@ export default function FloatingChip({ visible, total, onClick }: FloatingChipPr
         color: 'var(--band-ink)',
         border: '1px solid var(--band-border)',
         boxShadow: 'var(--shadow)',
-        animation: 'eoiFadeUp 0.35s ease both',
+        animation: 'eoiFadeUp 0.35s ease backwards',
       }}
     >
       <span className="text-[10.5px] tracking-[0.18em] font-medium" style={{ color: 'var(--band-muted)' }}>

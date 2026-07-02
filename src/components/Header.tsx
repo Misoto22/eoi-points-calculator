@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
 
@@ -13,30 +14,39 @@ export default function Header() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
 
+  // Theme is only known on the client; render the pre-mount state identically
+  // to the server markup to avoid hydration mismatches.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
-  const resolvedTheme = theme === 'system'
-    ? (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    : theme;
+  const resolvedTheme = mounted
+    ? (theme === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : theme)
+    : 'light';
 
   const langButton = (code: 'zh' | 'en', label: string) => (
     <button
       type="button"
       onClick={() => i18n.changeLanguage(code)}
-      className="cursor-pointer text-xs py-1"
+      aria-pressed={lang === code}
+      className="cursor-pointer text-xs px-1.5 py-2 -my-1"
       style={{
         background: 'none',
         border: 'none',
         color: lang === code ? 'var(--ink)' : 'var(--muted)',
-        borderBottom: lang === code ? '1px solid var(--ink)' : '1px solid transparent',
         letterSpacing: code === 'zh' ? '0.06em' : '0.08em',
       }}
     >
-      {label}
+      <span style={{ borderBottom: lang === code ? '1px solid var(--ink)' : '1px solid transparent', paddingBottom: 2 }}>
+        {label}
+      </span>
     </button>
   );
 
   return (
-    <header className="pt-[34px]" style={{ animation: 'eoiFadeUp 0.7s ease both' }}>
+    <header className="pt-[34px]" style={{ animation: 'eoiFadeUp 0.7s ease backwards' }}>
       <div className="flex justify-between items-center gap-4">
         <div className="text-[11.5px] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
           EOI&nbsp;POINTS
@@ -51,14 +61,22 @@ export default function Header() {
             type="button"
             onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle theme"
+            aria-pressed={resolvedTheme === 'dark'}
             title={t('themeHint')}
-            className="w-[26px] h-[26px] rounded-full cursor-pointer p-0"
-            style={{
-              border: '1px solid var(--muted)',
-              background: resolvedTheme === 'dark' ? 'var(--ink)' : 'transparent',
-              transition: 'background 0.3s ease',
-            }}
-          />
+            className="theme-toggle w-[38px] h-[38px] -m-1.5 rounded-full cursor-pointer p-0 flex items-center justify-center"
+            style={{ background: 'none', border: 'none' }}
+          >
+            <span
+              aria-hidden="true"
+              className="block w-[26px] h-[26px] rounded-full"
+              style={{
+                border: '1px solid var(--muted)',
+                background: 'linear-gradient(90deg, var(--ink) 50%, transparent 50%)',
+                transform: resolvedTheme === 'dark' ? 'rotate(180deg)' : 'none',
+                transition: 'transform 0.35s ease',
+              }}
+            />
+          </button>
         </div>
       </div>
       <h1

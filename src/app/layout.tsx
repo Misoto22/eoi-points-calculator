@@ -11,7 +11,10 @@ const notoSerifSC = Noto_Serif_SC({
 });
 
 export const viewport = {
-  themeColor: '#F2EFE6',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F2EFE6' },
+    { media: '(prefers-color-scheme: dark)', color: '#1E1C17' },
+  ],
 };
 
 export const metadata = {

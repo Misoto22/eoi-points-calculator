@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
@@ -15,16 +15,20 @@ interface ReferenceSectionProps {
 
 function Collapsible({ title, children }: { title: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const contentId = useId();
   return (
     <div style={{ borderBottom: '1px solid var(--hair)' }}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={contentId}
         className="w-full flex justify-between items-center gap-3.5 py-[18px] cursor-pointer text-left hover:text-[var(--muted)]"
         style={{ background: 'none', border: 'none', color: 'inherit' }}
       >
         <span className="text-[17px]" style={{ fontFamily: 'var(--font-serif)' }}>{title}</span>
         <span
+          aria-hidden="true"
           className="text-lg font-light leading-none"
           style={{ color: 'var(--muted)', transition: 'transform 0.35s ease', transform: open ? 'rotate(45deg)' : 'rotate(0deg)' }}
         >
@@ -32,6 +36,9 @@ function Collapsible({ title, children }: { title: string; children: ReactNode }
         </span>
       </button>
       <div
+        id={contentId}
+        // Clipped content must also leave the tab order and accessibility tree
+        inert={!open}
         className="grid"
         style={{ gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1)' }}
       >
@@ -49,7 +56,7 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
   const jobsWithOcc = evaluation.jobs.filter((je) => je.occupation);
 
   return (
-    <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.3s both' }}>
+    <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.3s backwards' }}>
       <SectionHeading num="04" title={t('sections.reference')} side="REFERENCE" />
 
       <div className="mt-[18px]">
@@ -138,7 +145,7 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[11.5px] tracking-[0.08em] underline underline-offset-4 whitespace-nowrap hover:text-[var(--ink)]"
+                  className="text-[11.5px] tracking-[0.08em] underline underline-offset-4 whitespace-nowrap py-2 -my-2 hover:text-[var(--ink)]"
                   style={{ color: 'var(--muted)', textDecorationColor: 'var(--hair)' }}
                 >
                   {t('visit')}&nbsp;↗

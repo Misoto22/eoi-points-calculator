@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eoi-calc-v2';
+const CACHE_NAME = 'eoi-calc-v3';
 const STATIC_ASSETS = [
   '/',
   '/locales/en/common.json',
@@ -21,25 +21,39 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+function fetchAndCache(request) {
+  return fetch(request).then((response) => {
+    if (response.ok && request.url.startsWith(self.location.origin)) {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+    }
+    return response;
+  });
+}
+
 self.addEventListener('fetch', (event) => {
-  // Network-first for navigation, cache-first for static assets
-  if (event.request.mode === 'navigate') {
+  const { request } = event;
+
+  // Network-first for navigation so deploys reach users immediately
+  if (request.mode === 'navigate') {
+    event.respondWith(fetch(request).catch(() => caches.match('/')));
+    return;
+  }
+
+  // Hashed build assets are immutable — cache-first is safe
+  if (request.url.includes('/_next/static/')) {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match('/'))
+      caches.match(request).then((cached) => cached || fetchAndCache(request))
     );
     return;
   }
 
+  // Everything else (locales, icons…) is stale-while-revalidate:
+  // serve the cache for speed, refresh it in the background
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).then((response) => {
-        if (response.ok && event.request.url.startsWith(self.location.origin)) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-        }
-        return response;
-      });
+    caches.match(request).then((cached) => {
+      const refresh = fetchAndCache(request).catch(() => cached);
+      return cached || refresh;
     })
   );
 });

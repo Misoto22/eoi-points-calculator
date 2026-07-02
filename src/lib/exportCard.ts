@@ -29,6 +29,8 @@ export interface CardOptions {
   theme: CardTheme;
   labels: CardLabels;
   dateLabel: string;
+  /** Device-pixel multiplier for the canvas backing store (default 2 = 2160×2880 export) */
+  scale?: number;
 }
 
 const SHARED_ROW_ORDER = [
@@ -50,8 +52,12 @@ export async function ensureCardFonts(): Promise<void> {
   ]).catch(() => { /* fall back to system serif */ });
 }
 
-/** Draw the 1080×1440 share card. Colors come from cardThemes, values from the evaluation. */
-export function drawCard({ evaluation, goal, lang, theme, labels, dateLabel }: CardOptions): HTMLCanvasElement {
+/**
+ * Draw the share card. Layout runs in 1080×1440 logical pixels; the canvas
+ * backing store is `scale`× larger so the exported PNG stays crisp on
+ * high-DPI screens. Colors come from cardThemes, values from the evaluation.
+ */
+export function drawCard({ evaluation, goal, lang, theme, labels, dateLabel, scale = 2 }: CardOptions): HTMLCanvasElement {
   const ev = evaluation;
   // Headline number is the bare score (裸分); pathway rows below carry the +5/+15 route totals.
   const total = ev.bareScore;
@@ -59,9 +65,10 @@ export function drawCard({ evaluation, goal, lang, theme, labels, dateLabel }: C
   const W = 1080, H = 1440, P = 96, IW = W - P * 2;
 
   const cv = document.createElement('canvas');
-  cv.width = W;
-  cv.height = H;
+  cv.width = W * scale;
+  cv.height = H * scale;
   const ctx = cv.getContext('2d')!;
+  ctx.scale(scale, scale);
 
   const setLS = (v: string) => {
     try {
