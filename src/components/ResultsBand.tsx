@@ -80,7 +80,9 @@ export default function ResultsBand({
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
 
-  const total = evaluation.bestTotal;
+  // Headline reflects the bare score (裸分); per-pathway rows below show the
+  // nomination-inclusive totals (+5 / +15) and eligibility.
+  const total = evaluation.bareScore;
 
   let statusLine: string;
   let warnColor = 'var(--band-muted)';

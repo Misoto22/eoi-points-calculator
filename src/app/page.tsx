@@ -57,8 +57,9 @@ const PageContent = () => {
   const bandRef = useRef<HTMLDivElement | null>(null);
 
   const evaluation = useMemo(() => evaluate(shared, jobs), [shared, jobs]);
-  const totalPoints = evaluation.bestTotal;
-  const displayTotal = useAnimatedNumber(totalPoints);
+  // Headline number is the bare score (裸分) — before any state/regional nomination bonus.
+  const bareScore = evaluation.bareScore;
+  const displayTotal = useAnimatedNumber(bareScore);
 
   // Persist to localStorage + keep the URL shareable (debounced)
   const firstRender = useRef(true);
@@ -153,7 +154,7 @@ const PageContent = () => {
   if (!ready || !mounted) return <PageSkeleton />;
 
   const anySearchOpen = Object.values(jobUI).some((u) => u?.open);
-  const chipVisible = chipShown && totalPoints > 0 && !exportOpen && !openSelect && !anySearchOpen;
+  const chipVisible = chipShown && bareScore > 0 && !exportOpen && !openSelect && !anySearchOpen;
   const sec2Active = (openSelect !== null && !openSelect.startsWith('sh:')) || anySearchOpen;
 
   return (
@@ -223,7 +224,7 @@ const PageContent = () => {
         bandRef={bandRef}
       />
 
-      <ReferenceSection totalPoints={totalPoints} evaluation={evaluation} />
+      <ReferenceSection totalPoints={bareScore} evaluation={evaluation} />
 
       {/* Footer */}
       <footer
@@ -256,7 +257,7 @@ const PageContent = () => {
         </div>
       </footer>
 
-      <FloatingChip visible={chipVisible} total={totalPoints} onClick={scrollToResults} />
+      <FloatingChip visible={chipVisible} total={bareScore} onClick={scrollToResults} />
 
       <ExportModal
         open={exportOpen}

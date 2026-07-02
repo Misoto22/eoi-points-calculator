@@ -53,7 +53,8 @@ export async function ensureCardFonts(): Promise<void> {
 /** Draw the 1080×1440 share card. Colors come from cardThemes, values from the evaluation. */
 export function drawCard({ evaluation, goal, lang, theme, labels, dateLabel }: CardOptions): HTMLCanvasElement {
   const ev = evaluation;
-  const total = ev.bestTotal;
+  // Headline number is the bare score (裸分); pathway rows below carry the +5/+15 route totals.
+  const total = ev.bareScore;
   const C = cardPalettes[theme];
   const W = 1080, H = 1440, P = 96, IW = W - P * 2;
 

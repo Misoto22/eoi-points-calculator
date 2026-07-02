@@ -84,7 +84,7 @@
   "occNo": "未找到匹配的职业",
   "occHint": "MLTSSL = 189/190/491 · STSOL = 190/491 · ROL = 仅 491",
   "occCount": "{{n}} / {{m}} 条",
-  "totalCaps": "最高总分 · BEST TOTAL",
+  "totalCaps": "裸分 · 未含州担保加分",
   "points": "分",
   "minimum": "最低要求",
   "goal": "目标",

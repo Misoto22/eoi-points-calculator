@@ -60,6 +60,8 @@ export interface Evaluation {
   best: { total: number; code: VisaCode; job: JobEvaluation } | null;
   /** Best eligible pathway total, or highest base when nothing is eligible yet */
   bestTotal: number;
+  /** Highest base score across jobs — the "裸分" before any state/regional nomination bonus */
+  bareScore: number;
 }
 
 export function calculateSharedPoints(shared: SharedCriteria): SharedPoints {
@@ -125,9 +127,9 @@ export function evaluate(shared: SharedCriteria, jobs: JobAssessment[]): Evaluat
     }
   }
 
-  const bestTotal = best
-    ? best.total
-    : jobEvaluations.reduce((max, je) => Math.max(max, je.base), 0);
+  // Bare score (裸分): the highest base across jobs, before any nomination bonus.
+  const bareScore = jobEvaluations.reduce((max, je) => Math.max(max, je.base), 0);
+  const bestTotal = best ? best.total : bareScore;
 
-  return { shared: sharedPoints, sharedTotal, jobs: jobEvaluations, best, bestTotal };
+  return { shared: sharedPoints, sharedTotal, jobs: jobEvaluations, best, bestTotal, bareScore };
 }
