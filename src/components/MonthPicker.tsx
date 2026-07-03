@@ -162,11 +162,12 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
             {editingYear ? (
               <input
                 autoFocus
+                inputMode="numeric"
                 value={yearDraft}
                 onChange={(e) => setYearDraft(e.target.value.replace(/\D/g, '').slice(0, 4))}
                 onBlur={commitYearDraft}
                 onKeyDown={(e) => { if (e.key === 'Enter') commitYearDraft(); }}
-                className="w-16 text-center text-[15px] tabular-nums outline-none"
+                className="w-16 text-center text-[16px] tabular-nums outline-none"
                 style={{ fontFamily: 'var(--font-serif)', background: 'var(--bg)', border: '1px solid var(--hair)', color: 'var(--ink)', padding: '1px 0' }}
               />
             ) : (
