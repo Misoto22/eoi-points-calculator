@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 
 export interface SelectOption {
   value: string;
@@ -35,6 +35,13 @@ export default function SelectField({
   const listId = `${id}-list`;
   const listRef = useRef<HTMLDivElement | null>(null);
   const selected = options.find((o) => o.value === value && value !== '') ?? null;
+
+  // If the lock engages while the listbox is open (e.g. the paired date is
+  // filled via keyboard), force-close so the list doesn't strand open with a
+  // disabled trigger. Parent toggle on an open select sets openSelect to null.
+  useEffect(() => {
+    if (lockedNote && open) onToggle();
+  }, [lockedNote, open, onToggle]);
 
   const moveOptionFocus = (delta: number) => {
     const opts = listRef.current
