@@ -257,7 +257,8 @@ export default function ResultsBand({
 
         {suggestions.length > 0 && (
           <div className="mt-3.5">
-            {suggestions.slice(0, 3).map((s) => (
+            {/* The MLTSSL structural hint unlocks 189 — never crowd it out */}
+            {[...suggestions.filter((s) => s.key === 'mltssl'), ...suggestions.filter((s) => s.key !== 'mltssl')].slice(0, 3).map((s) => (
               <div key={s.key} className="flex gap-3 items-baseline pt-2 text-[12px] leading-[1.5]">
                 <span className="flex-none text-[12.5px] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>+{s.points}</span>
                 <span style={{ color: 'var(--band-soft)' }}>{t(`sug.${s.key}`)}</span>

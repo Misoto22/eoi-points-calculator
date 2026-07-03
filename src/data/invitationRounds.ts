@@ -5,8 +5,9 @@
 //   high-demand trades that round. It is NOT a general pass mark: since 2024-25, 189 runs a
 //   few large, roughly quarterly rounds ranked by occupation, and professional / STEM / medical
 //   occupations typically needed 85-115 points in the same round.
-// A June 2026 round is reported by some secondary sources but is unconfirmed/disputed
-//   (conflicts with the 2025-26 planning ceiling), so it is omitted pending official data.
+// The 2026-06 round (4 Jun 2026) is confirmed on the official SkillSelect page:
+//   10,000 invitations. Its 65-pt trades floor comes from corroborated community
+//   trackers (RACC, Magpie Consultants) — DHA does not publish per-round floors.
 export interface InvitationRound {
   date: string;
   visa: '189';
@@ -15,6 +16,7 @@ export interface InvitationRound {
 }
 
 export const invitationRounds: InvitationRound[] = [
+  { date: '2026-06', visa: '189', minimumPoints: 65, invitations: 10000 },
   { date: '2025-11', visa: '189', minimumPoints: 65, invitations: 10000 },
   { date: '2025-08', visa: '189', minimumPoints: 65, invitations: 6887 },
   { date: '2024-11', visa: '189', minimumPoints: 65, invitations: 15000 },

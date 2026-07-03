@@ -7,7 +7,7 @@ import CheckRow from './CheckRow';
 import SubMonthRow from './SubMonthRow';
 import type { PlanningDates, SharedCriteria } from '@/lib/types';
 import { isYm } from '@/lib/types';
-import { addMonths, monthsBetween, naatiExpiryMonth } from '@/lib/timeline';
+import { ENGLISH_VALIDITY_MONTHS, addMonths, monthsBetween, naatiExpiryMonth } from '@/lib/timeline';
 import {
   bonusGroups,
   sharedBonusCriteria,
@@ -42,7 +42,7 @@ export default function SharedCriteriaSection({
       : monthsBetween(dates.birth, today) < 18 * 12 ? t('tlUnder18') : undefined)
     : undefined;
   const englishNote = isYm(dates.englishTest)
-    ? t('tlEnglishExpires', { date: addMonths(dates.englishTest, 36) })
+    ? t('tlEnglishExpires', { date: addMonths(dates.englishTest, ENGLISH_VALIDITY_MONTHS) })
     : undefined;
   const naatiNote = shared.communityLanguage && isYm(dates.naatiCert)
     ? t('tlNaatiExpires', { date: naatiExpiryMonth(dates.naatiCert) })

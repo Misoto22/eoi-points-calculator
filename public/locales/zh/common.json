@@ -26,7 +26,7 @@
     "lang": "语言"
   },
   "boxes": {
-    "stem": "STEM / IT 研究型硕士或博士（2 年）",
+    "stem": "STEM / IT 研究型硕士或博士(澳洲院校,2 年)",
     "ausStudy": "在澳完成 2 年全日制学习",
     "regionalStudy": "在偏远地区学习 2 年",
     "communityLanguage": "NAATI 社区语言认证（CCL / 口译 / 笔译）"
@@ -54,7 +54,7 @@
     "partnerStatus": {
       "none": "伴侣不符合加分条件",
       "single": "单身申请人",
-      "partnerSkills": "伴侣持有技术评估",
+      "partnerSkills": "配偶/伴侣有职业评估且英语达胜任水平",
       "partnerCitizen": "伴侣为澳洲公民 / 永居",
       "partnerEnglish": "伴侣具备普通英语"
     },
@@ -159,7 +159,7 @@
     },
     "NT": {
       "how": "离岸 MOL 清单 · 在岸看北领地关联",
-      "tip": "2025–26 名额极少，以特殊情形为主"
+      "tip": "2025–26 约 1,650 个名额;在岸申请需北领地关联"
     }
   },
   "suggestionCaps": "如何获得更多分数 · SUGGESTIONS",

@@ -100,9 +100,17 @@ const PREFIX_RULES: Record<string, AuthorityInfo> = {
   // Source: https://www.amsa.gov.au/qualifications-training/international-qualifications/immigration-skills-assessment-mariners
   '2312': { authority: 'AMSA', validityYears: 3 },
 
+  // ── Child Care Centre Manager ── ACECQA, 3 years ─────────────────────────
+  // ACECQA has been the designated authority for 134111 since 15 Nov 2019.
+  // Source: https://www.acecqa.gov.au/qualifications/assessment/skilled-migration
+  '134111': { authority: 'ACECQA', validityYears: 3 },
+
   // ── School Teachers ── AITSL, 3 years ───────────────────────────────────
   // Source: https://www.aitsl.edu.au/teach/understand-the-teaching-profession/teacher-assessment-referral
+  // Exception: 241111 Early Childhood Teacher moved from AITSL to ACECQA
+  // effective 7 Dec 2024 (longest-prefix rule below overrides '241').
   '241':  { authority: 'AITSL', validityYears: 3 }, // School Teachers
+  '241111': { authority: 'ACECQA', validityYears: 3 },
 
   // ── Nursing and Midwifery ── ANMAC, 3 years ─────────────────────────────
   // Source: https://anmac.org.au/assessment/skills-assessment

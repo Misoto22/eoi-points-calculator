@@ -145,7 +145,8 @@ export function groupCauses(causes: TimelineCause[]): GroupedCause[] {
 // —— constants ———————————————————————————————————————————————————————————————
 
 const HORIZON_MONTHS = 60;
-const ENGLISH_VALIDITY_MONTHS = 36;
+/** Points-test English results must come from a test taken in the prior 3 years */
+export const ENGLISH_VALIDITY_MONTHS = 36;
 
 // Causes that carry no score change — only a user warning.
 const WARNING_KINDS = new Set<TimelineCause['kind']>([
