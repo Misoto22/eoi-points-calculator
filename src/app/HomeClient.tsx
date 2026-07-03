@@ -233,6 +233,9 @@ const PageContent = () => {
             collapsed={openJobId !== job.id}
             onToggleCollapse={() => {
               setOpenSelect(null);
+              // Close this card's occupation search too, so the collapsing body
+              // can clip cleanly (overflow flips to hidden mid-transition).
+              patchJobUI(job.id, { open: false });
               setOpenJobId(openJobId === job.id ? null : job.id);
             }}
           />
