@@ -18,13 +18,14 @@
 - 📊 **Real-time Calculation**: Instant EOI points calculation based on current immigration rules
 - 🧭 **Multiple Skills Assessments**: Hold several nominated occupations side by side — shared criteria (age, English, education, partner, bonuses) apply to all, while work experience and Professional Year are entered per occupation
 - 🗺️ **Per-state Pathways**: 189 / 190 / 491 evaluated per assessment, including each state & territory's own 190/491 occupation list — the tool tags which states can nominate your occupation
+- 📅 **Score Timeline**: Enter real months (birth, work start, test/assessment dates) to project your score over the next 5 years — age-bracket drops, work milestones, and credential expiries (English test, skills assessment per authority, NAATI CCL) plotted on a step chart
 - 🖼️ **Share Card Export**: Generate a Cream or Charcoal PNG summary card of your result
 - 🌐 **Bilingual Support**: Full support for English and Simplified Chinese (简体中文)
 - 📱 **Responsive Design**: Optimized for all devices from mobile to desktop
 - 🎨 **Dark/Light Mode**: System preference detection with manual override
 - 🔗 **Shareable Links**: Full form state encoded in the URL for one-click sharing
 - 💾 **Persistent Storage**: Form data saved locally for convenience
-- 🔍 **SEO Optimized**: Complete Open Graph and Twitter Cards integration
+- 🔍 **SEO Optimized**: Complete Open Graph and Twitter Cards integration, with a dynamic per-score OG image for shared links
 
 All point values, pathway rules and per-state occupation lists live in `src/data/` (`pointsCriteria.ts`, `occupations.ts`, `stateLists.ts`) — nothing is hardcoded in the UI or the calculation engine.
 

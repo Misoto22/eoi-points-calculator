@@ -75,7 +75,15 @@ export default function RootLayout({
                 root.classList.add(theme === 'system' ? systemTheme : theme);
               } catch (e) {}
               if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js').catch(() => {});
+                // Dev chunks are not content-hashed, so a cache-first SW serves
+                // stale code — register in production only, clean up elsewhere.
+                if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+                  navigator.serviceWorker.getRegistrations()
+                    .then((rs) => rs.forEach((r) => r.unregister()))
+                    .catch(() => {});
+                } else {
+                  navigator.serviceWorker.register('/sw.js').catch(() => {});
+                }
               }
             `,
           }}

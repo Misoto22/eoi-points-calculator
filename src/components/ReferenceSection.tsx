@@ -57,7 +57,7 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
 
   return (
     <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.3s backwards' }}>
-      <SectionHeading num="04" title={t('sections.reference')} side="REFERENCE" />
+      <SectionHeading num="05" title={t('sections.reference')} side="REFERENCE" />
 
       <div className="mt-[18px]">
         <Collapsible title={t('roundsTitle')}>

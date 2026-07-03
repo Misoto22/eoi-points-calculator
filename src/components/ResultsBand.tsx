@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import type { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
@@ -20,7 +21,9 @@ interface ResultsBandProps {
   onCopyLink: () => void;
   copied: boolean;
   onReset: () => void;
-  bandRef: RefObject<HTMLDivElement | null>;
+  bandRef?: RefObject<HTMLDivElement | null>;
+  /** 'panel' = compact sticky-sidebar variant for the wide layout */
+  variant?: 'full' | 'panel';
 }
 
 const SHARED_ROW_ORDER = [
@@ -76,9 +79,12 @@ function presentPath(p: PathwayResult): PathPresentation {
 export default function ResultsBand({
   evaluation, shared, goal, displayTotal,
   onGoalDec, onGoalInc, onOpenExport, onCopyLink, copied, onReset, bandRef,
+  variant = 'full',
 }: ResultsBandProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
+  const panel = variant === 'panel';
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   // Headline reflects the bare score (裸分); per-pathway rows below show the
   // nomination-inclusive totals (+5 / +15) and eligibility.
@@ -105,7 +111,7 @@ export default function ResultsBand({
   const progressScale = Math.min(displayTotal / goal, 1);
 
   return (
-    <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.24s backwards' }}>
+    <section className={panel ? 'mt-[72px] wide:mt-[76px]' : 'mt-[72px]'} style={{ animation: 'eoiFadeUp 0.7s ease 0.24s backwards' }}>
       <SectionHeading num="03" title={t('sections.result')} side="RESULT" />
 
       <div
@@ -115,7 +121,7 @@ export default function ResultsBand({
           background: 'var(--band-bg)',
           color: 'var(--band-ink)',
           border: '1px solid var(--band-border)',
-          padding: 'clamp(26px, 5vw, 46px)',
+          padding: panel ? '24px 24px 20px' : 'clamp(26px, 5vw, 46px)',
           transition: 'background 0.4s ease, color 0.4s ease',
         }}
       >
@@ -124,7 +130,7 @@ export default function ResultsBand({
             <span className="text-[11.5px] tracking-[0.22em] font-medium" style={{ color: 'var(--band-muted)' }}>
               {t('totalCaps')}
             </span>
-            <span className="text-[15px]" style={{ fontFamily: 'var(--font-serif)', color: 'var(--band-ink)' }}>
+            <span className={panel ? 'text-[13.5px]' : 'text-[15px]'} style={{ fontFamily: 'var(--font-serif)', color: 'var(--band-ink)' }}>
               {bestPathLine}
             </span>
             <span className="text-[13px]" style={{ color: 'var(--band-soft)' }}>{statusLine}</span>
@@ -134,7 +140,7 @@ export default function ResultsBand({
               className="font-light tabular-nums"
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(64px, 11vw, 92px)',
+                fontSize: panel ? '62px' : 'clamp(64px, 11vw, 92px)',
                 lineHeight: 0.95,
                 letterSpacing: '-0.02em',
               }}
@@ -190,11 +196,36 @@ export default function ResultsBand({
           </div>
         </div>
 
-        {total < goal && (
+        {!panel && total < goal && (
           <p className="mt-5 mb-0 text-[13px] leading-[1.6]" style={{ color: warnColor }}>{statusLine}</p>
         )}
 
-        {sharedRows.length > 0 && (
+        {panel && sharedRows.length > 0 && (
+          <div className="mt-5" style={{ borderTop: '1px solid var(--band-hair)' }}>
+            <button
+              type="button"
+              onClick={() => setShowBreakdown((v) => !v)}
+              aria-expanded={showBreakdown}
+              className="w-full flex justify-between items-center cursor-pointer pt-3 pb-1 text-[11px] tracking-[0.22em] font-medium"
+              style={{ background: 'none', border: 'none', color: 'var(--band-muted)' }}
+            >
+              {t('sharedCaps')}
+              <span aria-hidden="true" className="text-[14px] font-light leading-none" style={{ transition: 'transform 0.3s ease', transform: showBreakdown ? 'rotate(45deg)' : 'none' }}>+</span>
+            </button>
+            {showBreakdown && sharedRows.map((r) => (
+              <div
+                key={r.key}
+                className="flex justify-between items-baseline gap-4 py-[7px] text-[12.5px]"
+                style={{ borderTop: '1px solid var(--band-hair-soft)' }}
+              >
+                <span style={{ color: 'var(--band-soft)' }}>{r.label}</span>
+                <span className="text-[13.5px] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{r.value}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!panel && sharedRows.length > 0 && (
           <div className="mt-[30px]" style={{ borderTop: '1px solid var(--band-hair)' }}>
             <div className="pt-4 pb-1.5 text-[11.5px] tracking-[0.22em] font-medium" style={{ color: 'var(--band-muted)' }}>
               {t('sharedCaps')}
@@ -220,7 +251,38 @@ export default function ResultsBand({
           </div>
         )}
 
-        {evaluation.jobs.map((je) => (
+        {panel && (
+          <div className="mt-4" style={{ borderTop: '1px solid var(--band-hair)' }}>
+            {evaluation.jobs.map((je) => (
+              <div key={je.job.id} className="pt-3 pb-2.5" style={{ borderBottom: '1px solid var(--band-hair-soft)' }}>
+                <div className="flex justify-between items-baseline gap-3">
+                  <span className="min-w-0 flex items-baseline gap-2.5">
+                    <span className="text-[15px] flex-none" style={{ fontFamily: 'var(--font-serif)' }}>
+                      {String.fromCharCode(65 + je.index)}
+                    </span>
+                    <span className="text-[12.5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{ color: 'var(--band-ink)' }}>
+                      {je.occupation ? (lang === 'zh' ? je.occupation.zh : je.occupation.en) : t('noOccName')}
+                    </span>
+                  </span>
+                  <span className="flex-none text-[14px] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{je.base}</span>
+                </div>
+                <div className="flex gap-4 mt-1.5">
+                  {je.pathways.map((p) => {
+                    const pres = presentPath(p);
+                    return (
+                      <span key={p.code} className="flex items-center gap-1.5 text-[11.5px] tabular-nums" style={{ color: pres.statusColor }}>
+                        <span className="w-[6px] h-[6px] rounded-full flex-none" style={{ border: `1px solid ${pres.dotBorder}`, background: pres.dotBg }} />
+                        {p.code}&nbsp;{pres.totalText}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!panel && evaluation.jobs.map((je) => (
           <div key={je.job.id} className="mt-[26px] px-[22px] pt-5 pb-2" style={{ border: '1px solid var(--band-hair)' }}>
             <div className="flex justify-between items-baseline gap-3.5 flex-wrap">
               <div className="flex items-baseline gap-3 min-w-0">
@@ -306,11 +368,22 @@ export default function ResultsBand({
           </div>
         ))}
 
-        <p className="mt-[18px] mb-0 text-[11.5px] leading-[1.8]" style={{ color: 'var(--band-muted)' }}>
-          {t('pathNote')}
-        </p>
+        {!panel && (
+          <p className="mt-[18px] mb-0 text-[11.5px] leading-[1.8]" style={{ color: 'var(--band-muted)' }}>
+            {t('pathNote')}
+          </p>
+        )}
 
-        {suggestions.length > 0 && (
+        {suggestions.length > 0 && (panel ? (
+          <div className="mt-3.5">
+            {suggestions.slice(0, 3).map((s) => (
+              <div key={s.key} className="flex gap-3 items-baseline pt-2 text-[12px] leading-[1.5]">
+                <span className="flex-none text-[12.5px] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>+{s.points}</span>
+                <span style={{ color: 'var(--band-soft)' }}>{t(`sug.${s.key}`)}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
           <div className="mt-[26px] px-5 pt-[18px] pb-5" style={{ border: '1px solid var(--band-hair)' }}>
             <div className="text-[11.5px] tracking-[0.22em] font-medium" style={{ color: 'var(--band-muted)' }}>
               {t('suggestionCaps')}
@@ -324,9 +397,9 @@ export default function ResultsBand({
               </div>
             ))}
           </div>
-        )}
+        ))}
 
-        <div className="flex flex-wrap items-center gap-2.5 mt-[34px]">
+        <div className={panel ? 'flex flex-wrap items-center gap-2.5 mt-6' : 'flex flex-wrap items-center gap-2.5 mt-[34px]'}>
           <button
             type="button"
             onClick={onOpenExport}

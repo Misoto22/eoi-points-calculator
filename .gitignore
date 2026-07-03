@@ -7,6 +7,9 @@
 /coverage
 .playwright-mcp/
 
+# brainstorming companion mockups
+.superpowers/
+
 # next.js
 /.next/
 /out/

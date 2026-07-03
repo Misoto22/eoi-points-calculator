@@ -1,9 +1,9 @@
-import type { JobAssessment, SharedCriteria } from './types';
-import { defaultSharedCriteria, newJob } from './types';
+import type { JobAssessment, PlanningDates, SharedCriteria } from './types';
+import { defaultPlanningDates, defaultSharedCriteria, isYm, newJob } from './types';
 import { MAX_JOBS } from '@/data/pointsCriteria';
 
 // Compact URL params so shared links stay short:
-//   ?a=25-32&e=ielts7&ed=bachelor&p=single&s=1&jobs=261313:3-5:5-8:1|221111::3-5:0
+//   ?a=25-32&e=ielts7&ed=bachelor&p=single&s=1&b=1995-03&jobs=261313:3-5:5-8:1:2026-06:|221111::3-5:0
 const SHARED_PARAMS: Record<string, keyof SharedCriteria> = {
   a: 'age',
   e: 'english',
@@ -16,18 +16,25 @@ const FLAG_PARAMS: Record<string, keyof SharedCriteria> = {
   rs: 'regionalStudy',
   cl: 'communityLanguage',
 };
+const DATE_PARAMS: Record<string, keyof PlanningDates> = { b: 'birth', et: 'englishTest', nc: 'naatiCert' };
+
+const V2_SHARED_KEY = 'eoi-v2-shared';
+const V2_JOBS_KEY = 'eoi-v2-jobs';
+const V2_DATES_KEY = 'eoi-v2-dates';
+const V1_FORM_KEY = 'eoi-form';
 
 export interface AppState {
   shared: SharedCriteria;
   jobs: JobAssessment[];
+  dates: PlanningDates;
 }
 
-export function readStateFromUrl(): AppState | null {
-  if (typeof window === 'undefined') return null;
-  const params = new URLSearchParams(window.location.search);
+/** Server-safe parser: the whole read path without touching window */
+export function parseStateFromParams(params: URLSearchParams): AppState | null {
   if (params.size === 0) return null;
 
   const shared = { ...defaultSharedCriteria };
+  const dates = { ...defaultPlanningDates };
   let hasAny = false;
 
   for (const [param, field] of Object.entries(SHARED_PARAMS)) {
@@ -43,6 +50,10 @@ export function readStateFromUrl(): AppState | null {
       hasAny = true;
     }
   }
+  for (const [param, field] of Object.entries(DATE_PARAMS)) {
+    const v = params.get(param);
+    if (v && isYm(v)) { dates[field] = v; hasAny = true; }
+  }
 
   let jobs: JobAssessment[] = [];
   const js = params.get('jobs');
@@ -54,31 +65,53 @@ export function readStateFromUrl(): AppState | null {
       job.ausWork = seg[1] || '';
       job.overseasWork = seg[2] || '';
       job.professionalYear = seg[3] === '1';
+      job.ausWorkStart = seg[4] && isYm(seg[4]) ? seg[4] : '';
+      job.overseasWorkStart = seg[5] && isYm(seg[5]) ? seg[5] : '';
+      job.assessmentDate = seg[6] && isYm(seg[6]) ? seg[6] : '';
       return job;
     });
     if (jobs.length) hasAny = true;
   }
 
   if (!hasAny) return null;
-  return { shared, jobs: jobs.length ? jobs : [newJob()] };
+  return { shared, jobs: jobs.length ? jobs : [newJob()], dates };
+}
+
+export function readStateFromUrl(): AppState | null {
+  if (typeof window === 'undefined') return null;
+  return parseStateFromParams(new URLSearchParams(window.location.search));
 }
 
 /** State-owned query params; anything else (e.g. i18next's ?lng=) is preserved on rewrite */
-const STATE_PARAM_KEYS = [...Object.keys(SHARED_PARAMS), ...Object.keys(FLAG_PARAMS), 'jobs'];
+const STATE_PARAM_KEYS = [
+  ...Object.keys(SHARED_PARAMS),
+  ...Object.keys(FLAG_PARAMS),
+  ...Object.keys(DATE_PARAMS),
+  'jobs',
+];
 
 /**
  * Rebuild the query string from app state while keeping foreign params intact.
  * Returns the query string without the leading '?', or '' when empty.
  */
-export function mergeQueryString(currentSearch: string, shared: SharedCriteria, jobs: JobAssessment[]): string {
+export function mergeQueryString(
+  currentSearch: string,
+  shared: SharedCriteria,
+  jobs: JobAssessment[],
+  dates: PlanningDates = { ...defaultPlanningDates },
+): string {
   const params = new URLSearchParams(currentSearch);
   for (const key of STATE_PARAM_KEYS) params.delete(key);
-  const stateParams = new URLSearchParams(stateToQueryString(shared, jobs));
+  const stateParams = new URLSearchParams(stateToQueryString(shared, jobs, dates));
   for (const [k, v] of stateParams) params.set(k, v);
   return params.toString();
 }
 
-export function stateToQueryString(shared: SharedCriteria, jobs: JobAssessment[]): string {
+export function stateToQueryString(
+  shared: SharedCriteria,
+  jobs: JobAssessment[],
+  dates: PlanningDates = { ...defaultPlanningDates },
+): string {
   const params = new URLSearchParams();
   for (const [param, field] of Object.entries(SHARED_PARAMS)) {
     const v = shared[field];
@@ -88,16 +121,19 @@ export function stateToQueryString(shared: SharedCriteria, jobs: JobAssessment[]
     if (shared[field]) params.set(param, '1');
   }
   const js = jobs
-    .filter((j) => j.anzsco || j.ausWork || j.overseasWork || j.professionalYear)
-    .map((j) => [j.anzsco, j.ausWork, j.overseasWork, j.professionalYear ? '1' : '0'].join(':'))
+    .filter((j) => j.anzsco || j.ausWork || j.overseasWork || j.professionalYear || j.ausWorkStart || j.overseasWorkStart || j.assessmentDate)
+    .map((j) =>
+      [j.anzsco, j.ausWork, j.overseasWork, j.professionalYear ? '1' : '0', j.ausWorkStart, j.overseasWorkStart, j.assessmentDate]
+        .join(':')
+        .replace(/:+$/, ''),
+    )
     .join('|');
   if (js) params.set('jobs', js);
+  for (const [param, field] of Object.entries(DATE_PARAMS)) {
+    if (dates[field]) params.set(param, dates[field]);
+  }
   return params.toString();
 }
-
-const V2_SHARED_KEY = 'eoi-v2-shared';
-const V2_JOBS_KEY = 'eoi-v2-jobs';
-const V1_FORM_KEY = 'eoi-form';
 
 function lsGet<T>(key: string): T | null {
   try {
@@ -108,10 +144,11 @@ function lsGet<T>(key: string): T | null {
   }
 }
 
-export function persistState(shared: SharedCriteria, jobs: JobAssessment[]): void {
+export function persistState(shared: SharedCriteria, jobs: JobAssessment[], dates: PlanningDates): void {
   try {
     localStorage.setItem(V2_SHARED_KEY, JSON.stringify(shared));
     localStorage.setItem(V2_JOBS_KEY, JSON.stringify(jobs));
+    localStorage.setItem(V2_DATES_KEY, JSON.stringify(dates));
   } catch {
     // Ignore quota errors
   }
@@ -120,7 +157,7 @@ export function persistState(shared: SharedCriteria, jobs: JobAssessment[]): voi
 /** Priority: URL params → v2 storage → migrated v1 form → defaults */
 export function readInitialState(): AppState {
   if (typeof window === 'undefined') {
-    return { shared: { ...defaultSharedCriteria }, jobs: [newJob()] };
+    return { shared: { ...defaultSharedCriteria }, jobs: [newJob()], dates: { ...defaultPlanningDates } };
   }
 
   const fromUrl = readStateFromUrl();
@@ -132,7 +169,17 @@ export function readInitialState(): AppState {
     const jobs = (storedJobs && storedJobs.length ? storedJobs : [{}])
       .slice(0, MAX_JOBS)
       .map((j) => ({ ...newJob(), ...j }));
-    return { shared: { ...defaultSharedCriteria, ...storedShared }, jobs };
+    // Validate each stored date field; silently drop any that are not YYYY-MM
+    const rawDates = lsGet<Record<string, string>>(V2_DATES_KEY);
+    const dates: PlanningDates = { ...defaultPlanningDates };
+    if (rawDates) {
+      for (const [k, v] of Object.entries(rawDates)) {
+        if (k in defaultPlanningDates && isYm(v)) {
+          (dates as unknown as Record<string, string>)[k] = v;
+        }
+      }
+    }
+    return { shared: { ...defaultSharedCriteria, ...storedShared }, jobs, dates };
   }
 
   // v1 stored a single flat form — split into shared criteria + one assessment
@@ -153,8 +200,8 @@ export function readInitialState(): AppState {
     job.ausWork = (v1.ausWork as string) || '';
     job.overseasWork = (v1.overseasWork as string) || '';
     job.professionalYear = !!v1.professionalYear;
-    return { shared, jobs: [job] };
+    return { shared, jobs: [job], dates: { ...defaultPlanningDates } };
   }
 
-  return { shared: { ...defaultSharedCriteria }, jobs: [newJob()] };
+  return { shared: { ...defaultSharedCriteria }, jobs: [newJob()], dates: { ...defaultPlanningDates } };
 }
