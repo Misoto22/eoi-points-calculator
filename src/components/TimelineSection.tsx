@@ -8,6 +8,7 @@ import type { TimelineResult } from '@/lib/timeline';
 import TimelineChart from './TimelineChart';
 import type { JobAssessment, PlanningDates } from '@/lib/types';
 import { isYm } from '@/lib/types';
+import { findOccupation } from '@/lib/points';
 
 interface TimelineSectionProps {
   /** Read-only: all dates are edited next to their source fields (01 / 02) */
@@ -21,9 +22,15 @@ interface TimelineSectionProps {
 export default function TimelineSection({
   dates, jobs, timeline, goal, today,
 }: TimelineSectionProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
   // Hovering a legend row highlights the matching marker on the chart
   const [focusEvent, setFocusEvent] = useState<number | null>(null);
+
+  const seriesLabels = jobs.map((j) => {
+    const occ = findOccupation(j.anzsco);
+    return occ ? (lang === 'zh' ? occ.zh : occ.en) : t('noOccName');
+  });
 
   const hasAnyDate = isYm(dates.birth) || isYm(dates.englishTest)
     || jobs.some((j) => isYm(j.ausWorkStart) || isYm(j.overseasWorkStart) || isYm(j.assessmentDate));
@@ -45,7 +52,7 @@ export default function TimelineSection({
         <>
           {hasAnyDate && timeline.events.length > 0 && (
             <>
-              <TimelineChart timeline={timeline} goal={goal} today={today} focusEventIndex={focusEvent} />
+              <TimelineChart timeline={timeline} goal={goal} today={today} focusEventIndex={focusEvent} seriesLabels={seriesLabels} />
               {/* Event legend: numbers match the chart markers; identical causes
                   across assessments are merged with their tags (A · B · C). */}
               <ol className="m-0 mt-2 p-0 list-none" onMouseLeave={() => setFocusEvent(null)}>
