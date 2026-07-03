@@ -1,6 +1,6 @@
 'use client';
 
-import { useId } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SelectField, { pointsTag } from './SelectField';
 import CheckRow from './CheckRow';
@@ -87,13 +87,29 @@ export default function JobCard({
 
   const open = !collapsed;
 
+  // Clip the body only while collapsed or mid-height-animation. In the open
+  // steady state overflow stays visible so self-managed popovers (month
+  // pickers) can extend past the card edge; transitionend plus a fallback
+  // timer marks the animation done.
+  const [animating, setAnimating] = useState(false);
+  const prevCollapsed = useRef(collapsed);
+  useEffect(() => {
+    if (prevCollapsed.current === collapsed) return;
+    prevCollapsed.current = collapsed;
+    setAnimating(true);
+    const timer = setTimeout(() => setAnimating(false), 450);
+    return () => clearTimeout(timer);
+  }, [collapsed]);
+
   return (
     <div
       className="mt-3 relative"
       style={{
         border: '1px solid var(--hair)',
         background: 'var(--surface)',
-        zIndex: cardActive ? 30 : 1,
+        // Open card floats above collapsed siblings so its popovers never
+        // paint underneath them; active dropdowns still take precedence.
+        zIndex: cardActive ? 30 : open ? 20 : 1,
         animation: 'eoiFadeUp 0.4s ease backwards',
       }}
     >
@@ -169,8 +185,9 @@ export default function JobCard({
         inert={collapsed}
         className="grid"
         style={{ gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1)' }}
+        onTransitionEnd={(e) => { if (e.propertyName === 'grid-template-rows') setAnimating(false); }}
       >
-        <div className={cardActive ? 'overflow-visible' : 'overflow-hidden'}>
+        <div className={cardActive || (open && !animating) ? 'overflow-visible' : 'overflow-hidden'}>
           <div style={{ padding: '0 clamp(18px, 3.4vw, 28px) clamp(18px, 3.4vw, 28px)' }}>
 
       {/* Occupation: searchable dropdown */}
