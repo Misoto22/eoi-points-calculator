@@ -74,15 +74,19 @@ export default function TimelineSection({
         return (
           <div
             key={j.id}
-            className="grid gap-x-9 gap-y-[18px] items-end mt-[18px] pt-3.5"
-            style={{ gridTemplateColumns: '26px repeat(auto-fill, minmax(min(200px, 100%), 1fr))', borderTop: '1px solid var(--hair-soft)' }}
+            className="grid gap-x-5 gap-y-[18px] mt-[18px] pt-3.5"
+            // Tag column stays fixed; fields wrap inside their own grid so a
+            // wrapped field can never fall into the narrow tag track.
+            style={{ gridTemplateColumns: '26px 1fr', borderTop: '1px solid var(--hair-soft)' }}
           >
-            <span className="text-[17px] pb-[11px]" style={{ fontFamily: 'var(--font-serif)' }}>
+            <span className="text-[17px] pt-[26px]" style={{ fontFamily: 'var(--font-serif)' }}>
               {String.fromCharCode(65 + i)}
             </span>
-            <MonthField label={t('tlAusStart')} value={j.ausWorkStart} onChange={(v) => onJobPatch(j.id, { ausWorkStart: v })} warnNote={invalidNote(j.ausWorkStart)} />
-            <MonthField label={t('tlOvsStart')} value={j.overseasWorkStart} onChange={(v) => onJobPatch(j.id, { overseasWorkStart: v })} warnNote={invalidNote(j.overseasWorkStart)} />
-            <MonthField label={t('tlAssessDate')} value={j.assessmentDate} onChange={(v) => onJobPatch(j.id, { assessmentDate: v })} warnNote={invalidNote(j.assessmentDate)} note={assessNote} />
+            <div className="grid gap-x-9 gap-y-[18px] items-end" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))' }}>
+              <MonthField label={t('tlAusStart')} value={j.ausWorkStart} onChange={(v) => onJobPatch(j.id, { ausWorkStart: v })} warnNote={invalidNote(j.ausWorkStart)} />
+              <MonthField label={t('tlOvsStart')} value={j.overseasWorkStart} onChange={(v) => onJobPatch(j.id, { overseasWorkStart: v })} warnNote={invalidNote(j.overseasWorkStart)} />
+              <MonthField label={t('tlAssessDate')} value={j.assessmentDate} onChange={(v) => onJobPatch(j.id, { assessmentDate: v })} warnNote={invalidNote(j.assessmentDate)} note={assessNote} />
+            </div>
           </div>
         );
       })}
