@@ -201,7 +201,7 @@
   "tlOvsStart": "海外工作起始",
   "tlAssessDate": "职业评估获得月",
   "jobStartMonth": "起始月",
-  "tlDerived": "已由日期推导",
+  "tlDerived": "已推导",
   "tlExpiresOn": "{{authority}} · 有效期 {{years}} 年 · {{date}} 到期",
   "tlAuthorityNote": "{{authority}} · 评估有效期 {{years}} 年",
   "tlEnglishExpires": "{{date}} 到期（有效期 3 年）",

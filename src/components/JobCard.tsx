@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import SelectField, { pointsTag } from './SelectField';
 import CheckRow from './CheckRow';
 import MonthField from './MonthField';
-import MonthPicker from './MonthPicker';
+import SubMonthRow from './SubMonthRow';
 import type { JobAssessment } from '@/lib/types';
 import { isYm } from '@/lib/types';
 import type { JobEvaluation } from '@/lib/points';
@@ -318,19 +318,12 @@ export default function JobCard({
                 lockedNote={locked ? t('tlDerived') : undefined}
               />
               {/* Precise alternative to the bracket: a start month that derives it */}
-              <div className="mt-2 flex items-center gap-2.5">
-                <span className="flex-none text-[10px] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>
-                  {t('jobStartMonth')}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <MonthPicker
-                    value={job[startField]}
-                    onChange={(v) => onPatch({ [startField]: v })}
-                    placeholder={t('tlPickMonth')}
-                    compact
-                  />
-                </div>
-              </div>
+              <SubMonthRow
+                label={t('jobStartMonth')}
+                value={job[startField]}
+                onChange={(v) => onPatch({ [startField]: v })}
+                placeholder={t('tlPickMonth')}
+              />
             </div>
           );
         })}

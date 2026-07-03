@@ -201,7 +201,7 @@
   "tlOvsStart": "Overseas work start",
   "tlAssessDate": "Assessment issue month",
   "jobStartMonth": "START MONTH",
-  "tlDerived": "Derived from date",
+  "tlDerived": "derived",
   "tlExpiresOn": "{{authority}} · valid {{years}} yrs · expires {{date}}",
   "tlAuthorityNote": "{{authority}} · assessments valid {{years}} yrs",
   "tlEnglishExpires": "Expires {{date}} (valid 3 years)",

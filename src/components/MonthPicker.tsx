@@ -11,8 +11,8 @@ interface MonthPickerProps {
   onChange: (value: string) => void;
   placeholder: string;
   disabled?: boolean;
-  /** Slimmer trigger for sub-field placements (e.g. under an experience select) */
-  compact?: boolean;
+  /** Borderless footnote-style trigger for sub-rows under a parent field */
+  inline?: boolean;
 }
 
 const MONTH_COUNT = 12;
@@ -27,7 +27,7 @@ function monthNames(lang: string): string[] {
  * Editorial month picker: year stepper + 12-month grid in a hairline popover.
  * Emits YYYY-MM strings; replaces the browser-native month input.
  */
-export default function MonthPicker({ id, value, onChange, placeholder, disabled, compact }: MonthPickerProps) {
+export default function MonthPicker({ id, value, onChange, placeholder, disabled, inline }: MonthPickerProps) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [viewYear, setViewYear] = useState<number>(() => new Date().getFullYear());
@@ -85,7 +85,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
   const footBtn = 'cursor-pointer text-[11px] tracking-[0.08em] py-1 px-1 hover:text-[var(--ink)]';
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className={inline ? 'relative inline-block max-w-full' : 'relative'}>
       <button
         type="button"
         id={id}
@@ -94,20 +94,38 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => (open ? close(false) : openPicker())}
-        className={`w-full box-border flex justify-between items-center gap-2 cursor-pointer text-left disabled:opacity-45 disabled:cursor-default hover:border-[var(--muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2 ${compact ? 'px-2.5 py-[6px] text-[12px]' : 'px-3.5 py-[11px] text-[13.5px]'}`}
-        style={{
-          background: 'var(--bg)',
-          border: `1px solid ${open ? 'var(--muted)' : 'var(--hair)'}`,
-          color: 'var(--ink)',
-          transition: 'border-color 0.2s ease',
-        }}
+        className={inline
+          ? 'box-border flex items-baseline gap-1.5 px-0 py-0.5 cursor-pointer text-left text-[12.5px] disabled:opacity-45 disabled:cursor-default focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2'
+          : 'w-full box-border flex justify-between items-center gap-2 px-3.5 py-[11px] text-[13.5px] cursor-pointer text-left disabled:opacity-45 disabled:cursor-default hover:border-[var(--muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2'}
+        style={inline
+          ? { background: 'none', border: 'none', color: 'var(--ink)' }
+          : {
+              background: 'var(--bg)',
+              border: `1px solid ${open ? 'var(--muted)' : 'var(--hair)'}`,
+              color: 'var(--ink)',
+              transition: 'border-color 0.2s ease',
+            }}
       >
         {valid ? (
-          <span className="tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>
+          <span
+            className="tabular-nums"
+            style={{
+              fontFamily: 'var(--font-serif)',
+              ...(inline ? { borderBottom: '1px dotted var(--muted)', paddingBottom: 1 } : {}),
+            }}
+          >
             {value.slice(0, 4)}&nbsp;·&nbsp;{value.slice(5, 7)}
           </span>
         ) : (
-          <span style={{ color: 'var(--muted)', opacity: 0.75 }}>{placeholder}</span>
+          <span
+            style={{
+              color: 'var(--muted)',
+              opacity: 0.75,
+              ...(inline ? { borderBottom: '1px dotted var(--hair)', paddingBottom: 1 } : {}),
+            }}
+          >
+            {placeholder}
+          </span>
         )}
         {valid && !disabled && (
           <span

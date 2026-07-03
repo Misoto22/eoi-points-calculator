@@ -107,7 +107,10 @@ export default function SelectField({
           <span className="text-xs tabular-nums" style={{ color: 'var(--muted)' }}>
             {selected ? `+${selected.points}` : ''}
           </span>
-          {!lockedNote && (
+          {lockedNote ? (
+            // In-place lock hint — replaces the chevron, no extra line below
+            <span className="text-[9.5px] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>{lockedNote}</span>
+          ) : (
             <svg
               width="10" height="6" viewBox="0 0 10 6" fill="none"
               style={{ transition: 'transform 0.25s ease', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
@@ -117,9 +120,6 @@ export default function SelectField({
           )}
         </span>
       </button>
-      {lockedNote && (
-        <p className="m-0 mt-1.5 text-[11px]" style={{ color: 'var(--muted)' }}>{lockedNote}</p>
-      )}
       {open && (
         <div
           ref={listRef}

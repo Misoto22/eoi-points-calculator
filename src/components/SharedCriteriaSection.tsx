@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import SelectField from './SelectField';
 import CheckRow from './CheckRow';
-import MonthPicker from './MonthPicker';
+import SubMonthRow from './SubMonthRow';
 import type { PlanningDates, SharedCriteria } from '@/lib/types';
 import { isYm } from '@/lib/types';
 import { addMonths, monthsBetween, naatiExpiryMonth } from '@/lib/timeline';
@@ -28,32 +28,6 @@ interface SharedCriteriaSectionProps {
 }
 
 const SELECT_FIELDS: SharedSelectField[] = ['age', 'english', 'education', 'partnerStatus'];
-
-/** Small labelled sub-row: an optional precise month under its parent field */
-function SubMonthRow({ label, value, onChange, placeholder, note, warn }: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  note?: string;
-  warn?: string;
-}) {
-  return (
-    <div className="mt-2">
-      <div className="flex items-center gap-2.5">
-        <span className="flex-none text-[10px] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>{label}</span>
-        <div className="flex-1 min-w-0">
-          <MonthPicker value={value} onChange={onChange} placeholder={placeholder} compact />
-        </div>
-      </div>
-      {(warn || note) && (
-        <p className="m-0 mt-1.5 text-[11px] leading-[1.5]" style={{ color: warn ? 'var(--danger)' : 'var(--muted)' }}>
-          {warn || note}
-        </p>
-      )}
-    </div>
-  );
-}
 
 export default function SharedCriteriaSection({
   shared, onPatch, openSelect, setOpenSelect, ageLocked, dates, onDatesPatch, today,
