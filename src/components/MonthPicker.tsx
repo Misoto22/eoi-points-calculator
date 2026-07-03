@@ -124,7 +124,6 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
           <span
             style={{
               color: 'var(--muted)',
-              opacity: 0.75,
               ...(inline ? { borderBottom: '1px dotted var(--hair)', paddingBottom: 1 } : {}),
             }}
           >

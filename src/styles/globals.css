@@ -133,9 +133,11 @@ html.standalone body {
   color: var(--bg);
 }
 
+/* Full-strength --muted clears 4.5:1 on both --bg and --surface; an opacity
+   multiplier here would silently push placeholders below WCAG AA */
 input::placeholder {
-  color: inherit;
-  opacity: 0.55;
+  color: var(--muted);
+  opacity: 1;
 }
 
 /* Replace the browser's blue focus halo with a theme-aware ring; keep it keyboard-only */

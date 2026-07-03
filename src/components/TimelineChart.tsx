@@ -162,7 +162,7 @@ function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLa
         {gridVals.map((v) => (
           <g key={v}>
             <line x1={PL} y1={y(v)} x2={W - PR} y2={y(v)} stroke="var(--hair-soft)" strokeWidth="0.6" strokeDasharray="1 4" />
-            <text x={PL - 7} y={y(v) + 3} fontSize="8.5" fill="var(--muted)" opacity="0.8" textAnchor="end" className="tabular-nums">{v}</text>
+            <text x={PL - 7} y={y(v) + 3} fontSize="8.5" fill="var(--muted)" textAnchor="end" className="tabular-nums">{v}</text>
           </g>
         ))}
         <rect x={PL} y={TOP} width={W - PL - PR} height={Math.max(0, y(goal) - TOP)} fill="var(--ink)" opacity="0.045" />
@@ -262,7 +262,7 @@ function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLa
         {/* axis + year ticks */}
         <line x1={PL} y1={AXIS} x2={W - PR} y2={AXIS} stroke="var(--ink)" strokeWidth="1" />
         {years.map((yr) => (
-          <text key={yr} x={xDate(`${yr}-01`)} y={H - 4} fontSize="9.5" fill="var(--muted)" opacity="0.7" textAnchor="middle">{yr}</text>
+          <text key={yr} x={xDate(`${yr}-01`)} y={H - 4} fontSize="9.5" fill="var(--muted)" textAnchor="middle">{yr}</text>
         ))}
 
         {/* hover crosshair + tooltip (pointer-only enhancement) */}
@@ -282,7 +282,7 @@ function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLa
                 fontSize="11"
                 fontFamily="var(--font-serif)"
                 fill="var(--ink)"
-                opacity={k === 0 ? 1 : 0.6}
+                opacity={k === 0 ? 1 : 0.75}
                 className="tabular-nums"
               >
                 {r.tag}&nbsp;&nbsp;{r.v}
