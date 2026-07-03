@@ -181,7 +181,9 @@ const PageContent = () => {
 
       {/* ≥wide: inputs flow in the left column, the results band sits sticky on the right.
           Below the breakpoint the grid collapses and DOM order (01·02·03·04) is the layout. */}
-      <div className="wide:grid wide:grid-cols-[minmax(0,1fr)_400px] wide:gap-x-16 wide:items-start">
+      {/* No items-start here: the right grid item must stretch to the full row
+          height or the sticky panel has no room to travel. */}
+      <div className="wide:grid wide:grid-cols-[minmax(0,1fr)_400px] wide:gap-x-16">
         <div className="min-w-0">
           <SharedCriteriaSection
             shared={derived.shared}
@@ -236,10 +238,28 @@ const PageContent = () => {
           </section>
         </div>
 
-        {/* Right column on wide screens: results stay in view while editing */}
-        <div className="min-w-0 wide:col-start-2 wide:row-start-1 wide:row-span-2">
-          <div className="wide:sticky wide:top-5 wide:max-h-[calc(100vh-40px)] wide:overflow-y-auto">
+        {/* Mobile / narrow: the full results band in document order (01·02·03·04) */}
+        <div className="min-w-0 wide:hidden">
+          <ResultsBand
+            evaluation={evaluation}
+            shared={shared}
+            goal={goalPoints}
+            displayTotal={displayTotal}
+            onGoalDec={() => setGoalPoints((prev: number) => Math.max(GOAL_RANGE.min, prev - GOAL_RANGE.step))}
+            onGoalInc={() => setGoalPoints((prev: number) => Math.min(GOAL_RANGE.max, prev + GOAL_RANGE.step))}
+            onOpenExport={() => setExportOpen(true)}
+            onCopyLink={handleCopyLink}
+            copied={copied}
+            onReset={handleReset}
+            bandRef={bandRef}
+          />
+        </div>
+
+        {/* Wide screens: compact sticky panel — short enough to fit without inner scroll */}
+        <div className="min-w-0 hidden wide:block wide:col-start-2 wide:row-start-1 wide:row-span-2">
+          <div className="wide:sticky wide:top-5">
             <ResultsBand
+              variant="panel"
               evaluation={evaluation}
               shared={shared}
               goal={goalPoints}
@@ -250,7 +270,6 @@ const PageContent = () => {
               onCopyLink={handleCopyLink}
               copied={copied}
               onReset={handleReset}
-              bandRef={bandRef}
             />
           </div>
         </div>
