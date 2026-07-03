@@ -59,8 +59,10 @@ export default function Header() {
     // position:sticky can pin it for the whole page, not just the header.
     <>
       <div
-        className="sticky top-0 z-40 pt-[22px] pb-3.5"
+        className="sticky top-0 z-40 pb-3.5"
         style={{
+          // 22px of our own air + the iOS standalone status-bar inset
+          paddingTop: 'calc(22px + env(safe-area-inset-top, 0px))',
           background: 'color-mix(in srgb, var(--bg) 86%, transparent)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',

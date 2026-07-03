@@ -17,8 +17,9 @@ export default function FloatingChip({ visible, total, onClick }: FloatingChipPr
       type="button"
       onClick={onClick}
       title={t('chipHint')}
-      className="fixed right-[22px] bottom-[22px] z-40 flex items-baseline gap-2.5 px-[18px] py-[11px] cursor-pointer wide:hidden"
+      className="fixed right-[22px] z-40 flex items-baseline gap-2.5 px-[18px] py-[11px] cursor-pointer wide:hidden"
       style={{
+        bottom: 'calc(22px + env(safe-area-inset-bottom, 0px))',
         background: 'var(--band-bg)',
         color: 'var(--band-ink)',
         border: '1px solid var(--band-border)',
