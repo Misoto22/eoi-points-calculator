@@ -260,28 +260,11 @@ const PageContent = () => {
           </section>
         </div>
 
-        {/* Mobile / narrow: the full results band in document order (01·02·03·04) */}
-        <div className="min-w-0 wide:hidden">
-          <ResultsBand
-            evaluation={evaluation}
-            shared={shared}
-            goal={goalPoints}
-            displayTotal={displayTotal}
-            onGoalDec={() => setGoalPoints((prev: number) => Math.max(GOAL_RANGE.min, prev - GOAL_RANGE.step))}
-            onGoalInc={() => setGoalPoints((prev: number) => Math.min(GOAL_RANGE.max, prev + GOAL_RANGE.step))}
-            onOpenExport={() => setExportOpen(true)}
-            onCopyLink={handleCopyLink}
-            copied={copied}
-            onReset={handleReset}
-            bandRef={bandRef}
-          />
-        </div>
-
-        {/* Wide screens: compact sticky panel — short enough to fit without inner scroll */}
-        <div className="min-w-0 hidden wide:block wide:col-start-2 wide:row-start-1 wide:row-span-2">
+        {/* One compact results band everywhere: in document order on narrow
+            screens, a sticky right panel on wide ones. */}
+        <div className="min-w-0 wide:col-start-2 wide:row-start-1 wide:row-span-2">
           <div className="wide:sticky wide:top-5">
             <ResultsBand
-              variant="panel"
               evaluation={evaluation}
               shared={shared}
               goal={goalPoints}
@@ -292,6 +275,7 @@ const PageContent = () => {
               onCopyLink={handleCopyLink}
               copied={copied}
               onReset={handleReset}
+              bandRef={bandRef}
             />
           </div>
         </div>
