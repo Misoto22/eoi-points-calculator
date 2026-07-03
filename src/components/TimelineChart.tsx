@@ -13,6 +13,8 @@ interface TimelineChartProps {
   today: string;
   /** Legend-row hover: bolds the matching marker and shows its crosshair */
   focusEventIndex?: number | null;
+  /** Occupation names per assessment (index-aligned) for the series key */
+  seriesLabels?: string[];
 }
 
 // One step line per assessment (monochrome dash variants). Numbers live in a
@@ -21,7 +23,7 @@ const W = 720, H = 238, PL = 40, PR = 62, TOP = 30, AXIS = 182;
 const DASHES: (string | undefined)[] = [undefined, '7 4', '2 3', '9 3 2 3', '1 4'];
 const DIM = 0.24;
 
-export default function TimelineChart({ timeline, goal, today, focusEventIndex = null }: TimelineChartProps) {
+export default function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLabels }: TimelineChartProps) {
   const { t } = useTranslation();
   const { startScore, startBases, events, horizonEnd } = timeline;
   const [hoverM, setHoverM] = useState<number | null>(null);   // months from today
@@ -120,7 +122,29 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
   const lineOpacity = (i: number) => (focusLine === null || focusLine === i ? 1 : DIM);
 
   return (
-    <div className="mt-[26px] overflow-x-auto">
+    <div className="mt-[26px]">
+      {/* Series key: which occupation each line style belongs to */}
+      <div className="flex flex-wrap gap-x-6 gap-y-1.5 mb-3" onMouseLeave={() => setFocusLine(null)}>
+        {series.map((s, i) => (
+          <button
+            key={s.tag}
+            type="button"
+            onMouseEnter={() => setFocusLine(i)}
+            onFocus={() => setFocusLine(i)}
+            className="flex items-center gap-2 p-0 cursor-default text-left"
+            style={{ background: 'none', border: 'none', opacity: lineOpacity(i), transition: 'opacity 0.2s ease' }}
+          >
+            <svg width="24" height="6" aria-hidden="true">
+              <line x1="0" y1="3" x2="24" y2="3" stroke="var(--ink)" strokeWidth="1.6" strokeDasharray={DASHES[i % DASHES.length]} />
+            </svg>
+            <span className="text-[13px] leading-none" style={{ fontFamily: 'var(--font-serif)' }}>{s.tag}</span>
+            <span className="text-[12px] leading-none" style={{ color: 'var(--ink-soft)' }}>
+              {seriesLabels?.[i] ?? ''}
+            </span>
+          </button>
+        ))}
+      </div>
+      <div className="overflow-x-auto">
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
@@ -263,6 +287,7 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
           </g>
         )}
       </svg>
+      </div>
     </div>
   );
 }
