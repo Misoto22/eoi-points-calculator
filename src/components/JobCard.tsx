@@ -106,7 +106,16 @@ export default function JobCard({
           aria-expanded={open}
           aria-label={open ? t('collapseJob') : t('expandJob')}
           className="flex-1 min-w-0 flex items-center gap-3 py-3 cursor-pointer text-left hover:bg-[var(--hover)]"
-          style={{ background: 'none', border: 'none', color: 'inherit', paddingLeft: 'clamp(18px, 3.4vw, 28px)', transition: 'background 0.15s ease' }}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'inherit',
+            paddingLeft: 'clamp(18px, 3.4vw, 28px)',
+            // Without the remove button the chevron ends the row — keep it
+            // clear of the card edge; with it, the × supplies the margin.
+            paddingRight: canRemove ? '10px' : 'clamp(18px, 3.4vw, 28px)',
+            transition: 'background 0.15s ease',
+          }}
         >
           <span className="text-[16px] leading-none flex-none" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
           {occ ? (
@@ -210,7 +219,7 @@ export default function JobCard({
             onChange={(e) => onUIPatch({ q: e.target.value, open: true })}
             onFocus={() => onUIPatch({ open: true })}
             placeholder={t('jobSearch')}
-            className="w-full box-border px-3.5 py-[13px] text-[13.5px] outline-none focus:border-[var(--muted)]"
+            className="w-full box-border px-3.5 py-[13px] text-[16px] outline-none focus:border-[var(--muted)]"
             style={{
               background: 'var(--bg)',
               border: '1px solid var(--hair)',
