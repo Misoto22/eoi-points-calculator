@@ -17,12 +17,14 @@ interface SharedCriteriaSectionProps {
   onPatch: (patch: Partial<SharedCriteria>) => void;
   openSelect: string | null;
   setOpenSelect: (key: string | null) => void;
+  /** When true, the age select shows the date-derived bracket and is locked. */
+  ageLocked?: boolean;
 }
 
 const SELECT_FIELDS: SharedSelectField[] = ['age', 'english', 'education', 'partnerStatus'];
 
 export default function SharedCriteriaSection({
-  shared, onPatch, openSelect, setOpenSelect,
+  shared, onPatch, openSelect, setOpenSelect, ageLocked,
 }: SharedCriteriaSectionProps) {
   const { t } = useTranslation();
 
@@ -56,6 +58,7 @@ export default function SharedCriteriaSection({
               onToggle={() => setOpenSelect(openSelect === key ? null : key)}
               onPick={(v) => { onPatch({ [field]: v }); setOpenSelect(null); }}
               fieldBg="surface"
+              lockedNote={field === 'age' && ageLocked ? t('tlDerived') : undefined}
             />
           );
         })}

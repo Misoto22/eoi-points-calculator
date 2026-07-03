@@ -18,6 +18,8 @@ interface SelectFieldProps {
   onPick: (value: string) => void;
   /** Trigger background: shared section sits on --bg (uses surface), job cards sit on surface (use bg) */
   fieldBg?: 'surface' | 'bg';
+  /** When set, the trigger is disabled and this note renders below the field. */
+  lockedNote?: string;
 }
 
 export function pointsTag(points: number): string {
@@ -25,7 +27,7 @@ export function pointsTag(points: number): string {
 }
 
 export default function SelectField({
-  label, placeholder, options, value, open, onToggle, onPick, fieldBg = 'surface',
+  label, placeholder, options, value, open, onToggle, onPick, fieldBg = 'surface', lockedNote,
 }: SelectFieldProps) {
   const id = useId();
   const labelId = `${id}-label`;
@@ -76,9 +78,11 @@ export default function SelectField({
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-controls={open ? listId : undefined}
-        onClick={(e) => { e.stopPropagation(); onToggle(); }}
-        onKeyDown={onTriggerKeyDown}
-        className="w-full flex justify-between items-center gap-3 px-3.5 py-[13px] cursor-pointer text-left hover:border-[var(--muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2"
+        disabled={!!lockedNote}
+        aria-disabled={!!lockedNote}
+        onClick={(e) => { if (lockedNote) return; e.stopPropagation(); onToggle(); }}
+        onKeyDown={(e) => { if (lockedNote) return; onTriggerKeyDown(e); }}
+        className="w-full flex justify-between items-center gap-3 px-3.5 py-[13px] cursor-pointer text-left hover:border-[var(--muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2 disabled:cursor-default"
         style={{
           background: fieldBg === 'surface' ? 'var(--surface)' : 'var(--bg)',
           border: `1px solid ${open ? 'var(--muted)' : 'var(--hair)'}`,
@@ -96,14 +100,19 @@ export default function SelectField({
           <span className="text-xs tabular-nums" style={{ color: 'var(--muted)' }}>
             {selected ? `+${selected.points}` : ''}
           </span>
-          <svg
-            width="10" height="6" viewBox="0 0 10 6" fill="none"
-            style={{ transition: 'transform 0.25s ease', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
-          >
-            <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.2" fill="none" />
-          </svg>
+          {!lockedNote && (
+            <svg
+              width="10" height="6" viewBox="0 0 10 6" fill="none"
+              style={{ transition: 'transform 0.25s ease', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            >
+              <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.2" fill="none" />
+            </svg>
+          )}
         </span>
       </button>
+      {lockedNote && (
+        <p className="m-0 mt-1.5 text-[11px]" style={{ color: 'var(--muted)' }}>{lockedNote}</p>
+      )}
       {open && (
         <div
           ref={listRef}

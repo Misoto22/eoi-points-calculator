@@ -17,7 +17,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { evaluate } from '@/lib/points';
 import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
-import { defaultPlanningDates, defaultSharedCriteria, newJob } from '@/lib/types';
+import { defaultPlanningDates, defaultSharedCriteria, isYm, newJob } from '@/lib/types';
 import { applyDates, buildTimeline } from '@/lib/timeline';
 import { mergeQueryString, persistState, readInitialState } from '@/lib/urlState';
 import { GOAL_RANGE, MAX_JOBS } from '@/data/pointsCriteria';
@@ -180,10 +180,11 @@ const PageContent = () => {
       <Header />
 
       <SharedCriteriaSection
-        shared={shared}
+        shared={derived.shared}
         onPatch={patchShared}
         openSelect={openSelect}
         setOpenSelect={setOpenSelect}
+        ageLocked={isYm(dates.birth)}
       />
 
       {/* 02 — Skills assessments */}
@@ -199,7 +200,7 @@ const PageContent = () => {
         {jobs.map((job, i) => (
           <JobCard
             key={job.id}
-            job={job}
+            job={derived.jobs[i]}
             evaluation={evaluation.jobs[i]}
             canRemove={jobs.length > 1}
             ui={jobUI[job.id] ?? { q: '', open: false }}
@@ -208,6 +209,8 @@ const PageContent = () => {
             onRemove={() => setJobs((prev) => prev.filter((j) => j.id !== job.id))}
             openSelect={openSelect}
             setOpenSelect={setOpenSelect}
+            ausWorkLocked={isYm(jobs[i].ausWorkStart)}
+            overseasWorkLocked={isYm(jobs[i].overseasWorkStart)}
           />
         ))}
 

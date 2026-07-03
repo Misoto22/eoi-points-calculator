@@ -26,6 +26,10 @@ interface JobCardProps {
   onRemove: () => void;
   openSelect: string | null;
   setOpenSelect: (key: string | null) => void;
+  /** When true, the ausWork select shows the date-derived bracket and is locked. */
+  ausWorkLocked?: boolean;
+  /** When true, the overseasWork select shows the date-derived bracket and is locked. */
+  overseasWorkLocked?: boolean;
 }
 
 export function occupationDisplayName(occ: Occupation | null, lang: string): string {
@@ -46,6 +50,7 @@ const listTagStyle = {
 
 export default function JobCard({
   job, evaluation, canRemove, ui, onPatch, onUIPatch, onRemove, openSelect, setOpenSelect,
+  ausWorkLocked, overseasWorkLocked,
 }: JobCardProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
@@ -209,6 +214,8 @@ export default function JobCard({
       <div className="grid gap-x-7 gap-y-[22px] mt-[22px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))' }}>
         {SELECT_FIELDS.map((field) => {
           const key = `${job.id}:${field}`;
+          // Derive lock state per field from parent-provided booleans
+          const locked = field === 'ausWork' ? ausWorkLocked : field === 'overseasWork' ? overseasWorkLocked : false;
           return (
             <SelectField
               key={field}
@@ -224,6 +231,7 @@ export default function JobCard({
               onToggle={() => setOpenSelect(openSelect === key ? null : key)}
               onPick={(v) => { onPatch({ [field]: v }); setOpenSelect(null); }}
               fieldBg="bg"
+              lockedNote={locked ? t('tlDerived') : undefined}
             />
           );
         })}
