@@ -99,13 +99,17 @@ export interface TimelineCause {
 export interface TimelineEvent {
   date: string;                           // YYYY-MM
   causes: TimelineCause[];
-  delta: number;                          // score change this month (0 for pure warnings)
+  delta: number;                          // bare-score change this month (0 for pure warnings)
   scoreAfter: number;                     // bare score after this month
+  /** Per-assessment base scores after this month (index-aligned with jobs) */
+  basesAfter: number[];
   warning: boolean;                       // true when every cause is an expiry
 }
 
 export interface TimelineResult {
   startScore: number;
+  /** Per-assessment base scores today (index-aligned with jobs) */
+  startBases: number[];
   events: TimelineEvent[];
   horizonEnd: string;                     // YYYY-MM
   endsAt45: boolean;
@@ -260,34 +264,40 @@ export function buildTimeline({
     });
   }
 
-  // Compute bare score at an arbitrary month, applying date-derived brackets.
-  const scoreAt = (m: string): number => {
+  // Per-assessment base scores (and the bare max) at an arbitrary month.
+  const basesAt = (m: string): { bases: number[]; bare: number } => {
     const { shared: s, jobs: js } = applyDates(shared, jobs, dates, m);
-    return evaluate(s, js).bareScore;
+    const ev = evaluate(s, js);
+    return { bases: ev.jobs.map((je) => je.base), bare: ev.bareScore };
   };
 
-  const startScore = scoreAt(today);
+  const start = basesAt(today);
+  const startScore = start.bare;
+  const startBases = start.bases;
 
-  // Build events: sort ascending by month, compute deltas, then filter to only
-  // months that change the score, carry a warning, or mark the eligibility end.
-  let prev = startScore;
-  const events: TimelineEvent[] = [...causesByMonth.entries()]
-    .sort(([a], [b]) => monthsBetween(b, a))   // ascending: monthsBetween(b, a) = toN(a) − toN(b)
-    .map(([date, causes]) => {
-      const scoreAfter = scoreAt(date);
-      const delta = scoreAfter - prev;
-      prev = scoreAfter;
-      const warning = causes.every((c) => WARNING_KINDS.has(c.kind));
-      return { date, causes, delta, scoreAfter, warning };
-    })
-    .filter(
-      (e) =>
-        e.delta !== 0 ||
-        e.warning ||
-        e.causes.some((c) => c.kind === 'eligibilityEnd') ||
-        // Keep multi-cause months even when changes cancel (e.g., age-drop + work gain).
-        e.causes.length > 1,
-    );
+  // Build events: sort ascending by month, compute per-assessment bases, then
+  // keep months where ANY assessment's base moves (so every occupation's line
+  // bends where it should), plus warnings and the eligibility end.
+  let prevBare = startScore;
+  let prevBases = startBases;
+  const events: TimelineEvent[] = [];
+  for (const [date, causes] of [...causesByMonth.entries()]
+    .sort(([a], [b]) => monthsBetween(b, a))) { // ascending: monthsBetween(b, a) = toN(a) − toN(b)
+    const { bases, bare } = basesAt(date);
+    const delta = bare - prevBare;
+    const anyBaseMoved = bases.some((b, i) => b !== prevBases[i]);
+    const warning = causes.every((c) => WARNING_KINDS.has(c.kind));
+    const keep = anyBaseMoved || warning
+      || causes.some((c) => c.kind === 'eligibilityEnd')
+      // Multi-cause months can cancel to zero on every base (age −5 + work +5)
+      // yet still deserve a marker.
+      || causes.length > 1;
+    if (keep) {
+      events.push({ date, causes, delta, scoreAfter: bare, basesAfter: bases, warning });
+    }
+    prevBare = bare;
+    prevBases = bases;
+  }
 
-  return { startScore, events, horizonEnd, endsAt45 };
+  return { startScore, startBases, events, horizonEnd, endsAt45 };
 }

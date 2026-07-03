@@ -207,3 +207,31 @@ describe('10-year work window', () => {
     expect(m?.delta).toBe(5);
   });
 });
+
+describe('per-assessment series', () => {
+  const today = '2026-07';
+
+  it('exposes startBases and basesAfter per assessment', () => {
+    const strong = job({ ausWork: '8-10' });                        // base stays flat
+    const weak = job({ anzsco: '233211', ausWorkStart: '2026-01' }); // gains milestones
+    const r = buildTimeline({ shared: shared(), jobs: [strong, weak], dates: dates(), today });
+    expect(r.startBases).toHaveLength(2);
+    expect(r.startBases[0]).toBeGreaterThan(r.startBases[1]);
+    // weak job's 1-year milestone is kept even though the max never moves
+    const m = r.events.find((e) => e.causes.some((c) => c.kind === 'ausWork'));
+    expect(m?.date).toBe('2027-01');
+    expect(m?.delta).toBe(0);                                        // bare max unchanged
+    expect(m?.basesAfter[1]).toBe(r.startBases[1] + 5);              // but B's line bends
+    expect(m?.basesAfter[0]).toBe(r.startBases[0]);
+  });
+
+  it('age events move every assessment base', () => {
+    const r = buildTimeline({
+      shared: shared(), jobs: [job(), job({ anzsco: '233211' })],
+      dates: dates({ birth: '1995-03' }), today,
+    });
+    const drop = r.events.find((e) => e.causes.some((c) => c.kind === 'age'));
+    expect(drop?.basesAfter[0]).toBe(r.startBases[0] - 5);
+    expect(drop?.basesAfter[1]).toBe(r.startBases[1] - 5);
+  });
+});

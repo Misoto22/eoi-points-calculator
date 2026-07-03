@@ -62,7 +62,7 @@ export default function TimelineSection({
                       <span className="text-xs tabular-nums" style={{ color: danger ? 'var(--danger)' : 'var(--muted)' }}>{e.date}</span>
                       <span className="leading-[1.55] min-w-0" style={{ color: danger ? 'var(--danger)' : 'var(--ink)' }}>{label}</span>
                       <span className="text-[13px] tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: danger ? 'var(--danger)' : 'var(--ink)' }}>
-                        {e.warning ? '⚠' : `${e.delta > 0 ? '+' : ''}${e.delta}`}
+                        {e.warning ? '⚠' : e.delta === 0 ? '±0' : `${e.delta > 0 ? '+' : ''}${e.delta}`}
                       </span>
                       <span className="text-[14px] tabular-nums text-right min-w-8" style={{ fontFamily: 'var(--font-serif)' }}>
                         {e.warning ? '' : e.scoreAfter}
