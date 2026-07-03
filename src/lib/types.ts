@@ -17,7 +17,11 @@ export interface JobAssessment {
   overseasWork: string;
   professionalYear: boolean;
   ausWorkStart: string;
+  /** '' = still working (ongoing) */
+  ausWorkEnd: string;
   overseasWorkStart: string;
+  /** '' = still working (ongoing) */
+  overseasWorkEnd: string;
   assessmentDate: string;
 }
 
@@ -57,7 +61,9 @@ export function newJob(): JobAssessment {
     overseasWork: '',
     professionalYear: false,
     ausWorkStart: '',
+    ausWorkEnd: '',
     overseasWorkStart: '',
+    overseasWorkEnd: '',
     assessmentDate: '',
   };
 }
