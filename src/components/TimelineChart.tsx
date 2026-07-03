@@ -16,7 +16,7 @@ const W = 720, H = 268, PL = 40, PR = 30, TOP = 30, AXIS = 176;
 
 export default function TimelineChart({ timeline, goal, today }: TimelineChartProps) {
   const { t } = useTranslation();
-  const { startScore, events, horizonEnd, endsAt45 } = timeline;
+  const { startScore, events, horizonEnd } = timeline;
 
   const total = Math.max(1, monthsBetween(today, horizonEnd));
   const x = (ym: string) => PL + (monthsBetween(today, ym) / total) * (W - PL - PR);
