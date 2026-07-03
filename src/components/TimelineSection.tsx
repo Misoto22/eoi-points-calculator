@@ -1,0 +1,97 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
+import SectionHeading from './SectionHeading';
+import MonthField from './MonthField';
+import { addMonths, monthsBetween, naatiExpiryMonth } from '@/lib/timeline';
+import type { TimelineResult } from '@/lib/timeline';
+import type { JobAssessment, PlanningDates } from '@/lib/types';
+import { isYm } from '@/lib/types';
+import { assessingAuthority } from '@/data/assessingAuthorities';
+
+interface TimelineSectionProps {
+  dates: PlanningDates;
+  onDatesPatch: (patch: Partial<PlanningDates>) => void;
+  jobs: JobAssessment[];
+  onJobPatch: (id: string, patch: Partial<JobAssessment>) => void;
+  naatiChecked: boolean;
+  timeline: TimelineResult;
+  goal: number;
+  today: string;
+}
+
+export default function TimelineSection({
+  dates, onDatesPatch, jobs, onJobPatch, naatiChecked, timeline, goal, today,
+}: TimelineSectionProps) {
+  const { t } = useTranslation();
+
+  // Suppress unused-variable warnings for props consumed by Task 6 chart
+  void timeline;
+  void goal;
+
+  const hasAnyDate = isYm(dates.birth) || isYm(dates.englishTest)
+    || jobs.some((j) => isYm(j.ausWorkStart) || isYm(j.overseasWorkStart) || isYm(j.assessmentDate));
+
+  // Future birth or an implied age under 18 both invalidate the derivation
+  const birthWarn = isYm(dates.birth)
+    ? (dates.birth >= today ? t('tlFutureBirth')
+      : monthsBetween(dates.birth, today) < 18 * 12 ? t('tlUnder18') : undefined)
+    : undefined;
+  const englishNote = isYm(dates.englishTest)
+    ? t('tlEnglishExpires', { date: addMonths(dates.englishTest, 36) })
+    : undefined;
+
+  // NAATI note logic per amendment: disabled → hint; enabled + valid date → expiry warn; otherwise no note
+  const naatiWarnNote = naatiChecked && isYm(dates.naatiCert)
+    ? t('tlNaatiExpires', { date: naatiExpiryMonth(dates.naatiCert) })
+    : undefined;
+  const naatiNote = !naatiChecked ? t('tlNaatiHint') : undefined;
+
+  return (
+    <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.28s backwards' }}>
+      <SectionHeading num="04" title={t('sections.timeline')} side="TIMELINE" />
+      <p className="mt-3.5 mb-0 text-[12.5px] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
+        {t('tlNote')}
+      </p>
+
+      <div className="grid gap-x-9 gap-y-[22px] mt-[26px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))' }}>
+        <MonthField label={t('tlBirth')} value={dates.birth} onChange={(v) => onDatesPatch({ birth: v })} warnNote={birthWarn} />
+        <MonthField label={t('tlEnglishTest')} value={dates.englishTest} onChange={(v) => onDatesPatch({ englishTest: v })} warnNote={englishNote} />
+        <MonthField
+          label={t('tlNaatiCert')}
+          value={dates.naatiCert}
+          onChange={(v) => onDatesPatch({ naatiCert: v })}
+          disabled={!naatiChecked}
+          warnNote={naatiWarnNote}
+          note={naatiNote}
+        />
+      </div>
+
+      {jobs.map((j, i) => {
+        const info = assessingAuthority(j.anzsco);
+        const assessNote = isYm(j.assessmentDate) && info.validityYears !== null
+          ? t('tlExpiresOn', { authority: info.authority, years: info.validityYears, date: addMonths(j.assessmentDate, info.validityYears * 12) })
+          : j.anzsco ? info.authority : undefined;
+        return (
+          <div
+            key={j.id}
+            className="grid gap-x-9 gap-y-[18px] items-end mt-[18px] pt-3.5"
+            style={{ gridTemplateColumns: '26px repeat(auto-fill, minmax(min(200px, 100%), 1fr))', borderTop: '1px solid var(--hair-soft)' }}
+          >
+            <span className="text-[17px] pb-[11px]" style={{ fontFamily: 'var(--font-serif)' }}>
+              {String.fromCharCode(65 + i)}
+            </span>
+            <MonthField label={t('tlAusStart')} value={j.ausWorkStart} onChange={(v) => onJobPatch(j.id, { ausWorkStart: v })} />
+            <MonthField label={t('tlOvsStart')} value={j.overseasWorkStart} onChange={(v) => onJobPatch(j.id, { overseasWorkStart: v })} />
+            <MonthField label={t('tlAssessDate')} value={j.assessmentDate} onChange={(v) => onJobPatch(j.id, { assessmentDate: v })} warnNote={undefined} note={assessNote} />
+          </div>
+        );
+      })}
+
+      {!hasAnyDate && (
+        <p className="mt-[26px] mb-0 text-[12.5px]" style={{ color: 'var(--muted)' }}>{t('tlEmpty')}</p>
+      )}
+      {/* TimelineChart mounts here in Task 6 */}
+    </section>
+  );
+}

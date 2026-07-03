@@ -15,6 +15,9 @@ const fromN = (n: number): string =>
 
 export const addMonths = (ym: string, n: number): string => fromN(toN(ym) + n);
 
+/** NAATI CCL expiry month: 5 years for credentials issued >= 2022-08, 3 years before (naati.com.au) */
+export const naatiExpiryMonth = (cert: string): string => addMonths(cert, cert >= '2022-08' ? 60 : 36);
+
 /** Returns b − a in whole months (signed). */
 export const monthsBetween = (a: string, b: string): number => toN(b) - toN(a);
 
@@ -202,8 +205,7 @@ export function buildTimeline({
   // NOTE: We only emit this warning when communityLanguage is ticked, because
   // the CCL credential is how the applicant claims that bonus point item.
   if (isYm(dates.naatiCert) && shared.communityLanguage) {
-    const months = dates.naatiCert >= '2022-08' ? 60 : 36;
-    push(addMonths(dates.naatiCert, months), {
+    push(naatiExpiryMonth(dates.naatiCert), {
       kind: 'naatiExpiry',
       labelKey: 'tl.naatiExpiry',
     });

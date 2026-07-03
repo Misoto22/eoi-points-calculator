@@ -9,6 +9,7 @@ import JobCard from '@/components/JobCard';
 import type { JobUIState } from '@/components/JobCard';
 import ResultsBand from '@/components/ResultsBand';
 import ReferenceSection from '@/components/ReferenceSection';
+import TimelineSection from '@/components/TimelineSection';
 import ExportModal from '@/components/ExportModal';
 import FloatingChip from '@/components/FloatingChip';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -16,7 +17,8 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { evaluate } from '@/lib/points';
 import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
-import { defaultSharedCriteria, newJob } from '@/lib/types';
+import { defaultPlanningDates, defaultSharedCriteria, newJob } from '@/lib/types';
+import { applyDates, buildTimeline } from '@/lib/timeline';
 import { mergeQueryString, persistState, readInitialState } from '@/lib/urlState';
 import { GOAL_RANGE, MAX_JOBS } from '@/data/pointsCriteria';
 import '@/app/i18n/client';
@@ -58,7 +60,16 @@ const PageContent = () => {
   const [chipShown, setChipShown] = useState(false);
   const bandRef = useRef<HTMLDivElement | null>(null);
 
-  const evaluation = useMemo(() => evaluate(shared, jobs), [shared, jobs]);
+  // today as YYYY-MM — PageContent only renders after the mounted gate, so this is client-safe
+  const today = useMemo(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }, []);
+
+  // evaluation now uses date-derived brackets
+  const derived = useMemo(() => applyDates(shared, jobs, dates, today), [shared, jobs, dates, today]);
+  const evaluation = useMemo(() => evaluate(derived.shared, derived.jobs), [derived]);
+  const timeline = useMemo(() => buildTimeline({ shared, jobs, dates, today }), [shared, jobs, dates, today]);
   // Headline number is the bare score (裸分) — before any state/regional nomination bonus.
   const bareScore = evaluation.bareScore;
   const displayTotal = useAnimatedNumber(bareScore);
@@ -122,6 +133,10 @@ const PageContent = () => {
     setShared((prev) => ({ ...prev, ...patch }));
   }, []);
 
+  const patchDates = useCallback((patch: Partial<PlanningDates>) => {
+    setDates((prev) => ({ ...prev, ...patch }));
+  }, []);
+
   const patchJob = useCallback((id: string, patch: Partial<JobAssessment>) => {
     setJobs((prev) => prev.map((j) => (j.id === id ? { ...j, ...patch } : j)));
   }, []);
@@ -145,6 +160,7 @@ const PageContent = () => {
     setShared({ ...defaultSharedCriteria });
     setJobs([newJob()]);
     setJobUI({});
+    setDates({ ...defaultPlanningDates });
     setGoalPoints(GOAL_RANGE.min);
   }, [setGoalPoints]);
 
@@ -224,6 +240,17 @@ const PageContent = () => {
         copied={copied}
         onReset={handleReset}
         bandRef={bandRef}
+      />
+
+      <TimelineSection
+        dates={dates}
+        onDatesPatch={patchDates}
+        jobs={jobs}
+        onJobPatch={patchJob}
+        naatiChecked={shared.communityLanguage}
+        timeline={timeline}
+        goal={goalPoints}
+        today={today}
       />
 
       <ReferenceSection totalPoints={bareScore} evaluation={evaluation} />
