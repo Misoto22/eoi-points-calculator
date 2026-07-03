@@ -266,7 +266,8 @@ const PageContent = () => {
         {/* One compact results band everywhere: in document order on narrow
             screens, a sticky right panel on wide ones. */}
         <div className="min-w-0 wide:col-start-2 wide:row-start-1 wide:row-span-2">
-          <div className="wide:sticky wide:top-5">
+          {/* top offset clears the sticky nav bar */}
+          <div className="wide:sticky wide:top-[74px]">
             <ResultsBand
               evaluation={evaluation}
               shared={shared}

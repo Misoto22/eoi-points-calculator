@@ -19,6 +19,15 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  // Hairline under the sticky bar only once the page has scrolled
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
   const resolvedTheme = mounted
     ? (theme === 'system'
@@ -46,41 +55,57 @@ export default function Header() {
   );
 
   return (
-    <header className="pt-[34px]" style={{ animation: 'eoiFadeUp 0.7s ease backwards' }}>
-      <div className="flex justify-between items-center gap-4">
-        <div className="text-[11.5px] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
-          EOI&nbsp;POINTS
-        </div>
-        <div className="flex items-center gap-3.5">
-          <div className="flex items-center gap-2.5 text-xs">
-            {langButton('zh', '中文')}
-            <span className="w-px h-3" style={{ background: 'var(--hair)' }} />
-            {langButton('en', 'EN')}
+    // Fragment: the nav bar must be a direct child of the page container so
+    // position:sticky can pin it for the whole page, not just the header.
+    <>
+      <div
+        className="sticky top-0 z-40 pt-[22px] pb-3.5"
+        style={{
+          background: 'color-mix(in srgb, var(--bg) 86%, transparent)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          borderBottom: scrolled ? '1px solid var(--hair)' : '1px solid transparent',
+          transition: 'border-color 0.25s ease, background 0.4s ease',
+          animation: 'eoiFadeUp 0.7s ease backwards',
+        }}
+      >
+        <div className="flex justify-between items-center gap-4">
+          <div className="text-[11.5px] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
+            EOI&nbsp;POINTS
           </div>
-          <button
-            type="button"
-            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-            aria-label="Toggle theme"
-            aria-pressed={resolvedTheme === 'dark'}
-            title={t('themeHint')}
-            className="theme-toggle w-[38px] h-[38px] -m-1.5 rounded-full cursor-pointer p-0 flex items-center justify-center"
-            style={{ background: 'none', border: 'none' }}
-          >
-            <span
-              aria-hidden="true"
-              className="block w-[26px] h-[26px] rounded-full"
-              style={{
-                border: '1px solid var(--muted)',
-                background: 'linear-gradient(90deg, var(--ink) 50%, transparent 50%)',
-                transform: resolvedTheme === 'dark' ? 'rotate(180deg)' : 'none',
-                transition: 'transform 0.35s ease',
-              }}
-            />
-          </button>
+          <div className="flex items-center gap-3.5">
+            <div className="flex items-center gap-2.5 text-xs">
+              {langButton('zh', '中文')}
+              <span className="w-px h-3" style={{ background: 'var(--hair)' }} />
+              {langButton('en', 'EN')}
+            </div>
+            <button
+              type="button"
+              onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+              aria-label="Toggle theme"
+              aria-pressed={resolvedTheme === 'dark'}
+              title={t('themeHint')}
+              className="theme-toggle w-[38px] h-[38px] -m-1.5 rounded-full cursor-pointer p-0 flex items-center justify-center"
+              style={{ background: 'none', border: 'none' }}
+            >
+              <span
+                aria-hidden="true"
+                className="block w-[26px] h-[26px] rounded-full"
+                style={{
+                  border: '1px solid var(--muted)',
+                  background: 'linear-gradient(90deg, var(--ink) 50%, transparent 50%)',
+                  transform: resolvedTheme === 'dark' ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.35s ease',
+                }}
+              />
+            </button>
+          </div>
         </div>
       </div>
+
+      <header style={{ animation: 'eoiFadeUp 0.7s ease backwards' }}>
       <h1
-        className="font-normal mt-[72px] mb-0 max-w-[16em]"
+        className="font-normal mt-[58px] mb-0 max-w-[16em]"
         style={{
           fontFamily: 'var(--font-serif)',
           fontSize: 'clamp(30px, 5.2vw, 44px)',
@@ -101,6 +126,7 @@ export default function Header() {
           {todayLabel()}
         </span>
       </div>
-    </header>
+      </header>
+    </>
   );
 }
