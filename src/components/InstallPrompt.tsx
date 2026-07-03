@@ -77,8 +77,9 @@ export default function InstallPrompt() {
     <div
       role="status"
       aria-live="polite"
-      className="fixed bottom-[18px] left-[18px] right-[18px] sm:left-auto sm:w-[340px] z-50 px-[18px] py-4"
+      className="fixed left-[18px] right-[18px] sm:left-auto sm:w-[340px] z-50 px-[18px] py-4"
       style={{
+        bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
         background: 'var(--band-bg)',
         color: 'var(--band-ink)',
         boxShadow: 'var(--shadow)',

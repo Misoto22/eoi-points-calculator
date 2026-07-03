@@ -16,6 +16,9 @@ export const viewport = {
     { media: '(prefers-color-scheme: light)', color: '#F2EFE6' },
     { media: '(prefers-color-scheme: dark)', color: '#1E1C17' },
   ],
+  // Standalone iOS draws the page behind the status bar; cover + explicit
+  // safe-area padding (nav bar, floating elements) keeps that zone ours.
+  viewportFit: 'cover' as const,
 };
 
 export const metadata = {
