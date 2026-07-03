@@ -2,6 +2,7 @@ import React from 'react';
 import '../styles/globals.css';
 import { Noto_Serif_SC } from 'next/font/google';
 import { ThemeProvider } from '../components/ThemeProvider';
+import SwRegister from '../components/SwRegister';
 
 const notoSerifSC = Noto_Serif_SC({
   weight: ['300', '400', '500', '600'],
@@ -47,12 +48,24 @@ export const metadata = {
       { url: '/favicon.ico' },
       { url: '/favicon-32x32.png', sizes: '32x32' },
       { url: '/favicon-16x16.png', sizes: '16x16' },
-      { url: '/apple-touch-icon.png', rel: 'apple-touch-icon', sizes: '180x180' },
     ],
     shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    // Served by the src/app/apple-icon.png file convention; linked explicitly
+    // because a manual `icons` block suppresses Next's automatic injection.
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
   },
-  manifest: '/site.webmanifest',
+  // iOS ignores most of the manifest — these emit the apple-mobile-web-app-*
+  // meta tags standalone mode needs on Safari.
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'EOI Points',
+  },
+  other: {
+    // Next emits the modern mobile-web-app-capable; keep the legacy apple tag
+    // for iOS < 17.4 standalone detection.
+    'apple-mobile-web-app-capable': 'yes',
+  },
 }
 
 export default function RootLayout({
@@ -74,17 +87,6 @@ export default function RootLayout({
                 root.classList.remove('light', 'dark');
                 root.classList.add(theme === 'system' ? systemTheme : theme);
               } catch (e) {}
-              if ('serviceWorker' in navigator) {
-                // Dev chunks are not content-hashed, so a cache-first SW serves
-                // stale code — register in production only, clean up elsewhere.
-                if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-                  navigator.serviceWorker.getRegistrations()
-                    .then((rs) => rs.forEach((r) => r.unregister()))
-                    .catch(() => {});
-                } else {
-                  navigator.serviceWorker.register('/sw.js').catch(() => {});
-                }
-              }
             `,
           }}
         />
@@ -117,6 +119,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <SwRegister />
       </body>
     </html>
   );

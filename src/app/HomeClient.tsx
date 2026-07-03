@@ -12,6 +12,7 @@ import ReferenceSection from '@/components/ReferenceSection';
 import TimelineSection from '@/components/TimelineSection';
 import ExportModal from '@/components/ExportModal';
 import FloatingChip from '@/components/FloatingChip';
+import InstallPrompt from '@/components/InstallPrompt';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
@@ -329,6 +330,7 @@ const PageContent = () => {
       </footer>
 
       <FloatingChip visible={chipVisible} total={bareScore} onClick={scrollToResults} />
+      <InstallPrompt />
 
       <ExportModal
         open={exportOpen}

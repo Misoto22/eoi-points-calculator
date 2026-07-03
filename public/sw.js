@@ -1,14 +1,20 @@
-const CACHE_NAME = 'eoi-calc-v3';
-const STATIC_ASSETS = [
+// Hand-written service worker (no next-pwa).
+// iOS note: Safari evicts SW caches aggressively under storage pressure and
+// after ~weeks of non-use. Every strategy below treats the cache as a bonus,
+// never as the source of truth — a cold cache only costs a network round-trip.
+const CACHE_NAME = 'eoi-calc-v4';
+
+// Minimal app shell: enough to render something offline.
+const SHELL = [
   '/',
+  '/manifest.webmanifest',
   '/locales/en/common.json',
   '/locales/zh/common.json',
+  '/android-chrome-192x192.png',
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL)));
   self.skipWaiting();
 });
 
@@ -33,14 +39,26 @@ function fetchAndCache(request) {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  if (request.method !== 'GET') return;
 
-  // Network-first for navigation so deploys reach users immediately
+  // Pages: network-first so deploys reach users immediately; refresh the
+  // cached shell copy on success, fall back to it offline.
   if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).catch(() => caches.match('/')));
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put('/', clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match('/'))
+    );
     return;
   }
 
-  // Hashed build assets are immutable — cache-first is safe
+  // Hashed build assets are immutable — cache-first is safe.
   if (request.url.includes('/_next/static/')) {
     event.respondWith(
       caches.match(request).then((cached) => cached || fetchAndCache(request))
@@ -48,8 +66,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Everything else (locales, icons…) is stale-while-revalidate:
-  // serve the cache for speed, refresh it in the background
+  // Everything else (locales, icons…): stale-while-revalidate.
   event.respondWith(
     caches.match(request).then((cached) => {
       const refresh = fetchAndCache(request).catch(() => cached);
