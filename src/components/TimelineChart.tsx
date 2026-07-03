@@ -12,7 +12,9 @@ interface TimelineChartProps {
   today: string;
 }
 
-const W = 720, H = 268, PL = 40, PR = 30, TOP = 30, AXIS = 176;
+// Markers carry only a number; the descriptions live in the event list the
+// section renders below the chart, so labels can never collide again.
+const W = 720, H = 214, PL = 40, PR = 30, TOP = 30, AXIS = 176;
 
 export default function TimelineChart({ timeline, goal, today }: TimelineChartProps) {
   const { t } = useTranslation();
@@ -35,15 +37,6 @@ export default function TimelineChart({ timeline, goal, today }: TimelineChartPr
   const endX = x(horizonEnd);
   d += ` H${endX}`;
   const area = `${d} V${AXIS} H${PL} Z`;
-
-  // label collision: alternate rows when neighbours are closer than 72px
-  const labelled = events.map((e) => ({ e, lx: x(e.date) }));
-  let lastLx = -Infinity, row = 0;
-  const rows = labelled.map(({ lx }) => {
-    row = lx - lastLx < 72 ? (row + 1) % 2 : 0;
-    lastLx = lx;
-    return row;
-  });
 
   const years: string[] = [];
   for (let yr = Number(today.slice(0, 4)) + 1; yr <= Number(horizonEnd.slice(0, 4)); yr++) years.push(String(yr));
@@ -72,18 +65,16 @@ export default function TimelineChart({ timeline, goal, today }: TimelineChartPr
         <text x={PL} y={TOP - 10} fontSize="10" fill="var(--muted)" letterSpacing="2">{t('tlToday')}</text>
         <text x={PL + 12} y={y(startScore) - 8} fontSize="17" fontFamily="var(--font-serif)" fill="var(--ink)">{startScore}</text>
 
-        {/* events: dots for gains/losses, dashed flag + rotated square for warnings, × for eligibilityEnd */}
+        {/* events: numbered markers — dots for gains/losses, dashed flag for warnings, × for eligibilityEnd */}
         {events.map((e, i) => {
           const ex = x(e.date);
-          const rowY = rows[i] * 28;
-          const short = e.causes.map((c) => t(c.labelKey, c.params)).join(' · ');
+          const no = String(i + 1);
           if (e.warning) {
             return (
               <g key={e.date}>
                 <line x1={ex} y1={TOP + 24} x2={ex} y2={AXIS} stroke="var(--danger)" strokeWidth="0.75" strokeDasharray="3 3" />
                 <rect x={ex - 4} y={TOP + 16} width="8" height="8" transform={`rotate(45 ${ex} ${TOP + 20})`} fill="none" stroke="var(--danger)" strokeWidth="1.25" />
-                <text x={ex} y={AXIS + 22 + rowY} fontSize="9.5" fill="var(--danger)" textAnchor="middle">{e.date}</text>
-                <text x={ex} y={AXIS + 36 + rowY} fontSize="10" fill="var(--danger)" textAnchor="middle">{short}</text>
+                <text x={ex + 9} y={TOP + 24} fontSize="10" fontFamily="var(--font-serif)" fill="var(--danger)">{no}</text>
               </g>
             );
           }
@@ -100,8 +91,7 @@ export default function TimelineChart({ timeline, goal, today }: TimelineChartPr
                 <circle cx={ex} cy={ey} r="4" fill={e.delta >= 0 ? 'var(--ink)' : 'none'} stroke={e.delta >= 0 ? 'var(--ink)' : 'var(--danger)'} strokeWidth="1.5" />
               )}
               <text x={ex} y={e.delta >= 0 ? ey - 14 : ey + 24} fontSize="16" fontFamily="var(--font-serif)" fill={e.delta >= 0 ? 'var(--ink)' : 'var(--danger)'} textAnchor="middle">{e.scoreAfter}</text>
-              <text x={ex} y={AXIS + 22 + rowY} fontSize="9.5" fill="var(--muted)" textAnchor="middle">{e.date}</text>
-              <text x={ex} y={AXIS + 36 + rowY} fontSize="10" fill={e.delta < 0 || isEnd ? 'var(--danger)' : 'var(--ink)'} textAnchor="middle">{short}</text>
+              <text x={ex + 9} y={ey + (e.delta >= 0 ? 12 : -8)} fontSize="10" fontFamily="var(--font-serif)" fill={isEnd || e.delta < 0 ? 'var(--danger)' : 'var(--muted)'}>{no}</text>
             </g>
           );
         })}
@@ -109,7 +99,7 @@ export default function TimelineChart({ timeline, goal, today }: TimelineChartPr
         {/* axis + year ticks */}
         <line x1={PL} y1={AXIS} x2={W - PR} y2={AXIS} stroke="var(--ink)" strokeWidth="1" />
         {years.map((yr) => (
-          <text key={yr} x={x(`${yr}-01`)} y={H - 4} fontSize="9.5" fill="var(--muted)" opacity="0.7" textAnchor="middle">{yr}</text>
+          <text key={yr} x={x(`${yr}-01`)} y={H - 22} fontSize="9.5" fill="var(--muted)" opacity="0.7" textAnchor="middle">{yr}</text>
         ))}
       </svg>
     </div>

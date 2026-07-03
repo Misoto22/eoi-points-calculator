@@ -3,12 +3,13 @@
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import MonthField from './MonthField';
-import { addMonths, monthsBetween, naatiExpiryMonth } from '@/lib/timeline';
+import { addMonths, groupCauses, monthsBetween, naatiExpiryMonth } from '@/lib/timeline';
 import type { TimelineResult } from '@/lib/timeline';
 import TimelineChart from './TimelineChart';
 import type { JobAssessment, PlanningDates } from '@/lib/types';
 import { isYm } from '@/lib/types';
 import { assessingAuthority } from '@/data/assessingAuthorities';
+import { findOccupation } from '@/lib/points';
 
 interface TimelineSectionProps {
   dates: PlanningDates;
@@ -24,7 +25,8 @@ interface TimelineSectionProps {
 export default function TimelineSection({
   dates, onDatesPatch, jobs, onJobPatch, naatiChecked, timeline, goal, today,
 }: TimelineSectionProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
 
   const invalidNote = (v: string) => (v && !isYm(v) ? t('tlInvalidDate') : undefined);
 
@@ -66,8 +68,16 @@ export default function TimelineSection({
         />
       </div>
 
+      {/* Column headers once (md+); on narrow screens each field keeps its own label */}
+      <div className="hidden md:grid gap-x-9 grid-cols-3 mt-[26px]">
+        {[t('tlAusStart'), t('tlOvsStart'), t('tlAssessDate')].map((l) => (
+          <span key={l} className="text-[11.5px] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>{l}</span>
+        ))}
+      </div>
+
       {jobs.map((j, i) => {
         const info = assessingAuthority(j.anzsco);
+        const occ = findOccupation(j.anzsco);
         // Note under the assessment field: expiry once a date is set, otherwise
         // the occupation's authority + validity so the mapping is visible upfront.
         const assessNote = !j.anzsco
@@ -78,20 +88,27 @@ export default function TimelineSection({
               ? t('tlAuthorityNote', { authority: info.authority, years: info.validityYears })
               : info.authority;
         return (
-          <div
-            key={j.id}
-            className="grid gap-x-5 gap-y-[18px] mt-[18px] pt-3.5"
-            // Tag column stays fixed; fields wrap inside their own grid so a
-            // wrapped field can never fall into the narrow tag track.
-            style={{ gridTemplateColumns: '26px 1fr', borderTop: '1px solid var(--hair-soft)' }}
-          >
-            <span className="text-[17px] pt-[26px]" style={{ fontFamily: 'var(--font-serif)' }}>
-              {String.fromCharCode(65 + i)}
-            </span>
-            <div className="grid gap-x-9 gap-y-[18px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))' }}>
-              <MonthField label={t('tlAusStart')} value={j.ausWorkStart} onChange={(v) => onJobPatch(j.id, { ausWorkStart: v })} warnNote={invalidNote(j.ausWorkStart)} />
-              <MonthField label={t('tlOvsStart')} value={j.overseasWorkStart} onChange={(v) => onJobPatch(j.id, { overseasWorkStart: v })} warnNote={invalidNote(j.overseasWorkStart)} />
-              <MonthField label={t('tlAssessDate')} value={j.assessmentDate} onChange={(v) => onJobPatch(j.id, { assessmentDate: v })} warnNote={invalidNote(j.assessmentDate)} note={assessNote} />
+          <div key={j.id} className="mt-3 pt-3" style={{ borderTop: '1px solid var(--hair-soft)' }}>
+            {/* Which assessment this row belongs to — tag + occupation */}
+            <div className="flex items-baseline gap-2.5 mb-2.5 min-w-0">
+              <span className="text-[15px] leading-none flex-none" style={{ fontFamily: 'var(--font-serif)' }}>
+                {String.fromCharCode(65 + i)}
+              </span>
+              {occ ? (
+                <>
+                  <span className="text-xs tabular-nums flex-none" style={{ color: 'var(--muted)' }}>{occ.anzsco}</span>
+                  <span className="text-[12.5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{ color: 'var(--ink-soft)' }}>
+                    {lang === 'zh' ? occ.zh : occ.en}
+                  </span>
+                </>
+              ) : (
+                <span className="text-[12.5px]" style={{ color: 'var(--muted)' }}>{t('noOccName')}</span>
+              )}
+            </div>
+            <div className="grid gap-x-9 gap-y-[18px] grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pb-2">
+              <MonthField label={t('tlAusStart')} hideLabelOnMd value={j.ausWorkStart} onChange={(v) => onJobPatch(j.id, { ausWorkStart: v })} warnNote={invalidNote(j.ausWorkStart)} />
+              <MonthField label={t('tlOvsStart')} hideLabelOnMd value={j.overseasWorkStart} onChange={(v) => onJobPatch(j.id, { overseasWorkStart: v })} warnNote={invalidNote(j.overseasWorkStart)} />
+              <MonthField label={t('tlAssessDate')} hideLabelOnMd value={j.assessmentDate} onChange={(v) => onJobPatch(j.id, { assessmentDate: v })} warnNote={invalidNote(j.assessmentDate)} note={assessNote} />
             </div>
           </div>
         );
@@ -108,13 +125,33 @@ export default function TimelineSection({
           {hasAnyDate && timeline.events.length > 0 && (
             <>
               <TimelineChart timeline={timeline} goal={goal} today={today} />
-              <ol className="sr-only">
-                {timeline.events.map((e) => (
-                  <li key={e.date}>
-                    {e.date}: {e.causes.map((c) => t(c.labelKey, c.params)).join(', ')}
-                    {e.delta !== 0 ? ` (${e.delta > 0 ? '+' : ''}${e.delta} → ${e.scoreAfter})` : ''}
-                  </li>
-                ))}
+              {/* Event legend: numbers match the chart markers; identical causes
+                  across assessments are merged with their tags (A · B · C). */}
+              <ol className="m-0 mt-2 p-0 list-none">
+                {timeline.events.map((e, i) => {
+                  const isEnd = e.causes.some((c) => c.kind === 'eligibilityEnd');
+                  const danger = e.warning || e.delta < 0 || isEnd;
+                  const label = groupCauses(e.causes)
+                    .map((g) => `${g.jobTags.length ? `${g.jobTags.join(' · ')} ` : ''}${t(g.labelKey, g.params)}`)
+                    .join('　');
+                  return (
+                    <li
+                      key={e.date}
+                      className="grid items-baseline gap-x-3.5 py-[9px] text-[13px]"
+                      style={{ gridTemplateColumns: '20px 62px 1fr auto auto', borderBottom: '1px solid var(--hair-soft)' }}
+                    >
+                      <span className="text-[13px]" style={{ fontFamily: 'var(--font-serif)', color: danger ? 'var(--danger)' : 'var(--muted)' }}>{i + 1}</span>
+                      <span className="text-xs tabular-nums" style={{ color: danger ? 'var(--danger)' : 'var(--muted)' }}>{e.date}</span>
+                      <span className="leading-[1.55] min-w-0" style={{ color: danger ? 'var(--danger)' : 'var(--ink)' }}>{label}</span>
+                      <span className="text-[13px] tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: danger ? 'var(--danger)' : 'var(--ink)' }}>
+                        {e.warning ? '⚠' : `${e.delta > 0 ? '+' : ''}${e.delta}`}
+                      </span>
+                      <span className="text-[14px] tabular-nums text-right min-w-8" style={{ fontFamily: 'var(--font-serif)' }}>
+                        {e.warning ? '' : e.scoreAfter}
+                      </span>
+                    </li>
+                  );
+                })}
               </ol>
             </>
           )}

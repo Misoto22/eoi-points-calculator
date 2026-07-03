@@ -55,6 +55,8 @@ const PageContent = () => {
 
   const [openSelect, setOpenSelect] = useState<string | null>(null);
   const [jobUI, setJobUI] = useState<Record<string, JobUIState>>({});
+  // Accordion: the one assessment currently expanded for editing
+  const [openJobId, setOpenJobId] = useState<string | null>(initial.jobs[0]?.id ?? null);
   const [copied, setCopied] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [chipShown, setChipShown] = useState(false);
@@ -157,9 +159,11 @@ const PageContent = () => {
   }, []);
 
   const handleReset = useCallback(() => {
+    const nj = newJob();
     setShared({ ...defaultSharedCriteria });
-    setJobs([newJob()]);
+    setJobs([nj]);
     setJobUI({});
+    setOpenJobId(nj.id);
     setDates({ ...defaultPlanningDates });
     setGoalPoints(GOAL_RANGE.min);
   }, [setGoalPoints]);
@@ -212,18 +216,30 @@ const PageContent = () => {
             ui={jobUI[job.id] ?? { q: '', open: false }}
             onPatch={(patch) => patchJob(job.id, patch)}
             onUIPatch={(patch) => patchJobUI(job.id, patch)}
-            onRemove={() => setJobs((prev) => prev.filter((j) => j.id !== job.id))}
+            onRemove={() => {
+              setJobs((prev) => prev.filter((j) => j.id !== job.id));
+              if (openJobId === job.id) setOpenJobId(null);
+            }}
             openSelect={openSelect}
             setOpenSelect={setOpenSelect}
             ausWorkLocked={isYm(jobs[i].ausWorkStart)}
             overseasWorkLocked={isYm(jobs[i].overseasWorkStart)}
+            collapsed={openJobId !== job.id}
+            onToggleCollapse={() => {
+              setOpenSelect(null);
+              setOpenJobId(openJobId === job.id ? null : job.id);
+            }}
           />
         ))}
 
             {jobs.length < MAX_JOBS && (
               <button
                 type="button"
-                onClick={() => setJobs((prev) => [...prev, newJob()])}
+                onClick={() => {
+                  const nj = newJob();
+                  setJobs((prev) => [...prev, nj]);
+                  setOpenJobId(nj.id);
+                }}
                 className="w-full mt-[18px] p-[15px] cursor-pointer text-[12.5px] tracking-[0.14em] hover:bg-[var(--hover)] hover:border-[var(--ink)]"
                 style={{
                   background: 'none',

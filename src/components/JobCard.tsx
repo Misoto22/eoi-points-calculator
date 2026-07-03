@@ -30,6 +30,9 @@ interface JobCardProps {
   ausWorkLocked?: boolean;
   /** When true, the overseasWork select shows the date-derived bracket and is locked. */
   overseasWorkLocked?: boolean;
+  /** Accordion: collapsed cards render as a one-line summary row */
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export function occupationDisplayName(occ: Occupation | null, lang: string): string {
@@ -50,7 +53,7 @@ const listTagStyle = {
 
 export default function JobCard({
   job, evaluation, canRemove, ui, onPatch, onUIPatch, onRemove, openSelect, setOpenSelect,
-  ausWorkLocked, overseasWorkLocked,
+  ausWorkLocked, overseasWorkLocked, collapsed, onToggleCollapse,
 }: JobCardProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
@@ -67,6 +70,62 @@ export default function JobCard({
   const showDisplay = !!occ && !ui.open;
   const showSearch = !occ || ui.open;
   const cardActive = ui.open || !!openSelect?.startsWith(`${job.id}:`);
+
+  if (collapsed) {
+    return (
+      <div
+        className="mt-3 flex items-center gap-2"
+        style={{ border: '1px solid var(--hair)', background: 'var(--surface)' }}
+      >
+        <button
+          type="button"
+          onClick={onToggleCollapse}
+          aria-expanded={false}
+          aria-label={t('expandJob')}
+          className="flex-1 min-w-0 flex items-center gap-3 px-3.5 py-3 cursor-pointer text-left hover:bg-[var(--hover)]"
+          style={{ background: 'none', border: 'none', color: 'inherit' }}
+        >
+          <span className="text-[16px] leading-none flex-none" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
+          {occ ? (
+            <>
+              <span className="text-xs tabular-nums flex-none" style={{ color: 'var(--muted)' }}>{occ.anzsco}</span>
+              <span className="text-[13px] overflow-hidden text-ellipsis whitespace-nowrap">
+                {lang === 'zh' ? occ.zh : occ.en}
+              </span>
+            </>
+          ) : (
+            <span className="text-[13px]" style={{ color: 'var(--muted)' }}>{t('noOccName')}</span>
+          )}
+          <span className="flex-none hidden sm:flex items-center gap-1.5">
+            {job.ausWork && <span style={listTagStyle}>{t('chipAus', { v: job.ausWork })}</span>}
+            {job.overseasWork && <span style={listTagStyle}>{t('chipOvs', { v: job.overseasWork })}</span>}
+            {job.professionalYear && <span style={listTagStyle}>PY</span>}
+          </span>
+          <span className="ml-auto flex-none text-xs" style={{ color: 'var(--muted)' }}>
+            {t('jobSubtotal')}&nbsp;
+            <span className="text-[15px] tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}>
+              {evaluation.base}
+            </span>
+          </span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="flex-none" aria-hidden="true">
+            <path d="M1 1l4 4 4-4" stroke="var(--muted)" strokeWidth="1.2" fill="none" />
+          </svg>
+        </button>
+        {canRemove && (
+          <button
+            type="button"
+            onClick={onRemove}
+            title={t('removeJob')}
+            aria-label={t('removeJob')}
+            className="cursor-pointer text-[16px] leading-none w-8 h-8 mr-1.5 flex-none flex items-center justify-center hover:text-[var(--danger)]"
+            style={{ background: 'none', border: 'none', color: 'var(--muted)' }}
+          >
+            ×
+          </button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -93,6 +152,20 @@ export default function JobCard({
               {evaluation.base}
             </span>
           </span>
+          {onToggleCollapse && (
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              aria-expanded={true}
+              aria-label={t('collapseJob')}
+              className="cursor-pointer w-8 h-8 -my-2 flex items-center justify-center hover:bg-[var(--hover)]"
+              style={{ background: 'none', border: 'none' }}
+            >
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true" style={{ transform: 'rotate(180deg)' }}>
+                <path d="M1 1l4 4 4-4" stroke="var(--muted)" strokeWidth="1.2" fill="none" />
+              </svg>
+            </button>
+          )}
           {canRemove && (
             <button
               type="button"

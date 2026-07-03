@@ -96,6 +96,33 @@ export interface TimelineResult {
   endsAt45: boolean;
 }
 
+// —— cause grouping (display helper) —————————————————————————————————————————
+
+export interface GroupedCause {
+  labelKey: string;
+  params?: Record<string, string | number>;
+  /** Tags of the assessments sharing this cause (empty for shared causes like age) */
+  jobTags: string[];
+}
+
+/**
+ * Merge identical causes across assessments so "Australian work reaches 3 yrs"
+ * fired by A, B and C in the same month renders once with the tags collected.
+ */
+export function groupCauses(causes: TimelineCause[]): GroupedCause[] {
+  const map = new Map<string, GroupedCause>();
+  for (const c of causes) {
+    const key = `${c.labelKey}|${JSON.stringify(c.params ?? {})}`;
+    const g = map.get(key);
+    if (g) {
+      if (c.jobTag) g.jobTags.push(c.jobTag);
+    } else {
+      map.set(key, { labelKey: c.labelKey, params: c.params, jobTags: c.jobTag ? [c.jobTag] : [] });
+    }
+  }
+  return [...map.values()];
+}
+
 // —— constants ———————————————————————————————————————————————————————————————
 
 const HORIZON_MONTHS = 60;

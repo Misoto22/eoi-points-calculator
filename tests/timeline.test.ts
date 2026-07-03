@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addMonths, applyDates, buildTimeline, monthsBetween } from '@/lib/timeline';
+import { addMonths, applyDates, buildTimeline, groupCauses, monthsBetween } from '@/lib/timeline';
 import { defaultPlanningDates, defaultSharedCriteria, newJob } from '@/lib/types';
 
 const shared = (o = {}) =>
@@ -149,5 +149,26 @@ describe('NAATI CCL expiry', () => {
     const e = r.events.find((ev) => ev.causes.some((c) => c.kind === 'naatiExpiry'));
     expect(e?.date).toBe('2025-01');
     expect(e?.warning).toBe(true);
+  });
+});
+
+describe('groupCauses', () => {
+  it('merges identical causes and collects job tags', () => {
+    const groups = groupCauses([
+      { kind: 'ausWork', jobTag: 'A', labelKey: 'tl.ausWork', params: { years: 3 } },
+      { kind: 'ausWork', jobTag: 'B', labelKey: 'tl.ausWork', params: { years: 3 } },
+      { kind: 'age', labelKey: 'tl.age33', params: { age: 33 } },
+    ]);
+    expect(groups).toHaveLength(2);
+    expect(groups[0]).toEqual({ labelKey: 'tl.ausWork', params: { years: 3 }, jobTags: ['A', 'B'] });
+    expect(groups[1].jobTags).toEqual([]);
+  });
+
+  it('keeps causes with different params separate', () => {
+    const groups = groupCauses([
+      { kind: 'assessmentExpiry', jobTag: 'A', labelKey: 'tl.assessmentExpiry', params: { authority: 'ACS' } },
+      { kind: 'assessmentExpiry', jobTag: 'B', labelKey: 'tl.assessmentExpiry', params: { authority: 'VETASSESS' } },
+    ]);
+    expect(groups).toHaveLength(2);
   });
 });
