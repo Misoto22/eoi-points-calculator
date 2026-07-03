@@ -128,14 +128,14 @@ function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLa
     <div className="mt-[26px]">
       {/* Series key: which occupation each line style belongs to */}
       <div className="flex flex-wrap gap-x-6 gap-y-1.5 mb-3" onMouseLeave={() => setFocusLine(null)}>
+        {/* Hover-only highlight — plain spans keep no-op stops out of the tab
+            order; the legend text itself stays readable without interaction */}
         {series.map((s, i) => (
-          <button
+          <span
             key={s.tag}
-            type="button"
             onMouseEnter={() => setFocusLine(i)}
-            onFocus={() => setFocusLine(i)}
-            className="flex items-center gap-2 p-0 cursor-default text-left"
-            style={{ background: 'none', border: 'none', opacity: lineOpacity(i), transition: 'opacity 0.2s ease' }}
+            className="flex items-center gap-2 text-left"
+            style={{ opacity: lineOpacity(i), transition: 'opacity 0.2s ease' }}
           >
             <svg width="24" height="6" aria-hidden="true">
               <line x1="0" y1="3" x2="24" y2="3" stroke="var(--ink)" strokeWidth="1.6" strokeDasharray={DASHES[i % DASHES.length]} />
@@ -144,7 +144,7 @@ function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLa
             <span className="text-[0.75rem] leading-none" style={{ color: 'var(--ink-soft)' }}>
               {seriesLabels?.[i] ?? ''}
             </span>
-          </button>
+          </span>
         ))}
       </div>
       <div className="overflow-x-auto">

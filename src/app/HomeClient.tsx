@@ -248,7 +248,8 @@ const PageContent = () => {
     // Standalone mode scrolls the body, not the window (see globals.css)
     const bodyScrolls = document.documentElement.classList.contains('standalone');
     const currentTop = bodyScrolls ? document.body.scrollTop : window.scrollY;
-    const target = { top: el.getBoundingClientRect().top + currentTop - 32, behavior: 'smooth' as const };
+    const behavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    const target = { top: el.getBoundingClientRect().top + currentTop - 32, behavior };
     if (bodyScrolls) document.body.scrollTo(target);
     else window.scrollTo(target);
   }, []);

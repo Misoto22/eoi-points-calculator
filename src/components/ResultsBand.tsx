@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useMemo, useState } from 'react';
+import { memo, useId, useMemo, useState } from 'react';
 import type { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
@@ -83,6 +83,7 @@ function ResultsBand({
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const breakdownId = useId();
 
   // Headline reflects the bare score (裸分); per-pathway rows below show the
   // nomination-inclusive totals (+5 / +15) and eligibility.
@@ -172,7 +173,7 @@ function ResultsBand({
               <button
                 type="button"
                 onClick={onGoalDec}
-                aria-label="Decrease goal"
+                aria-label={t('goalDec')}
                 className="w-11 h-11 cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
                 style={{ background: 'none', border: 'none', color: 'var(--band-soft)' }}
               >
@@ -188,7 +189,7 @@ function ResultsBand({
               <button
                 type="button"
                 onClick={onGoalInc}
-                aria-label="Increase goal"
+                aria-label={t('goalInc')}
                 className="w-11 h-11 cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
                 style={{ background: 'none', border: 'none', color: 'var(--band-soft)' }}
               >
@@ -204,6 +205,7 @@ function ResultsBand({
               type="button"
               onClick={() => setShowBreakdown((v) => !v)}
               aria-expanded={showBreakdown}
+              aria-controls={showBreakdown ? breakdownId : undefined}
               className="w-full flex justify-between items-center cursor-pointer pt-3 pb-1 text-[0.6875rem] tracking-[0.22em] font-medium"
               style={{ background: 'none', border: 'none', color: 'var(--band-muted)' }}
             >
@@ -211,7 +213,7 @@ function ResultsBand({
               <span aria-hidden="true" className="text-[0.875rem] font-light leading-none" style={{ transition: 'transform 0.3s ease', transform: showBreakdown ? 'rotate(45deg)' : 'none' }}>+</span>
             </button>
             {showBreakdown && (
-              <>
+              <div id={breakdownId}>
                 {sharedRows.map((r) => (
                   <div
                     key={r.key}
@@ -226,7 +228,7 @@ function ResultsBand({
                   <span style={{ color: 'var(--band-muted)' }}>{t('sharedSubtotal')}</span>
                   <span className="text-[0.84375rem] font-medium tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{evaluation.sharedTotal}</span>
                 </div>
-              </>
+              </div>
             )}
           </div>
         )}

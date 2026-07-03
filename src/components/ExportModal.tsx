@@ -155,7 +155,7 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t('close')}
             className="cursor-pointer text-xl leading-none p-3 -m-2 hover:text-[var(--overlay-ink)]"
             style={{ background: 'none', border: 'none', color: 'var(--overlay-muted)' }}
           >
@@ -168,7 +168,7 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={img}
-              alt="EOI share card preview"
+              alt={t('cardPreviewAlt')}
               className="block"
               style={{ maxWidth: '100%', maxHeight: '64vh', boxShadow: 'var(--overlay-shadow)' }}
             />

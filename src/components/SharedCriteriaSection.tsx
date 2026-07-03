@@ -103,7 +103,7 @@ function SharedCriteriaSection({
       </div>
 
       {bonusGroups.map((group) => (
-        <div key={group.id} className="mt-[30px]">
+        <div key={group.id} className="mt-[30px]" role="group" aria-label={t(`groups.${group.id}`)}>
           <div className="text-[0.71875rem] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
             {t(`groups.${group.id}`)}
           </div>

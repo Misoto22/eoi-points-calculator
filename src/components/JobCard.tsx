@@ -77,6 +77,7 @@ export default function JobCard({
   const searchId = useId();
   const searchListId = `${searchId}-list`;
   const searchLabelId = `${searchId}-label`;
+  const bodyId = `${searchId}-body`;
   const searchListRef = useRef<HTMLDivElement | null>(null);
 
   // Same focus-roving idiom as SelectField: ArrowDown/Up moves real focus
@@ -150,6 +151,7 @@ export default function JobCard({
           type="button"
           onClick={onToggleCollapse}
           aria-expanded={open}
+          aria-controls={bodyId}
           className="flex-1 min-w-0 flex items-center gap-3 py-3 cursor-pointer text-left hover:bg-[var(--hover)]"
           style={{
             background: 'none',
@@ -211,6 +213,7 @@ export default function JobCard({
 
       {/* Body — symmetric height animation, same idiom as the Reference collapsibles */}
       <div
+        id={bodyId}
         inert={collapsed}
         className="grid"
         style={{ gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1)' }}

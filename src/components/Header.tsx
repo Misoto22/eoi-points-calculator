@@ -90,7 +90,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-              aria-label="Toggle theme"
+              aria-label={t('themeHint')}
               aria-pressed={resolvedTheme === 'dark'}
               title={t('themeHint')}
               className="theme-toggle w-11 h-11 -m-[9px] rounded-full cursor-pointer p-0 flex items-center justify-center"

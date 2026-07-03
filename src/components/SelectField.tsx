@@ -142,7 +142,11 @@ export default function SelectField({
               type="button"
               role="option"
               aria-selected={value === o.value && o.value !== ''}
-              onClick={() => onPick(o.value)}
+              onClick={() => {
+                onPick(o.value);
+                // The list unmounts on pick — hand focus back to the trigger
+                requestAnimationFrame(() => document.getElementById(triggerId)?.focus());
+              }}
               className="flex w-full justify-between items-baseline gap-4 px-3.5 py-3 cursor-pointer text-[0.8125rem] text-left leading-[1.45] hover:bg-[var(--hover)]"
               style={{
                 background: value === o.value && o.value !== '' ? 'var(--hover)' : 'transparent',

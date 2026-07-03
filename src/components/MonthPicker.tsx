@@ -161,7 +161,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
             className="flex justify-between items-center px-1.5 py-1.5"
             style={{ borderBottom: '1px solid var(--hair-soft)' }}
           >
-            <button type="button" aria-label="Previous year" onClick={() => setViewYear((y) => y - 1)} className={stepBtn} style={{ background: 'none', border: 'none', color: 'var(--muted)' }}>‹</button>
+            <button type="button" aria-label={t('prevYear')} onClick={() => setViewYear((y) => y - 1)} className={stepBtn} style={{ background: 'none', border: 'none', color: 'var(--muted)' }}>‹</button>
             {editingYear ? (
               <input
                 autoFocus
@@ -183,7 +183,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
                 {viewYear}
               </button>
             )}
-            <button type="button" aria-label="Next year" onClick={() => setViewYear((y) => y + 1)} className={stepBtn} style={{ background: 'none', border: 'none', color: 'var(--muted)' }}>›</button>
+            <button type="button" aria-label={t('nextYear')} onClick={() => setViewYear((y) => y + 1)} className={stepBtn} style={{ background: 'none', border: 'none', color: 'var(--muted)' }}>›</button>
           </div>
 
           <div className="grid grid-cols-4">
