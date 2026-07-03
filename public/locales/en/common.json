@@ -196,6 +196,7 @@
   "tlAssessDate": "Assessment issue month",
   "tlDerived": "Derived from date",
   "tlExpiresOn": "{{authority}} · valid {{years}} yrs · expires {{date}}",
+  "tlAuthorityNote": "{{authority}} · assessments valid {{years}} yrs",
   "tlEnglishExpires": "Expires {{date}} (valid 3 years)",
   "tlInvalidDate": "Enter a month like 2026-07",
   "tlPickMonth": "Select month…",

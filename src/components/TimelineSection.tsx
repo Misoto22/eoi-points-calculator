@@ -68,9 +68,15 @@ export default function TimelineSection({
 
       {jobs.map((j, i) => {
         const info = assessingAuthority(j.anzsco);
-        const assessNote = isYm(j.assessmentDate) && info.validityYears !== null
-          ? t('tlExpiresOn', { authority: info.authority, years: info.validityYears, date: addMonths(j.assessmentDate, info.validityYears * 12) })
-          : j.anzsco ? info.authority : undefined;
+        // Note under the assessment field: expiry once a date is set, otherwise
+        // the occupation's authority + validity so the mapping is visible upfront.
+        const assessNote = !j.anzsco
+          ? undefined
+          : isYm(j.assessmentDate) && info.validityYears !== null
+            ? t('tlExpiresOn', { authority: info.authority, years: info.validityYears, date: addMonths(j.assessmentDate, info.validityYears * 12) })
+            : info.validityYears !== null
+              ? t('tlAuthorityNote', { authority: info.authority, years: info.validityYears })
+              : info.authority;
         return (
           <div
             key={j.id}
@@ -82,7 +88,7 @@ export default function TimelineSection({
             <span className="text-[17px] pt-[26px]" style={{ fontFamily: 'var(--font-serif)' }}>
               {String.fromCharCode(65 + i)}
             </span>
-            <div className="grid gap-x-9 gap-y-[18px] items-end" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))' }}>
+            <div className="grid gap-x-9 gap-y-[18px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))' }}>
               <MonthField label={t('tlAusStart')} value={j.ausWorkStart} onChange={(v) => onJobPatch(j.id, { ausWorkStart: v })} warnNote={invalidNote(j.ausWorkStart)} />
               <MonthField label={t('tlOvsStart')} value={j.overseasWorkStart} onChange={(v) => onJobPatch(j.id, { overseasWorkStart: v })} warnNote={invalidNote(j.overseasWorkStart)} />
               <MonthField label={t('tlAssessDate')} value={j.assessmentDate} onChange={(v) => onJobPatch(j.id, { assessmentDate: v })} warnNote={invalidNote(j.assessmentDate)} note={assessNote} />

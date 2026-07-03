@@ -196,6 +196,7 @@
   "tlAssessDate": "职业评估获得月",
   "tlDerived": "已由日期推导",
   "tlExpiresOn": "{{authority}} · 有效期 {{years}} 年 · {{date}} 到期",
+  "tlAuthorityNote": "{{authority}} · 评估有效期 {{years}} 年",
   "tlEnglishExpires": "{{date}} 到期（有效期 3 年）",
   "tlInvalidDate": "请输入形如 2026-07 的年月",
   "tlPickMonth": "请选择年月…",
