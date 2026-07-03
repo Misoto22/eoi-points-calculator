@@ -26,6 +26,8 @@ export default function TimelineSection({
 }: TimelineSectionProps) {
   const { t } = useTranslation();
 
+  const invalidNote = (v: string) => (v && !isYm(v) ? t('tlInvalidDate') : undefined);
+
   const hasAnyDate = isYm(dates.birth) || isYm(dates.englishTest)
     || jobs.some((j) => isYm(j.ausWorkStart) || isYm(j.overseasWorkStart) || isYm(j.assessmentDate));
 
@@ -52,14 +54,14 @@ export default function TimelineSection({
       </p>
 
       <div className="grid gap-x-9 gap-y-[22px] mt-[26px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))' }}>
-        <MonthField label={t('tlBirth')} value={dates.birth} onChange={(v) => onDatesPatch({ birth: v })} warnNote={birthWarn} />
-        <MonthField label={t('tlEnglishTest')} value={dates.englishTest} onChange={(v) => onDatesPatch({ englishTest: v })} warnNote={englishNote} />
+        <MonthField label={t('tlBirth')} value={dates.birth} onChange={(v) => onDatesPatch({ birth: v })} warnNote={invalidNote(dates.birth) ?? birthWarn} />
+        <MonthField label={t('tlEnglishTest')} value={dates.englishTest} onChange={(v) => onDatesPatch({ englishTest: v })} warnNote={invalidNote(dates.englishTest) ?? englishNote} />
         <MonthField
           label={t('tlNaatiCert')}
           value={dates.naatiCert}
           onChange={(v) => onDatesPatch({ naatiCert: v })}
           disabled={!naatiChecked}
-          warnNote={naatiWarnNote}
+          warnNote={invalidNote(dates.naatiCert) ?? naatiWarnNote}
           note={naatiNote}
         />
       </div>
@@ -78,9 +80,9 @@ export default function TimelineSection({
             <span className="text-[17px] pb-[11px]" style={{ fontFamily: 'var(--font-serif)' }}>
               {String.fromCharCode(65 + i)}
             </span>
-            <MonthField label={t('tlAusStart')} value={j.ausWorkStart} onChange={(v) => onJobPatch(j.id, { ausWorkStart: v })} />
-            <MonthField label={t('tlOvsStart')} value={j.overseasWorkStart} onChange={(v) => onJobPatch(j.id, { overseasWorkStart: v })} />
-            <MonthField label={t('tlAssessDate')} value={j.assessmentDate} onChange={(v) => onJobPatch(j.id, { assessmentDate: v })} warnNote={undefined} note={assessNote} />
+            <MonthField label={t('tlAusStart')} value={j.ausWorkStart} onChange={(v) => onJobPatch(j.id, { ausWorkStart: v })} warnNote={invalidNote(j.ausWorkStart)} />
+            <MonthField label={t('tlOvsStart')} value={j.overseasWorkStart} onChange={(v) => onJobPatch(j.id, { overseasWorkStart: v })} warnNote={invalidNote(j.overseasWorkStart)} />
+            <MonthField label={t('tlAssessDate')} value={j.assessmentDate} onChange={(v) => onJobPatch(j.id, { assessmentDate: v })} warnNote={invalidNote(j.assessmentDate)} note={assessNote} />
           </div>
         );
       })}
