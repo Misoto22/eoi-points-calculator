@@ -176,22 +176,26 @@ const PageContent = () => {
   const sec2Active = (openSelect !== null && !openSelect.startsWith('sh:')) || anySearchOpen;
 
   return (
-    <div className="max-w-[780px] mx-auto px-[26px]">
+    <div className="max-w-[780px] wide:max-w-[1280px] mx-auto px-[26px]">
       <Header />
 
-      <SharedCriteriaSection
-        shared={derived.shared}
-        onPatch={patchShared}
-        openSelect={openSelect}
-        setOpenSelect={setOpenSelect}
-        ageLocked={isYm(dates.birth)}
-      />
+      {/* ≥wide: inputs flow in the left column, the results band sits sticky on the right.
+          Below the breakpoint the grid collapses and DOM order (01·02·03·04) is the layout. */}
+      <div className="wide:grid wide:grid-cols-[minmax(0,1fr)_400px] wide:gap-x-16 wide:items-start">
+        <div className="min-w-0">
+          <SharedCriteriaSection
+            shared={derived.shared}
+            onPatch={patchShared}
+            openSelect={openSelect}
+            setOpenSelect={setOpenSelect}
+            ageLocked={isYm(dates.birth)}
+          />
 
-      {/* 02 — Skills assessments */}
-      <section
-        className="mt-[72px] relative"
-        style={{ zIndex: sec2Active ? 30 : 'auto', animation: 'eoiFadeUp 0.7s ease 0.16s backwards' }}
-      >
+          {/* 02 — Skills assessments */}
+          <section
+            className="mt-[72px] relative"
+            style={{ zIndex: sec2Active ? 30 : 'auto', animation: 'eoiFadeUp 0.7s ease 0.16s backwards' }}
+          >
         <SectionHeading num="02" title={t('sections.jobs')} side="ASSESSMENTS" />
         <p className="mt-3.5 mb-0 text-[12.5px] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
           {t('jobsNote')}
@@ -214,47 +218,56 @@ const PageContent = () => {
           />
         ))}
 
-        {jobs.length < MAX_JOBS && (
-          <button
-            type="button"
-            onClick={() => setJobs((prev) => [...prev, newJob()])}
-            className="w-full mt-[18px] p-[15px] cursor-pointer text-[12.5px] tracking-[0.14em] hover:bg-[var(--hover)] hover:border-[var(--ink)]"
-            style={{
-              background: 'none',
-              border: '1px dashed var(--muted)',
-              color: 'var(--ink-soft)',
-              transition: 'border-color 0.2s ease, background 0.2s ease',
-            }}
-          >
-            +&nbsp;&nbsp;{t('addJob')}
-          </button>
-        )}
-      </section>
+            {jobs.length < MAX_JOBS && (
+              <button
+                type="button"
+                onClick={() => setJobs((prev) => [...prev, newJob()])}
+                className="w-full mt-[18px] p-[15px] cursor-pointer text-[12.5px] tracking-[0.14em] hover:bg-[var(--hover)] hover:border-[var(--ink)]"
+                style={{
+                  background: 'none',
+                  border: '1px dashed var(--muted)',
+                  color: 'var(--ink-soft)',
+                  transition: 'border-color 0.2s ease, background 0.2s ease',
+                }}
+              >
+                +&nbsp;&nbsp;{t('addJob')}
+              </button>
+            )}
+          </section>
+        </div>
 
-      <ResultsBand
-        evaluation={evaluation}
-        shared={shared}
-        goal={goalPoints}
-        displayTotal={displayTotal}
-        onGoalDec={() => setGoalPoints((prev: number) => Math.max(GOAL_RANGE.min, prev - GOAL_RANGE.step))}
-        onGoalInc={() => setGoalPoints((prev: number) => Math.min(GOAL_RANGE.max, prev + GOAL_RANGE.step))}
-        onOpenExport={() => setExportOpen(true)}
-        onCopyLink={handleCopyLink}
-        copied={copied}
-        onReset={handleReset}
-        bandRef={bandRef}
-      />
+        {/* Right column on wide screens: results stay in view while editing */}
+        <div className="min-w-0 wide:col-start-2 wide:row-start-1 wide:row-span-2">
+          <div className="wide:sticky wide:top-5 wide:max-h-[calc(100vh-40px)] wide:overflow-y-auto">
+            <ResultsBand
+              evaluation={evaluation}
+              shared={shared}
+              goal={goalPoints}
+              displayTotal={displayTotal}
+              onGoalDec={() => setGoalPoints((prev: number) => Math.max(GOAL_RANGE.min, prev - GOAL_RANGE.step))}
+              onGoalInc={() => setGoalPoints((prev: number) => Math.min(GOAL_RANGE.max, prev + GOAL_RANGE.step))}
+              onOpenExport={() => setExportOpen(true)}
+              onCopyLink={handleCopyLink}
+              copied={copied}
+              onReset={handleReset}
+              bandRef={bandRef}
+            />
+          </div>
+        </div>
 
-      <TimelineSection
-        dates={dates}
-        onDatesPatch={patchDates}
-        jobs={jobs}
-        onJobPatch={patchJob}
-        naatiChecked={shared.communityLanguage}
-        timeline={timeline}
-        goal={goalPoints}
-        today={today}
-      />
+        <div className="min-w-0 wide:col-start-1 wide:row-start-2">
+          <TimelineSection
+            dates={dates}
+            onDatesPatch={patchDates}
+            jobs={jobs}
+            onJobPatch={patchJob}
+            naatiChecked={shared.communityLanguage}
+            timeline={timeline}
+            goal={goalPoints}
+            today={today}
+          />
+        </div>
+      </div>
 
       <ReferenceSection totalPoints={bareScore} evaluation={evaluation} />
 
