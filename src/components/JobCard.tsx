@@ -47,10 +47,14 @@ export function occupationDisplayName(occ: Occupation | null, lang: string): str
 
 const MAX_RESULTS = 8;
 const SELECT_FIELDS: JobSelectField[] = ['ausWork', 'overseasWork'];
-// Optional start-month input under each experience select — one home per fact
+// Optional work-period inputs under each experience select — one home per fact
 const START_FIELD: Record<JobSelectField, 'ausWorkStart' | 'overseasWorkStart'> = {
   ausWork: 'ausWorkStart',
   overseasWork: 'overseasWorkStart',
+};
+const END_FIELD: Record<JobSelectField, 'ausWorkEnd' | 'overseasWorkEnd'> = {
+  ausWork: 'ausWorkEnd',
+  overseasWork: 'overseasWorkEnd',
 };
 
 const listTagStyle = {
@@ -317,12 +321,20 @@ export default function JobCard({
                 fieldBg="bg"
                 lockedNote={locked ? t('tlDerived') : undefined}
               />
-              {/* Precise alternative to the bracket: a start month that derives it */}
+              {/* Precise alternative to the bracket: a work period that derives it
+                  (10-year window; empty end = ongoing) */}
               <SubMonthRow
                 label={t('jobStartMonth')}
                 value={job[startField]}
                 onChange={(v) => onPatch({ [startField]: v })}
                 placeholder={t('tlPickMonth')}
+                endValue={job[END_FIELD[field]]}
+                onEndChange={(v) => onPatch({ [END_FIELD[field]]: v })}
+                endPlaceholder={t('tlOngoing')}
+                endSeparator={t('jobEndSep')}
+                warn={isYm(job[startField]) && isYm(job[END_FIELD[field]]) && job[END_FIELD[field]] < job[startField]
+                  ? t('tlEndBeforeStart')
+                  : undefined}
               />
             </div>
           );

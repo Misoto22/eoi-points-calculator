@@ -5,7 +5,7 @@ import { defaultPlanningDates, defaultSharedCriteria } from '@/lib/types';
 import type { PlanningDates } from '@/lib/types';
 
 function job(overrides: Partial<JobAssessment> = {}): JobAssessment {
-  return { id: 'j1', anzsco: '', ausWork: '', overseasWork: '', professionalYear: false, ausWorkStart: '', overseasWorkStart: '', assessmentDate: '', ...overrides };
+  return { id: 'j1', anzsco: '', ausWork: '', overseasWork: '', professionalYear: false, ausWorkStart: '', ausWorkEnd: '', overseasWorkStart: '', overseasWorkEnd: '', assessmentDate: '', ...overrides };
 }
 
 function dates(overrides: Partial<PlanningDates> = {}): PlanningDates {

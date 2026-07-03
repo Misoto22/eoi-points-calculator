@@ -24,6 +24,21 @@ export const monthsBetween = (a: string, b: string): number => toN(b) - toN(a);
 const fullYears = (from: string, at: string): number =>
   Math.floor(Math.max(0, monthsBetween(from, at)) / 12);
 
+/** The points test only counts work in the 10 years before the reference date */
+const WORK_WINDOW_MONTHS = 120;
+
+/**
+ * Whole years of a work period falling inside the 10-year window that ends at
+ * `at`. An empty/invalid `end` means the job is ongoing.
+ */
+export function yearsInWindow(start: string, end: string, at: string): number {
+  if (!isYm(start)) return 0;
+  const a = toN(at);
+  const e = isYm(end) ? Math.min(toN(end), a) : a;
+  const months = Math.min(e, a) - Math.max(toN(start), a - WORK_WINDOW_MONTHS);
+  return Math.floor(Math.max(0, months) / 12);
+}
+
 // —— bracket derivation ——————————————————————————————————————————————————————
 
 const AGE_BRACKETS: [min: number, max: number, value: string][] = [
@@ -57,8 +72,8 @@ export function applyDates(
 
   const js = jobs.map((j) => {
     const out = { ...j };
-    if (isYm(j.ausWorkStart)) out.ausWork = ausWorkValue(fullYears(j.ausWorkStart, at));
-    if (isYm(j.overseasWorkStart)) out.overseasWork = overseasWorkValue(fullYears(j.overseasWorkStart, at));
+    if (isYm(j.ausWorkStart)) out.ausWork = ausWorkValue(yearsInWindow(j.ausWorkStart, j.ausWorkEnd, at));
+    if (isYm(j.overseasWorkStart)) out.overseasWork = overseasWorkValue(yearsInWindow(j.overseasWorkStart, j.overseasWorkEnd, at));
     return out;
   });
 
@@ -181,25 +196,32 @@ export function buildTimeline({
   jobs.forEach((j, i) => {
     const tag = String.fromCharCode(65 + i); // 'A', 'B', …
 
-    if (isYm(j.ausWorkStart)) {
-      for (const y of [1, 3, 5, 8]) {
-        push(addMonths(j.ausWorkStart, y * 12), {
-          kind: 'ausWork',
-          jobTag: tag,
-          labelKey: 'tl.ausWork',
-          params: { years: y },
-        });
-      }
-    }
-
-    if (isYm(j.overseasWorkStart)) {
-      for (const y of [3, 5, 8]) {
-        push(addMonths(j.overseasWorkStart, y * 12), {
-          kind: 'overseasWork',
-          jobTag: tag,
-          labelKey: 'tl.overseasWork',
-          params: { years: y },
-        });
+    // Work brackets can rise AND fall (ended periods slide out of the 10-year
+    // window), so scan month by month for bracket transitions instead of
+    // projecting fixed anniversaries. ≤60 iterations per field — cheap.
+    const BRACKET_THRESHOLD: Record<string, number> = { '': 0, '1-3': 1, '3-5': 3, '5-8': 5, '8-10': 8 };
+    const workSpecs = [
+      { kind: 'ausWork' as const, start: j.ausWorkStart, end: j.ausWorkEnd, value: ausWorkValue, upKey: 'tl.ausWork', downKey: 'tl.ausWorkDrop' },
+      { kind: 'overseasWork' as const, start: j.overseasWorkStart, end: j.overseasWorkEnd, value: overseasWorkValue, upKey: 'tl.overseasWork', downKey: 'tl.overseasWorkDrop' },
+    ];
+    for (const spec of workSpecs) {
+      if (!isYm(spec.start)) continue;
+      let prevVal = spec.value(yearsInWindow(spec.start, spec.end, today));
+      const span = monthsBetween(today, horizonEnd);
+      for (let m = 1; m <= span; m++) {
+        const at = addMonths(today, m);
+        const val = spec.value(yearsInWindow(spec.start, spec.end, at));
+        if (val !== prevVal) {
+          const rising = BRACKET_THRESHOLD[val] > BRACKET_THRESHOLD[prevVal];
+          push(at, {
+            kind: spec.kind,
+            jobTag: tag,
+            labelKey: rising ? spec.upKey : spec.downKey,
+            // Rising: the threshold just reached; falling: the threshold just lost
+            params: { years: rising ? BRACKET_THRESHOLD[val] : BRACKET_THRESHOLD[prevVal] },
+          });
+          prevVal = val;
+        }
       }
     }
 

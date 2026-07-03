@@ -68,6 +68,8 @@ export function parseStateFromParams(params: URLSearchParams): AppState | null {
       job.ausWorkStart = seg[4] && isYm(seg[4]) ? seg[4] : '';
       job.overseasWorkStart = seg[5] && isYm(seg[5]) ? seg[5] : '';
       job.assessmentDate = seg[6] && isYm(seg[6]) ? seg[6] : '';
+      job.ausWorkEnd = seg[7] && isYm(seg[7]) ? seg[7] : '';
+      job.overseasWorkEnd = seg[8] && isYm(seg[8]) ? seg[8] : '';
       return job;
     });
     if (jobs.length) hasAny = true;
@@ -121,9 +123,9 @@ export function stateToQueryString(
     if (shared[field]) params.set(param, '1');
   }
   const js = jobs
-    .filter((j) => j.anzsco || j.ausWork || j.overseasWork || j.professionalYear || j.ausWorkStart || j.overseasWorkStart || j.assessmentDate)
+    .filter((j) => j.anzsco || j.ausWork || j.overseasWork || j.professionalYear || j.ausWorkStart || j.overseasWorkStart || j.assessmentDate || j.ausWorkEnd || j.overseasWorkEnd)
     .map((j) =>
-      [j.anzsco, j.ausWork, j.overseasWork, j.professionalYear ? '1' : '0', j.ausWorkStart, j.overseasWorkStart, j.assessmentDate]
+      [j.anzsco, j.ausWork, j.overseasWork, j.professionalYear ? '1' : '0', j.ausWorkStart, j.overseasWorkStart, j.assessmentDate, j.ausWorkEnd, j.overseasWorkEnd]
         .join(':')
         .replace(/:+$/, ''),
     )

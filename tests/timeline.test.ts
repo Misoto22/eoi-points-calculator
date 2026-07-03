@@ -172,3 +172,38 @@ describe('groupCauses', () => {
     expect(groups).toHaveLength(2);
   });
 });
+
+describe('10-year work window', () => {
+  const today = '2026-07';
+
+  it('counts only window-overlap years for ended work', () => {
+    // ended 2016-01..2024-01 seen from 2026-07: window opens 2016-07 → 90 months → 7 years
+    expect(applyDates(shared(), [job({ ausWorkStart: '2016-01', ausWorkEnd: '2024-01' })], dates(), today).jobs[0].ausWork).toBe('5-8');
+    // same period seen from 2030-01: window opens 2020-01 → 48 months → 4 years
+    expect(applyDates(shared(), [job({ ausWorkStart: '2016-01', ausWorkEnd: '2024-01' })], dates(), '2030-01').jobs[0].ausWork).toBe('3-5');
+  });
+
+  it('treats end-before-start as zero years', () => {
+    expect(applyDates(shared(), [job({ ausWorkStart: '2025-01', ausWorkEnd: '2024-01' })], dates(), today).jobs[0].ausWork).toBe('');
+  });
+
+  it('emits a drop event when ended work slides below a bracket', () => {
+    const r = buildTimeline({
+      shared: shared(),
+      jobs: [job({ ausWorkStart: '2016-01', ausWorkEnd: '2024-01' })],
+      dates: dates(),
+      today,
+    });
+    const drop = r.events.find((e) => e.causes.some((c) => c.labelKey === 'tl.ausWorkDrop'));
+    expect(drop?.date).toBe('2029-02');            // window slips below 5 years here
+    expect(drop?.delta).toBe(-5);                  // 5-8 (15) → 3-5 (10)
+    expect(drop?.causes[0].params?.years).toBe(5); // the threshold lost
+  });
+
+  it('keeps ongoing work identical to the old anniversary behaviour', () => {
+    const r = buildTimeline({ shared: shared(), jobs: [job({ overseasWorkStart: '2021-11' })], dates: dates(), today });
+    const m = r.events.find((e) => e.causes.some((c) => c.kind === 'overseasWork'));
+    expect(m?.date).toBe('2026-11');
+    expect(m?.delta).toBe(5);
+  });
+});
