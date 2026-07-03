@@ -4,7 +4,9 @@ import { cardPalettes } from '@/data/cardThemes';
 export const runtime = 'edge';
 
 const C = cardPalettes.cream;
-const fontData = fetch(new URL('./NotoSerifSC-sub.otf', import.meta.url)).then((r) => r.arrayBuffer());
+const fontData = fetch(new URL('./NotoSerifSC-sub.otf', import.meta.url))
+  .then((r) => r.arrayBuffer())
+  .catch(() => null);   // null = render without custom font
 
 function card(score: number, lang: 'zh' | 'en', occ: string[], eligible: string[]) {
   return (
@@ -34,9 +36,11 @@ function card(score: number, lang: 'zh' | 'en', occ: string[], eligible: string[
 }
 
 export async function GET(req: Request) {
-  const font = { name: 'Serif', data: await fontData, weight: 500 as const };
+  // With fonts: [] satori falls back to its default font — acceptable degraded mode.
+  const fontBuffer = await fontData;
   const opts = {
-    width: 1200, height: 630, fonts: [font],
+    width: 1200, height: 630,
+    fonts: fontBuffer ? [{ name: 'Serif', data: fontBuffer, weight: 500 as const }] : [],
     headers: { 'cache-control': 'public, immutable, no-transform, max-age=31536000' },
   };
   try {
