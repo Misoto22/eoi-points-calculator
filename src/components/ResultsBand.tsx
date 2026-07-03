@@ -122,6 +122,10 @@ export default function ResultsBand({
           transition: 'background 0.4s ease, color 0.4s ease',
         }}
       >
+        {/* Announce the settled score (not the animated displayTotal) to screen readers */}
+        <span className="sr-only" role="status" aria-live="polite">
+          {t('srTotal', { n: total })}
+        </span>
         <div className="flex justify-between items-end gap-5 flex-wrap">
           <div className="flex flex-col gap-2.5 min-w-0">
             <span className="text-[11.5px] tracking-[0.22em] font-medium" style={{ color: 'var(--band-muted)' }}>

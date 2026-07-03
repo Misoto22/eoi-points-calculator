@@ -120,7 +120,6 @@ export default function JobCard({
           type="button"
           onClick={onToggleCollapse}
           aria-expanded={open}
-          aria-label={open ? t('collapseJob') : t('expandJob')}
           className="flex-1 min-w-0 flex items-center gap-3 py-3 cursor-pointer text-left hover:bg-[var(--hover)]"
           style={{
             background: 'none',

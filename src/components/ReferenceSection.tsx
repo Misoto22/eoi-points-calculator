@@ -9,7 +9,6 @@ import { invitationRounds } from '@/data/invitationRounds';
 import { states } from '@/data/stateLists';
 
 interface ReferenceSectionProps {
-  totalPoints: number;
   evaluation: Evaluation;
 }
 
@@ -50,7 +49,7 @@ function Collapsible({ title, children }: { title: string; children: ReactNode }
   );
 }
 
-export default function ReferenceSection({ totalPoints, evaluation }: ReferenceSectionProps) {
+export default function ReferenceSection({ evaluation }: ReferenceSectionProps) {
   const { t } = useTranslation();
 
   const jobsWithOcc = evaluation.jobs.filter((je) => je.occupation);
@@ -63,38 +62,30 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
         <Collapsible title={t('roundsTitle')}>
           <div
             className="grid gap-3 py-2 text-[11px] tracking-[0.12em] font-medium"
-            style={{ gridTemplateColumns: '90px 56px 1fr 1fr 22px', borderBottom: '1px solid var(--ink)', color: 'var(--muted)' }}
+            style={{ gridTemplateColumns: '90px 56px 1fr 1fr', borderBottom: '1px solid var(--ink)', color: 'var(--muted)' }}
           >
             <span>{t('roundsDate')}</span>
             <span>{t('roundsVisa')}</span>
             <span className="text-right">{t('roundsMin')}</span>
             <span className="text-right">{t('roundsInv')}</span>
-            <span />
           </div>
-          {invitationRounds.map((r) => {
-            const hit = totalPoints >= r.minimumPoints && totalPoints > 0;
-            return (
-              <div
-                key={r.date}
-                title={hit ? t('roundsHitYes') : t('roundsHitNo')}
-                className="grid gap-3 py-[11px] text-[13px] tabular-nums items-baseline"
-                style={{ gridTemplateColumns: '90px 56px 1fr 1fr 22px', borderBottom: '1px solid var(--hair-soft)' }}
-              >
-                <span style={{ color: 'var(--ink-soft)' }}>{r.date}</span>
-                <span style={{ color: 'var(--muted)' }}>{r.visa}</span>
-                <span className="text-right">{r.minimumPoints}</span>
-                <span className="text-right" style={{ color: 'var(--ink-soft)' }}>
-                  {r.invitations.toLocaleString('en-US')}
-                </span>
-                <span className="flex justify-end">
-                  <span
-                    className="w-[7px] h-[7px] rounded-full"
-                    style={{ border: '1px solid var(--muted)', background: hit ? 'var(--ink)' : 'transparent' }}
-                  />
-                </span>
-              </div>
-            );
-          })}
+          {/* No pass/fail marker here on purpose: `minimumPoints` is only the
+              trades floor (see data file note) — comparing the user's score
+              against it would read as "you qualify" when they likely don't. */}
+          {invitationRounds.map((r) => (
+            <div
+              key={r.date}
+              className="grid gap-3 py-[11px] text-[13px] tabular-nums items-baseline"
+              style={{ gridTemplateColumns: '90px 56px 1fr 1fr', borderBottom: '1px solid var(--hair-soft)' }}
+            >
+              <span style={{ color: 'var(--ink-soft)' }}>{r.date}</span>
+              <span style={{ color: 'var(--muted)' }}>{r.visa}</span>
+              <span className="text-right">{r.minimumPoints}</span>
+              <span className="text-right" style={{ color: 'var(--ink-soft)' }}>
+                {r.invitations.toLocaleString('en-US')}
+              </span>
+            </div>
+          ))}
           <p className="mt-4 mb-0 text-xs leading-[1.7] max-w-[56em]" style={{ color: 'var(--muted)' }}>
             {t('roundsNote')}
           </p>

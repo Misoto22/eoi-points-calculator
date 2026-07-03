@@ -302,7 +302,7 @@ const PageContent = () => {
         </div>
       </div>
 
-      <ReferenceSection totalPoints={bareScore} evaluation={evaluation} />
+      <ReferenceSection evaluation={evaluation} />
 
       {/* Footer */}
       <footer
