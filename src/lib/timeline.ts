@@ -136,9 +136,9 @@ export function buildTimeline({
     causesByMonth.set(m, [...(causesByMonth.get(m) ?? []), c]);
   };
 
-  // Age bracket changes at 33 and 40; eligibility ends at 45.
+  // Age bracket changes at 25, 33 and 40; eligibility ends at 45.
   if (isYm(dates.birth)) {
-    for (const target of [33, 40] as const) {
+    for (const target of [25, 33, 40] as const) {
       push(addMonths(dates.birth, target * 12), {
         kind: 'age',
         labelKey: `tl.age${target}`,

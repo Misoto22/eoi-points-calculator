@@ -203,6 +203,7 @@
   "tlOver45": "Age 45+ — no longer eligible for these visas",
   "tlEmpty": "Fill in any month above to draw the projection.",
   "tl": {
+    "age25": "Turns 25 — age bracket rises",
     "age33": "Turns 33 — age bracket drops",
     "age40": "Turns 40 — age bracket drops",
     "age45": "Turns 45 — no longer eligible",

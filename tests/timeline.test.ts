@@ -99,6 +99,14 @@ describe('buildTimeline', () => {
     // weak job's milestone (+5 on its own card) doesn't beat strong job's base → no event
     expect(r.events.filter((e) => e.delta !== 0)).toEqual([]);
   });
+
+  it('emits a 25th-birthday age event with +5 delta', () => {
+    // Born 2003-01, today 2026-07 → turns 25 at 2028-01; bracket rises 18-24 (25 pts) → 25-32 (30 pts)
+    const r = buildTimeline({ shared: shared(), jobs: [job()], dates: dates({ birth: '2003-01' }), today });
+    const e = r.events.find((ev) => ev.causes.some((c) => c.kind === 'age'));
+    expect(e?.date).toBe('2028-01');
+    expect(e?.delta).toBe(5);
+  });
 });
 
 describe('NAATI CCL expiry', () => {
