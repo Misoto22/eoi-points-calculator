@@ -82,6 +82,14 @@ export type JobSelectField = keyof typeof jobSelectCriteria;
 export const professionalYearPoints = 5;
 
 /**
+ * Part 6D.5 item 6D51: when an applicant qualifies under both Part 6D.3
+ * (overseas employment) and Part 6D.4 (Australian employment) and the
+ * combined points exceed 20, exactly 20 points are awarded.
+ * Source: Migration Regulations 1994 Schedule 6D (verified 2026-07-03).
+ */
+export const EMPLOYMENT_EXPERIENCE_CAP = 20;
+
+/**
  * Visa pathways. `lists` is the federal occupation-list gate.
  * `perState` pathways additionally depend on each state's own occupation list
  * (see stateLists.ts) — the nomination bonus is only claimable with a nomination.
@@ -100,7 +108,8 @@ export const pathways: Pathway[] = [
 ];
 
 export const MIN_POINTS = 65;
-export const GOAL_RANGE = { min: 65, max: 120, step: 5 } as const;
+// max = theoretical best base score: shared 105 + capped employment 20 + PY 5
+export const GOAL_RANGE = { min: 65, max: 130, step: 5 } as const;
 export const MAX_JOBS = 5;
 
 export function optionPoints(options: PointOption[], value: string): number {

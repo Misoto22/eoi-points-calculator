@@ -28,7 +28,7 @@ export interface StateInfo {
 
 /** Metadata per state; descriptive how/tip strings live in the locale files under `states.<code>` */
 export const states: StateInfo[] = [
-  { code: 'NSW', url: 'https://www.nsw.gov.au/visas-and-migration' },
+  { code: 'NSW', url: 'https://www.nsw.gov.au/visas-and-migration/skilled-visas/nsw-skills-lists' },
   { code: 'VIC', url: 'https://liveinmelbourne.vic.gov.au' },
   { code: 'QLD', url: 'https://migration.qld.gov.au' },
   { code: 'WA', url: 'https://migration.wa.gov.au' },

@@ -26,7 +26,7 @@
     "lang": "Language"
   },
   "boxes": {
-    "stem": "STEM / IT Masters by research or PhD (2 yrs)",
+    "stem": "STEM / IT Masters by research or PhD at an Australian institution (2 yrs)",
     "ausStudy": "Australian study (2 yrs full-time)",
     "regionalStudy": "Regional study (2 yrs)",
     "communityLanguage": "NAATI certification (CCL / Interpreter / Translator)"
@@ -54,7 +54,7 @@
     "partnerStatus": {
       "none": "Partner without claimable points",
       "single": "Single applicant",
-      "partnerSkills": "Partner with skills assessment",
+      "partnerSkills": "Partner with skills assessment + competent English",
       "partnerCitizen": "Partner is AU citizen / PR",
       "partnerEnglish": "Partner with competent English"
     },
@@ -159,7 +159,7 @@
     },
     "NT": {
       "how": "Offshore MOL · onshore needs NT connection",
-      "tip": "Very limited places in 2025–26, exceptions only"
+      "tip": "About 1,650 places in 2025–26; onshore applicants need NT ties"
     }
   },
   "suggestionCaps": "HOW TO GAIN MORE POINTS",
@@ -221,13 +221,13 @@
     "age33": "Turns 33 — age bracket drops",
     "age40": "Turns 40 — age bracket drops",
     "age45": "Turns 45 — no longer eligible",
-    "ausWork": "Australian work reaches {{years}} yrs",
-    "overseasWork": "Overseas work reaches {{years}} yrs",
+    "ausWork": "Australian work reaches the {{years}}-year mark",
+    "overseasWork": "Overseas work reaches the {{years}}-year mark",
     "englishExpiry": "English test result expires",
     "assessmentExpiry": "{{authority}} assessment expires",
     "naatiExpiry": "NAATI CCL credential expires",
-    "ausWorkDrop": "Australian work in the 10-yr window falls below {{years}} yrs",
-    "overseasWorkDrop": "Overseas work in the 10-yr window falls below {{years}} yrs"
+    "ausWorkDrop": "Australian work in the 10-yr window falls below the {{years}}-year mark",
+    "overseasWorkDrop": "Overseas work in the 10-yr window falls below the {{years}}-year mark"
   },
   "tlToday": "TODAY",
   "tlGoalLine": "Goal {{n}}",

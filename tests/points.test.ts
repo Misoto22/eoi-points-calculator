@@ -288,3 +288,28 @@ describe('data integrity', () => {
     }
   });
 });
+
+describe('combined employment cap (Part 6D.5 item 6D51)', () => {
+  const shared = { age: '25-32', english: 'ielts8', education: 'bachelor', partnerStatus: 'single', stem: false, ausStudy: false, regionalStudy: false, communityLanguage: false };
+  const job = (o = {}) => ({ id: 'j1', anzsco: '261313', ausWork: '', overseasWork: '', professionalYear: false, ausWorkStart: '', ausWorkEnd: '', overseasWorkStart: '', overseasWorkEnd: '', assessmentDate: '', ...o });
+
+  it('caps AU + overseas employment points at 20', () => {
+    // shared = 30+20+15+10 = 75; aus 8-10 (20) + ovs 8-10 (15) would be 35 uncapped
+    const ev = evaluate(shared, [job({ ausWork: '8-10', overseasWork: '8-10' })]);
+    expect(ev.jobs[0].base).toBe(75 + 20);
+  });
+
+  it('leaves combinations at or under 20 untouched', () => {
+    // aus 3-5 (10) + ovs 5-8 (10) = exactly 20
+    const ev = evaluate(shared, [job({ ausWork: '3-5', overseasWork: '5-8' })]);
+    expect(ev.jobs[0].base).toBe(75 + 20);
+    // aus 1-3 (5) + ovs 3-5 (5) = 10
+    const ev2 = evaluate(shared, [job({ ausWork: '1-3', overseasWork: '3-5' })]);
+    expect(ev2.jobs[0].base).toBe(75 + 10);
+  });
+
+  it('applies the cap before adding Professional Year points', () => {
+    const ev = evaluate(shared, [job({ ausWork: '8-10', overseasWork: '8-10', professionalYear: true })]);
+    expect(ev.jobs[0].base).toBe(75 + 20 + 5);
+  });
+});

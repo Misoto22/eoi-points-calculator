@@ -103,7 +103,8 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
     if (!canvasRef.current) return;
     const a = document.createElement('a');
     const unit = lang === 'zh' ? '分' : 'pts';
-    a.download = `EOI-${evaluation.bestTotal}${unit}-${todayLabel().replace(/\./g, '-')}.png`;
+    // Filename carries the bare score — same figure every other surface shows
+    a.download = `EOI-${evaluation.bareScore}${unit}-${todayLabel().replace(/\./g, '-')}.png`;
     a.href = canvasRef.current.toDataURL('image/png');
     a.click();
   };

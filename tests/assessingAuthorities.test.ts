@@ -18,8 +18,16 @@ describe('assessingAuthority', () => {
 
   it('maps accountants, teachers and nurses to their bodies', () => {
     expect(assessingAuthority('221111').authority).toMatch(/CPA/);
-    expect(assessingAuthority('241111').authority).toBe('AITSL');
+    // Secondary teachers stay with AITSL…
+    expect(assessingAuthority('241411').authority).toBe('AITSL');
     expect(assessingAuthority('254411').authority).toBe('ANMAC');
+  });
+
+  it('maps early-childhood occupations to ACECQA', () => {
+    // 241111 moved from AITSL to ACECQA effective 7 Dec 2024
+    expect(assessingAuthority('241111')).toEqual({ authority: 'ACECQA', validityYears: 3 });
+    // 134111 Child Care Centre Manager has been ACECQA since 2019
+    expect(assessingAuthority('134111')).toEqual({ authority: 'ACECQA', validityYears: 3 });
   });
 
   it('falls back to TRA for trades (major group 3) and VETASSESS otherwise', () => {

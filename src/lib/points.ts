@@ -2,6 +2,7 @@ import type { JobAssessment, SharedCriteria } from './types';
 import type { Occupation } from '@/data/occupations';
 import { occupations } from '@/data/occupations';
 import {
+  EMPLOYMENT_EXPERIENCE_CAP,
   MIN_POINTS,
   jobSelectCriteria,
   optionPoints,
@@ -101,7 +102,9 @@ export function evaluate(shared: SharedCriteria, jobs: JobAssessment[]): Evaluat
 
   const jobEvaluations: JobEvaluation[] = jobs.map((job, index) => {
     const points = calculateJobPoints(job);
-    const base = sharedTotal + points.ausWork + points.overseasWork + points.professionalYear;
+    // Part 6D.5 item 6D51: combined AU + overseas employment points cap at 20
+    const employment = Math.min(points.ausWork + points.overseasWork, EMPLOYMENT_EXPERIENCE_CAP);
+    const base = sharedTotal + employment + points.professionalYear;
     const occupation = findOccupation(job.anzsco);
 
     const pathwayResults: PathwayResult[] = pathways.map((p) => {
