@@ -239,5 +239,11 @@
   "cardMin": "最低要求",
   "cardEmpty": "尚未选择任何条件",
   "cardPathways": "职业路径 · PATHWAYS",
-  "cardShared": "共同条件 · SHARED"
+  "cardShared": "共同条件 · SHARED",
+  "pwaTitle": "添加到主屏幕",
+  "pwaIosHintPre": "把计算器装成应用:点击 Safari 的分享按钮",
+  "pwaIosHintPost": ",然后选择「添加到主屏幕」。",
+  "pwaChromiumHint": "把计算器安装为应用——独立窗口运行,支持离线使用。",
+  "pwaInstall": "安装应用",
+  "pwaLater": "暂不"
 }
