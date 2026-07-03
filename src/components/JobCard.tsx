@@ -85,19 +85,28 @@ export default function JobCard({
   const showSearch = !occ || ui.open;
   const cardActive = ui.open || !!openSelect?.startsWith(`${job.id}:`);
 
-  if (collapsed) {
-    return (
-      <div
-        className="mt-3 flex items-center gap-2"
-        style={{ border: '1px solid var(--hair)', background: 'var(--surface)' }}
-      >
+  const open = !collapsed;
+
+  return (
+    <div
+      className="mt-3 relative"
+      style={{
+        border: '1px solid var(--hair)',
+        background: 'var(--surface)',
+        zIndex: cardActive ? 30 : 1,
+        animation: 'eoiFadeUp 0.4s ease backwards',
+      }}
+    >
+      {/* Header — identical geometry in both states; only the chips toggle.
+          The chevron rotates in place, so it never jumps between layouts. */}
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={onToggleCollapse}
-          aria-expanded={false}
-          aria-label={t('expandJob')}
-          className="flex-1 min-w-0 flex items-center gap-3 px-3.5 py-3 cursor-pointer text-left hover:bg-[var(--hover)]"
-          style={{ background: 'none', border: 'none', color: 'inherit' }}
+          aria-expanded={open}
+          aria-label={open ? t('collapseJob') : t('expandJob')}
+          className="flex-1 min-w-0 flex items-center gap-3 py-3 cursor-pointer text-left hover:bg-[var(--hover)]"
+          style={{ background: 'none', border: 'none', color: 'inherit', paddingLeft: 'clamp(18px, 3.4vw, 28px)', transition: 'background 0.15s ease' }}
         >
           <span className="text-[16px] leading-none flex-none" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
           {occ ? (
@@ -108,20 +117,27 @@ export default function JobCard({
               </span>
             </>
           ) : (
-            <span className="text-[13px]" style={{ color: 'var(--muted)' }}>{t('noOccName')}</span>
+            <span className="text-[11.5px] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
+              {t('jobCaps')}
+            </span>
           )}
-          <span className="flex-none hidden sm:flex items-center gap-1.5">
-            {job.ausWork && <span style={listTagStyle}>{t('chipAus', { v: job.ausWork })}</span>}
-            {job.overseasWork && <span style={listTagStyle}>{t('chipOvs', { v: job.overseasWork })}</span>}
-            {job.professionalYear && <span style={listTagStyle}>PY</span>}
-          </span>
+          {collapsed && (
+            <span className="flex-none hidden sm:flex items-center gap-1.5">
+              {job.ausWork && <span style={listTagStyle}>{t('chipAus', { v: job.ausWork })}</span>}
+              {job.overseasWork && <span style={listTagStyle}>{t('chipOvs', { v: job.overseasWork })}</span>}
+              {job.professionalYear && <span style={listTagStyle}>PY</span>}
+            </span>
+          )}
           <span className="ml-auto flex-none text-xs" style={{ color: 'var(--muted)' }}>
             {t('jobSubtotal')}&nbsp;
             <span className="text-[15px] tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}>
               {evaluation.base}
             </span>
           </span>
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="flex-none" aria-hidden="true">
+          <svg
+            width="10" height="6" viewBox="0 0 10 6" fill="none" className="flex-none" aria-hidden="true"
+            style={{ transition: 'transform 0.3s ease', transform: open ? 'rotate(180deg)' : 'none' }}
+          >
             <path d="M1 1l4 4 4-4" stroke="var(--muted)" strokeWidth="1.2" fill="none" />
           </svg>
         </button>
@@ -131,69 +147,22 @@ export default function JobCard({
             onClick={onRemove}
             title={t('removeJob')}
             aria-label={t('removeJob')}
-            className="cursor-pointer text-[16px] leading-none w-8 h-8 mr-1.5 flex-none flex items-center justify-center hover:text-[var(--danger)]"
+            className="cursor-pointer text-[16px] leading-none w-8 h-8 mr-2.5 flex-none flex items-center justify-center hover:text-[var(--danger)]"
             style={{ background: 'none', border: 'none', color: 'var(--muted)' }}
           >
             ×
           </button>
         )}
       </div>
-    );
-  }
 
-  return (
-    <div
-      className="mt-[22px] relative"
-      style={{
-        border: '1px solid var(--hair)',
-        background: 'var(--surface)',
-        padding: 'clamp(18px, 3.4vw, 28px)',
-        zIndex: cardActive ? 30 : 1,
-        animation: 'eoiFadeUp 0.4s ease backwards',
-      }}
-    >
-      <div className="flex justify-between items-baseline gap-3.5">
-        <div className="flex items-baseline gap-3">
-          <span className="text-[19px] leading-none" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
-          <span className="text-[11.5px] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
-            {t('jobCaps')}
-          </span>
-        </div>
-        <div className="flex items-baseline gap-3.5">
-          <span className="text-xs" style={{ color: 'var(--muted)' }}>
-            {t('jobSubtotal')}&nbsp;
-            <span className="text-base tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}>
-              {evaluation.base}
-            </span>
-          </span>
-          {onToggleCollapse && (
-            <button
-              type="button"
-              onClick={onToggleCollapse}
-              aria-expanded={true}
-              aria-label={t('collapseJob')}
-              className="cursor-pointer w-8 h-8 -my-2 flex items-center justify-center hover:bg-[var(--hover)]"
-              style={{ background: 'none', border: 'none' }}
-            >
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true" style={{ transform: 'rotate(180deg)' }}>
-                <path d="M1 1l4 4 4-4" stroke="var(--muted)" strokeWidth="1.2" fill="none" />
-              </svg>
-            </button>
-          )}
-          {canRemove && (
-            <button
-              type="button"
-              onClick={onRemove}
-              title={t('removeJob')}
-              aria-label={t('removeJob')}
-              className="cursor-pointer text-[17px] leading-none w-8 h-8 -my-2 flex items-center justify-center hover:text-[var(--danger)]"
-              style={{ background: 'none', border: 'none', color: 'var(--muted)' }}
-            >
-              ×
-            </button>
-          )}
-        </div>
-      </div>
+      {/* Body — symmetric height animation, same idiom as the Reference collapsibles */}
+      <div
+        inert={collapsed}
+        className="grid"
+        style={{ gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1)' }}
+      >
+        <div className={cardActive ? 'overflow-visible' : 'overflow-hidden'}>
+          <div style={{ padding: '0 clamp(18px, 3.4vw, 28px) clamp(18px, 3.4vw, 28px)' }}>
 
       {/* Occupation: searchable dropdown */}
       <div data-dd="true" className="relative mt-[18px]">
@@ -364,6 +333,9 @@ export default function JobCard({
           points={professionalYearPoints}
           onToggle={() => onPatch({ professionalYear: !job.professionalYear })}
         />
+      </div>
+          </div>
+        </div>
       </div>
     </div>
   );
