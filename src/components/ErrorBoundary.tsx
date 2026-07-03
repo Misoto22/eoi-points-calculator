@@ -31,11 +31,11 @@ export default class ErrorBoundary extends Component<Props, State> {
         <div className="max-w-md mx-auto mt-20 text-center px-6">
           <div
             className="text-4xl mb-4"
-            style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}
+            style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}
           >
             Oops
           </div>
-          <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>
             Something went wrong. Please refresh the page.
           </p>
           <button
@@ -43,8 +43,8 @@ export default class ErrorBoundary extends Component<Props, State> {
               this.setState({ hasError: false });
               window.location.reload();
             }}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors duration-150"
-            style={{ backgroundColor: 'var(--accent)' }}
+            className="cursor-pointer text-xs tracking-[0.18em] font-medium px-[22px] py-[13px] hover:opacity-85"
+            style={{ background: 'var(--ink)', color: 'var(--bg)', border: 'none', transition: 'opacity 0.2s ease' }}
           >
             Refresh
           </button>

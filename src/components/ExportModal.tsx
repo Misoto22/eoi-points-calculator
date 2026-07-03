@@ -113,7 +113,8 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
     <button
       type="button"
       onClick={() => setCardTheme(value)}
-      className="cursor-pointer text-xs tracking-[0.1em] py-1"
+      aria-pressed={cardTheme === value}
+      className="cursor-pointer text-xs tracking-[0.1em] py-3 -my-2"
       style={{
         background: 'none',
         border: 'none',
@@ -126,7 +127,10 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
   );
 
   return (
-    <div className="fixed inset-0 z-60 flex items-center justify-center p-[22px]">
+    <div
+      className="fixed inset-0 z-60 flex items-center justify-center"
+      style={{ padding: '22px', paddingBottom: 'max(22px, env(safe-area-inset-bottom))' }}
+    >
       <div
         onClick={onClose}
         aria-hidden="true"
@@ -151,8 +155,8 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
-            className="cursor-pointer text-xl leading-none p-1 hover:text-[var(--overlay-ink)]"
+            aria-label={t('close')}
+            className="cursor-pointer text-xl leading-none p-3 -m-2 hover:text-[var(--overlay-ink)]"
             style={{ background: 'none', border: 'none', color: 'var(--overlay-muted)' }}
           >
             ×
@@ -164,14 +168,14 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={img}
-              alt="EOI share card preview"
+              alt={t('cardPreviewAlt')}
               className="block"
               style={{ maxWidth: '100%', maxHeight: '64vh', boxShadow: 'var(--overlay-shadow)' }}
             />
           )}
           {loading && (
             <div
-              className="w-full flex items-center justify-center text-[12.5px] tracking-[0.12em]"
+              className="w-full flex items-center justify-center text-[0.78125rem] tracking-[0.12em]"
               style={{
                 aspectRatio: '3 / 4',
                 background: 'var(--overlay-surface)',
@@ -187,7 +191,7 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
           <button
             type="button"
             onClick={download}
-            className="flex-1 cursor-pointer text-[12.5px] tracking-[0.18em] font-medium px-5 py-3.5 hover:opacity-88"
+            className="flex-1 cursor-pointer text-[0.78125rem] tracking-[0.18em] font-medium px-5 py-3.5 hover:opacity-88"
             style={{ background: 'var(--overlay-ink)', color: 'var(--overlay-contrast)', border: 'none' }}
           >
             {t('download')}
@@ -195,7 +199,7 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
           <button
             type="button"
             onClick={onClose}
-            className="cursor-pointer text-[12.5px] tracking-[0.14em] px-5 py-3.5 hover:border-[var(--overlay-ink)] hover:text-[var(--overlay-ink)]"
+            className="cursor-pointer text-[0.78125rem] tracking-[0.14em] px-5 py-3.5 hover:border-[var(--overlay-ink)] hover:text-[var(--overlay-ink)]"
             style={{ background: 'none', color: 'var(--overlay-soft)', border: '1px solid var(--overlay-hair)' }}
           >
             {t('close')}

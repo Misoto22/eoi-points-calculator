@@ -86,9 +86,13 @@ export function calculateJobPoints(job: JobAssessment): JobPoints {
   };
 }
 
+// O(1) lookup — evaluate() and the month-by-month timeline scan resolve
+// occupations repeatedly, so a linear .find over 500+ rows adds up
+const occupationByAnzsco = new Map(occupations.map((o) => [o.anzsco, o]));
+
 export function findOccupation(anzsco: string): Occupation | null {
   if (!anzsco) return null;
-  return occupations.find((o) => o.anzsco === anzsco) ?? null;
+  return occupationByAnzsco.get(anzsco) ?? null;
 }
 
 /**

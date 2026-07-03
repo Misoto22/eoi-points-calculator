@@ -42,18 +42,30 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
 
   // Pages: network-first so deploys reach users immediately; refresh the
-  // cached shell copy on success, fall back to it offline.
+  // cached shell copy on success, fall back to it offline. On "lie-fi" the
+  // request can hang far past usefulness — race it against a timeout and
+  // serve the cached shell instead of a blank wait.
   if (request.mode === 'navigate') {
+    const NAV_TIMEOUT_MS = 3000;
     event.respondWith(
-      fetch(request)
-        .then((response) => {
+      (async () => {
+        const network = fetch(request).then((response) => {
           if (response.ok) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put('/', clone));
           }
           return response;
-        })
-        .catch(() => caches.match('/'))
+        });
+        try {
+          return await Promise.race([
+            network,
+            new Promise((_, reject) => setTimeout(() => reject(new Error('nav-timeout')), NAV_TIMEOUT_MS)),
+          ]);
+        } catch {
+          // Cold cache: nothing to fall back to — let the network attempt settle
+          return (await caches.match('/')) || network;
+        }
+      })()
     );
     return;
   }

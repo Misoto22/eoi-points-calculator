@@ -47,6 +47,8 @@
   --overlay-shadow: 0 44px 110px rgba(5, 4, 2, 0.55);
 }
 
+/* Dark palette — mirrored verbatim in the prefers-color-scheme block below;
+   edit BOTH lists together */
 .dark {
   --bg: #1e1c17;
   --surface: #26241d;
@@ -67,6 +69,7 @@
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
 
+/* System-preference copy of .dark above — edit BOTH lists together */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
     --bg: #1e1c17;
@@ -133,9 +136,11 @@ html.standalone body {
   color: var(--bg);
 }
 
+/* Full-strength --muted clears 4.5:1 on both --bg and --surface; an opacity
+   multiplier here would silently push placeholders below WCAG AA */
 input::placeholder {
-  color: inherit;
-  opacity: 0.55;
+  color: var(--muted);
+  opacity: 1;
 }
 
 /* Replace the browser's blue focus halo with a theme-aware ring; keep it keyboard-only */
@@ -184,4 +189,14 @@ input::placeholder {
 @keyframes eoiModalIn {
   from { opacity: 0; transform: translateY(22px) scale(0.985); }
   to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SelectField, { pointsTag } from './SelectField';
 import CheckRow from './CheckRow';
@@ -46,6 +46,9 @@ export function occupationDisplayName(occ: Occupation | null, lang: string): str
 }
 
 const MAX_RESULTS = 8;
+// Prebuilt lowercase index so a search keystroke doesn't re-lowercase all
+// 500+ occupation names
+const searchIndex = occupations.map((o) => ({ occ: o, enLower: o.en.toLowerCase() }));
 const SELECT_FIELDS: JobSelectField[] = ['ausWork', 'overseasWork'];
 // Optional work-period inputs under each experience select — one home per fact
 const START_FIELD: Record<JobSelectField, 'ausWorkStart' | 'overseasWorkStart'> = {
@@ -58,7 +61,7 @@ const END_FIELD: Record<JobSelectField, 'ausWorkEnd' | 'overseasWorkEnd'> = {
 };
 
 const listTagStyle = {
-  fontSize: '10px',
+  fontSize: '0.625rem',
   letterSpacing: '0.1em',
   color: 'var(--muted)',
   border: '1px solid var(--hair)',
@@ -73,14 +76,42 @@ export default function JobCard({
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
   const searchId = useId();
   const searchListId = `${searchId}-list`;
+  const searchLabelId = `${searchId}-label`;
+  const bodyId = `${searchId}-body`;
+  const searchListRef = useRef<HTMLDivElement | null>(null);
+
+  // Same focus-roving idiom as SelectField: ArrowDown/Up moves real focus
+  // through the option buttons; Enter then activates the focused option.
+  const moveOptionFocus = (delta: number) => {
+    const opts = searchListRef.current
+      ? Array.from(searchListRef.current.querySelectorAll<HTMLButtonElement>('[role="option"]'))
+      : [];
+    if (!opts.length) return;
+    const idx = opts.indexOf(document.activeElement as HTMLButtonElement);
+    const next = idx < 0
+      ? (delta > 0 ? 0 : opts.length - 1)
+      : Math.min(Math.max(idx + delta, 0), opts.length - 1);
+    opts[next].focus();
+  };
+
+  const pickOccupation = (anzsco: string) => {
+    onPatch({ anzsco });
+    onUIPatch({ open: false, q: '' });
+    // The input unmounts on selection; hand focus to the display button that
+    // replaces it (both carry searchId, never rendered together)
+    requestAnimationFrame(() => document.getElementById(searchId)?.focus());
+  };
 
   const occ = evaluation.occupation;
   const tag = String.fromCharCode(65 + evaluation.index);
-  const q = ui.q.trim().toLowerCase();
-  const filtered = q
-    ? occupations.filter((o) =>
-        o.anzsco.includes(q) || o.en.toLowerCase().includes(q) || o.zh.includes(ui.q.trim()))
-    : occupations;
+  const qRaw = ui.q.trim();
+  const filtered = useMemo(() => {
+    if (!qRaw) return occupations;
+    const q = qRaw.toLowerCase();
+    return searchIndex
+      .filter((r) => r.occ.anzsco.includes(q) || r.enLower.includes(q) || r.occ.zh.includes(qRaw))
+      .map((r) => r.occ);
+  }, [qRaw]);
   const showDisplay = !!occ && !ui.open;
   const showSearch = !occ || ui.open;
   const cardActive = ui.open || !!openSelect?.startsWith(`${job.id}:`);
@@ -120,7 +151,7 @@ export default function JobCard({
           type="button"
           onClick={onToggleCollapse}
           aria-expanded={open}
-          aria-label={open ? t('collapseJob') : t('expandJob')}
+          aria-controls={bodyId}
           className="flex-1 min-w-0 flex items-center gap-3 py-3 cursor-pointer text-left hover:bg-[var(--hover)]"
           style={{
             background: 'none',
@@ -133,16 +164,16 @@ export default function JobCard({
             transition: 'background 0.15s ease',
           }}
         >
-          <span className="text-[16px] leading-none flex-none" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
+          <span className="text-[1rem] leading-none flex-none" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
           {occ ? (
             <>
               <span className="text-xs tabular-nums flex-none" style={{ color: 'var(--muted)' }}>{occ.anzsco}</span>
-              <span className="text-[13px] overflow-hidden text-ellipsis whitespace-nowrap">
+              <span className="text-[0.8125rem] overflow-hidden text-ellipsis whitespace-nowrap">
                 {lang === 'zh' ? occ.zh : occ.en}
               </span>
             </>
           ) : (
-            <span className="text-[11.5px] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
+            <span className="text-[0.71875rem] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
               {t('jobCaps')}
             </span>
           )}
@@ -155,7 +186,7 @@ export default function JobCard({
           )}
           <span className="ml-auto flex-none text-xs" style={{ color: 'var(--muted)' }}>
             {t('jobSubtotal')}&nbsp;
-            <span className="text-[15px] tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}>
+            <span className="text-[0.9375rem] tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}>
               {evaluation.base}
             </span>
           </span>
@@ -172,7 +203,7 @@ export default function JobCard({
             onClick={onRemove}
             title={t('removeJob')}
             aria-label={t('removeJob')}
-            className="cursor-pointer text-[16px] leading-none w-8 h-8 mr-2.5 flex-none flex items-center justify-center hover:text-[var(--danger)]"
+            className="cursor-pointer text-[1rem] leading-none w-11 h-11 mr-0.5 flex-none flex items-center justify-center hover:text-[var(--danger)]"
             style={{ background: 'none', border: 'none', color: 'var(--muted)' }}
           >
             ×
@@ -182,6 +213,7 @@ export default function JobCard({
 
       {/* Body — symmetric height animation, same idiom as the Reference collapsibles */}
       <div
+        id={bodyId}
         inert={collapsed}
         className="grid"
         style={{ gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1)' }}
@@ -195,8 +227,9 @@ export default function JobCard({
       {/* Occupation: searchable dropdown */}
       <div data-dd="true" className="relative mt-[18px]">
         <label
+          id={searchLabelId}
           htmlFor={searchId}
-          className="block text-[11.5px] tracking-[0.16em] font-medium mb-2.5"
+          className="block text-[0.71875rem] tracking-[0.16em] font-medium mb-2.5"
           style={{ color: 'var(--muted)' }}
         >
           {t('jobField')}
@@ -205,12 +238,13 @@ export default function JobCard({
           <div className="flex items-stretch" style={{ border: '1px solid var(--hair)', background: 'var(--bg)' }}>
             <button
               type="button"
+              id={searchId}
               onClick={(e) => { e.stopPropagation(); onUIPatch({ open: true, q: '' }); }}
               className="flex-1 flex items-baseline gap-3 px-3.5 py-[13px] cursor-pointer text-left min-w-0 hover:bg-[var(--hover)]"
               style={{ background: 'none', border: 'none', color: 'inherit' }}
             >
               <span className="text-xs tabular-nums flex-none" style={{ color: 'var(--muted)' }}>{occ.anzsco}</span>
-              <span className="text-[13.5px] leading-[1.4] overflow-hidden text-ellipsis whitespace-nowrap">
+              <span className="text-[0.84375rem] leading-[1.4] overflow-hidden text-ellipsis whitespace-nowrap">
                 {occupationDisplayName(occ, lang)}
               </span>
               <span className="flex-none" style={listTagStyle}>{occ.list}</span>
@@ -220,7 +254,7 @@ export default function JobCard({
               onClick={(e) => { e.stopPropagation(); onPatch({ anzsco: '' }); onUIPatch({ open: false, q: '' }); }}
               title={t('clearOcc')}
               aria-label={t('clearOcc')}
-              className="cursor-pointer text-[15px] px-4 hover:text-[var(--danger)]"
+              className="cursor-pointer text-[0.9375rem] px-4 hover:text-[var(--danger)]"
               style={{ background: 'none', border: 'none', borderLeft: '1px solid var(--hair)', color: 'var(--muted)' }}
             >
               ×
@@ -237,8 +271,14 @@ export default function JobCard({
             value={ui.q}
             onChange={(e) => onUIPatch({ q: e.target.value, open: true })}
             onFocus={() => onUIPatch({ open: true })}
+            onKeyDown={(e) => {
+              if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+              e.preventDefault();
+              if (!ui.open) onUIPatch({ open: true });
+              requestAnimationFrame(() => moveOptionFocus(e.key === 'ArrowDown' ? 1 : -1));
+            }}
             placeholder={t('jobSearch')}
-            className="w-full box-border px-3.5 py-[13px] text-[16px] outline-none focus:border-[var(--muted)]"
+            className="w-full box-border px-3.5 py-[13px] text-[1rem] outline-none focus:border-[var(--muted)]"
             style={{
               background: 'var(--bg)',
               border: '1px solid var(--hair)',
@@ -250,8 +290,6 @@ export default function JobCard({
         )}
         {ui.open && (
           <div
-            id={searchListId}
-            role="listbox"
             className="absolute z-50 left-0 right-0 max-h-[296px] overflow-auto"
             style={{
               top: 'calc(100% + 6px)',
@@ -261,32 +299,46 @@ export default function JobCard({
               animation: 'eoiDropIn 0.18s ease backwards',
             }}
           >
-            {filtered.slice(0, MAX_RESULTS).map((o) => (
-              <button
-                key={o.anzsco}
-                type="button"
-                role="option"
-                aria-selected={job.anzsco === o.anzsco}
-                onClick={() => { onPatch({ anzsco: o.anzsco }); onUIPatch({ open: false, q: '' }); }}
-                className="grid items-baseline gap-3 w-full px-3.5 py-3 cursor-pointer text-[13px] text-left leading-[1.45] hover:bg-[var(--hover)]"
-                style={{
-                  gridTemplateColumns: '62px 1fr auto',
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid var(--hair-soft)',
-                  color: 'var(--ink)',
-                }}
-              >
-                <span className="text-xs tabular-nums" style={{ color: 'var(--muted)' }}>{o.anzsco}</span>
-                <span>{lang === 'zh' ? `${o.zh} · ${o.en}` : o.en}</span>
-                <span style={listTagStyle}>{o.list}</span>
-              </button>
-            ))}
+            {/* Only option children may live inside the listbox — the empty
+                state and count hint render as siblings */}
+            <div
+              ref={searchListRef}
+              id={searchListId}
+              role="listbox"
+              aria-labelledby={searchLabelId}
+              onKeyDown={(e) => {
+                if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+                e.preventDefault();
+                moveOptionFocus(e.key === 'ArrowDown' ? 1 : -1);
+              }}
+            >
+              {filtered.slice(0, MAX_RESULTS).map((o) => (
+                <button
+                  key={o.anzsco}
+                  type="button"
+                  role="option"
+                  aria-selected={job.anzsco === o.anzsco}
+                  onClick={() => pickOccupation(o.anzsco)}
+                  className="grid items-baseline gap-3 w-full px-3.5 py-3 cursor-pointer text-[0.8125rem] text-left leading-[1.45] hover:bg-[var(--hover)]"
+                  style={{
+                    gridTemplateColumns: '62px 1fr auto',
+                    background: 'transparent',
+                    border: 'none',
+                    borderBottom: '1px solid var(--hair-soft)',
+                    color: 'var(--ink)',
+                  }}
+                >
+                  <span className="text-xs tabular-nums" style={{ color: 'var(--muted)' }}>{o.anzsco}</span>
+                  <span>{lang === 'zh' ? `${o.zh} · ${o.en}` : o.en}</span>
+                  <span style={listTagStyle}>{o.list}</span>
+                </button>
+              ))}
+            </div>
             {filtered.length === 0 && (
-              <p className="m-0 p-3.5 text-[12.5px]" style={{ color: 'var(--muted)' }}>{t('occNo')}</p>
+              <p className="m-0 p-3.5 text-[0.78125rem]" style={{ color: 'var(--muted)' }}>{t('occNo')}</p>
             )}
             <div
-              className="px-3.5 py-[9px] text-[11px] tracking-[0.05em]"
+              className="px-3.5 py-[9px] text-[0.6875rem] tracking-[0.05em]"
               style={{ color: 'var(--muted)', borderTop: '1px solid var(--hair-soft)' }}
             >
               {t('occCount', { n: Math.min(MAX_RESULTS, filtered.length), m: filtered.length })}&nbsp;·&nbsp;{t('occHint')}

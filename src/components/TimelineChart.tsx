@@ -1,7 +1,7 @@
 // src/components/TimelineChart.tsx
 'use client';
 
-import { useMemo, useState } from 'react';
+import { memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { addMonths, monthsBetween } from '@/lib/timeline';
 import type { TimelineResult } from '@/lib/timeline';
@@ -23,11 +23,14 @@ const W = 720, H = 238, PL = 40, PR = 62, TOP = 30, AXIS = 182;
 const DASHES: (string | undefined)[] = [undefined, '7 4', '2 3', '9 3 2 3', '1 4'];
 const DIM = 0.24;
 
-export default function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLabels }: TimelineChartProps) {
+function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLabels }: TimelineChartProps) {
   const { t } = useTranslation();
   const { startScore, startBases, events, horizonEnd } = timeline;
   const [hoverM, setHoverM] = useState<number | null>(null);   // months from today
   const [focusLine, setFocusLine] = useState<number | null>(null);
+  // BCR is cached per hover session — reading it on every pointermove forces
+  // synchronous layout right when frames matter most
+  const rectRef = useRef<DOMRect | null>(null);
 
   const total = Math.max(1, monthsBetween(today, horizonEnd));
   const x = (m: number) => PL + (m / total) * (W - PL - PR);
@@ -100,7 +103,7 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
 
   // Hover → month + tooltip rows
   const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = rectRef.current ?? (rectRef.current = e.currentTarget.getBoundingClientRect());
     const px = ((e.clientX - rect.left) / rect.width) * W;
     if (px < PL || px > endX) { setHoverM(null); return; }
     setHoverM(Math.max(0, Math.min(total, Math.round(((px - PL) / (endX - PL)) * total))));
@@ -125,23 +128,23 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
     <div className="mt-[26px]">
       {/* Series key: which occupation each line style belongs to */}
       <div className="flex flex-wrap gap-x-6 gap-y-1.5 mb-3" onMouseLeave={() => setFocusLine(null)}>
+        {/* Hover-only highlight — plain spans keep no-op stops out of the tab
+            order; the legend text itself stays readable without interaction */}
         {series.map((s, i) => (
-          <button
+          <span
             key={s.tag}
-            type="button"
             onMouseEnter={() => setFocusLine(i)}
-            onFocus={() => setFocusLine(i)}
-            className="flex items-center gap-2 p-0 cursor-default text-left"
-            style={{ background: 'none', border: 'none', opacity: lineOpacity(i), transition: 'opacity 0.2s ease' }}
+            className="flex items-center gap-2 text-left"
+            style={{ opacity: lineOpacity(i), transition: 'opacity 0.2s ease' }}
           >
             <svg width="24" height="6" aria-hidden="true">
               <line x1="0" y1="3" x2="24" y2="3" stroke="var(--ink)" strokeWidth="1.6" strokeDasharray={DASHES[i % DASHES.length]} />
             </svg>
-            <span className="text-[13px] leading-none" style={{ fontFamily: 'var(--font-serif)' }}>{s.tag}</span>
-            <span className="text-[12px] leading-none" style={{ color: 'var(--ink-soft)' }}>
+            <span className="text-[0.8125rem] leading-none" style={{ fontFamily: 'var(--font-serif)' }}>{s.tag}</span>
+            <span className="text-[0.75rem] leading-none" style={{ color: 'var(--ink-soft)' }}>
               {seriesLabels?.[i] ?? ''}
             </span>
-          </button>
+          </span>
         ))}
       </div>
       <div className="overflow-x-auto">
@@ -150,15 +153,16 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
         role="img"
         aria-label={t('tlChartSummary', { from: today, to: horizonEnd, score: startScore, n: events.length })}
         style={{ minWidth: 560, width: '100%', display: 'block', touchAction: 'pan-y' }}
+        onPointerEnter={(e) => { rectRef.current = e.currentTarget.getBoundingClientRect(); }}
         onPointerMove={onMove}
         onPointerDown={onMove}
-        onPointerLeave={() => { setHoverM(null); setFocusLine(null); }}
+        onPointerLeave={() => { rectRef.current = null; setHoverM(null); setFocusLine(null); }}
       >
         {/* y-grid + goal band + threshold lines */}
         {gridVals.map((v) => (
           <g key={v}>
             <line x1={PL} y1={y(v)} x2={W - PR} y2={y(v)} stroke="var(--hair-soft)" strokeWidth="0.6" strokeDasharray="1 4" />
-            <text x={PL - 7} y={y(v) + 3} fontSize="8.5" fill="var(--muted)" opacity="0.8" textAnchor="end" className="tabular-nums">{v}</text>
+            <text x={PL - 7} y={y(v) + 3} fontSize="8.5" fill="var(--muted)" textAnchor="end" className="tabular-nums">{v}</text>
           </g>
         ))}
         <rect x={PL} y={TOP} width={W - PL - PR} height={Math.max(0, y(goal) - TOP)} fill="var(--ink)" opacity="0.045" />
@@ -258,7 +262,7 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
         {/* axis + year ticks */}
         <line x1={PL} y1={AXIS} x2={W - PR} y2={AXIS} stroke="var(--ink)" strokeWidth="1" />
         {years.map((yr) => (
-          <text key={yr} x={xDate(`${yr}-01`)} y={H - 4} fontSize="9.5" fill="var(--muted)" opacity="0.7" textAnchor="middle">{yr}</text>
+          <text key={yr} x={xDate(`${yr}-01`)} y={H - 4} fontSize="9.5" fill="var(--muted)" textAnchor="middle">{yr}</text>
         ))}
 
         {/* hover crosshair + tooltip (pointer-only enhancement) */}
@@ -278,7 +282,7 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
                 fontSize="11"
                 fontFamily="var(--font-serif)"
                 fill="var(--ink)"
-                opacity={k === 0 ? 1 : 0.6}
+                opacity={k === 0 ? 1 : 0.75}
                 className="tabular-nums"
               >
                 {r.tag}&nbsp;&nbsp;{r.v}
@@ -291,3 +295,5 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
     </div>
   );
 }
+
+export default memo(TimelineChart);

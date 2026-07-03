@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { memo, useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
@@ -9,7 +9,6 @@ import { invitationRounds } from '@/data/invitationRounds';
 import { states } from '@/data/stateLists';
 
 interface ReferenceSectionProps {
-  totalPoints: number;
   evaluation: Evaluation;
 }
 
@@ -26,7 +25,7 @@ function Collapsible({ title, children }: { title: string; children: ReactNode }
         className="w-full flex justify-between items-center gap-3.5 py-[18px] cursor-pointer text-left hover:text-[var(--muted)]"
         style={{ background: 'none', border: 'none', color: 'inherit' }}
       >
-        <span className="text-[17px]" style={{ fontFamily: 'var(--font-serif)' }}>{title}</span>
+        <span className="text-[1.0625rem]" style={{ fontFamily: 'var(--font-serif)' }}>{title}</span>
         <span
           aria-hidden="true"
           className="text-lg font-light leading-none"
@@ -50,7 +49,7 @@ function Collapsible({ title, children }: { title: string; children: ReactNode }
   );
 }
 
-export default function ReferenceSection({ totalPoints, evaluation }: ReferenceSectionProps) {
+function ReferenceSection({ evaluation }: ReferenceSectionProps) {
   const { t } = useTranslation();
 
   const jobsWithOcc = evaluation.jobs.filter((je) => je.occupation);
@@ -62,46 +61,38 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
       <div className="mt-[18px]">
         <Collapsible title={t('roundsTitle')}>
           <div
-            className="grid gap-3 py-2 text-[11px] tracking-[0.12em] font-medium"
-            style={{ gridTemplateColumns: '90px 56px 1fr 1fr 22px', borderBottom: '1px solid var(--ink)', color: 'var(--muted)' }}
+            className="grid gap-3 py-2 text-[0.6875rem] tracking-[0.12em] font-medium"
+            style={{ gridTemplateColumns: '90px 56px 1fr 1fr', borderBottom: '1px solid var(--ink)', color: 'var(--muted)' }}
           >
             <span>{t('roundsDate')}</span>
             <span>{t('roundsVisa')}</span>
             <span className="text-right">{t('roundsMin')}</span>
             <span className="text-right">{t('roundsInv')}</span>
-            <span />
           </div>
-          {invitationRounds.map((r) => {
-            const hit = totalPoints >= r.minimumPoints && totalPoints > 0;
-            return (
-              <div
-                key={r.date}
-                title={hit ? t('roundsHitYes') : t('roundsHitNo')}
-                className="grid gap-3 py-[11px] text-[13px] tabular-nums items-baseline"
-                style={{ gridTemplateColumns: '90px 56px 1fr 1fr 22px', borderBottom: '1px solid var(--hair-soft)' }}
-              >
-                <span style={{ color: 'var(--ink-soft)' }}>{r.date}</span>
-                <span style={{ color: 'var(--muted)' }}>{r.visa}</span>
-                <span className="text-right">{r.minimumPoints}</span>
-                <span className="text-right" style={{ color: 'var(--ink-soft)' }}>
-                  {r.invitations.toLocaleString('en-US')}
-                </span>
-                <span className="flex justify-end">
-                  <span
-                    className="w-[7px] h-[7px] rounded-full"
-                    style={{ border: '1px solid var(--muted)', background: hit ? 'var(--ink)' : 'transparent' }}
-                  />
-                </span>
-              </div>
-            );
-          })}
+          {/* No pass/fail marker here on purpose: `minimumPoints` is only the
+              trades floor (see data file note) — comparing the user's score
+              against it would read as "you qualify" when they likely don't. */}
+          {invitationRounds.map((r) => (
+            <div
+              key={r.date}
+              className="grid gap-3 py-[11px] text-[0.8125rem] tabular-nums items-baseline"
+              style={{ gridTemplateColumns: '90px 56px 1fr 1fr', borderBottom: '1px solid var(--hair-soft)' }}
+            >
+              <span style={{ color: 'var(--ink-soft)' }}>{r.date}</span>
+              <span style={{ color: 'var(--muted)' }}>{r.visa}</span>
+              <span className="text-right">{r.minimumPoints}</span>
+              <span className="text-right" style={{ color: 'var(--ink-soft)' }}>
+                {r.invitations.toLocaleString('en-US')}
+              </span>
+            </div>
+          ))}
           <p className="mt-4 mb-0 text-xs leading-[1.7] max-w-[56em]" style={{ color: 'var(--muted)' }}>
             {t('roundsNote')}
           </p>
         </Collapsible>
 
         <Collapsible title={t('statesTitle')}>
-          <p className="mt-0 mb-2 text-[12.5px] leading-[1.75] max-w-[52em]" style={{ color: 'var(--muted)' }}>
+          <p className="mt-0 mb-2 text-[0.78125rem] leading-[1.75] max-w-[52em]" style={{ color: 'var(--muted)' }}>
             {t('statesIntro')}
           </p>
           {states.map((s) => {
@@ -119,9 +110,9 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
                 className="grid gap-4 py-[13px] items-baseline"
                 style={{ gridTemplateColumns: '54px 1fr auto', borderBottom: '1px solid var(--hair-soft)' }}
               >
-                <span className="text-[15.5px]" style={{ fontFamily: 'var(--font-serif)' }}>{s.code}</span>
+                <span className="text-[0.96875rem]" style={{ fontFamily: 'var(--font-serif)' }}>{s.code}</span>
                 <div className="min-w-0">
-                  <div className="text-[13px] leading-[1.5]" style={{ color: 'var(--ink)' }}>
+                  <div className="text-[0.8125rem] leading-[1.5]" style={{ color: 'var(--ink)' }}>
                     {t(`states.${s.code}.how`)}
                   </div>
                   <div className="text-xs leading-[1.6] mt-[3px]" style={{ color: 'var(--muted)' }}>
@@ -132,7 +123,7 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
                       {jobMarks.map((m) => (
                         <span
                           key={m.tag}
-                          className="text-[10.5px] tracking-[0.08em] tabular-nums leading-none"
+                          className="text-[0.65625rem] tracking-[0.08em] tabular-nums leading-none"
                           style={{ color: 'var(--ink-soft)', border: '1px solid var(--hair)', padding: '3px 7px' }}
                         >
                           {m.tag}&nbsp;{m.visas.join(' · ')}
@@ -145,7 +136,7 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[11.5px] tracking-[0.08em] underline underline-offset-4 whitespace-nowrap py-2 -my-2 hover:text-[var(--ink)]"
+                  className="text-[0.71875rem] tracking-[0.08em] underline underline-offset-4 whitespace-nowrap px-2 -mx-2 py-3 -my-3 hover:text-[var(--ink)]"
                   style={{ color: 'var(--muted)', textDecorationColor: 'var(--hair)' }}
                 >
                   {t('visit')}&nbsp;↗
@@ -153,7 +144,7 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
               </div>
             );
           })}
-          <p className="mt-3.5 mb-0 text-[11.5px] tracking-[0.03em]" style={{ color: 'var(--muted)' }}>
+          <p className="mt-3.5 mb-0 text-[0.71875rem] tracking-[0.03em]" style={{ color: 'var(--muted)' }}>
             {t('statesNote')}
           </p>
         </Collapsible>
@@ -161,3 +152,5 @@ export default function ReferenceSection({ totalPoints, evaluation }: ReferenceS
     </section>
   );
 }
+
+export default memo(ReferenceSection);

@@ -23,6 +23,20 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
+// Must match --bg in globals.css and viewport.themeColor in layout.tsx
+const THEME_BG = { light: '#F2EFE6', dark: '#1E1C17' } as const;
+
+function applyResolvedTheme(resolved: 'dark' | 'light') {
+  const root = window.document.documentElement;
+  root.classList.remove('light', 'dark');
+  root.classList.add(resolved);
+  // The static media-scoped <meta theme-color> tags only track the system
+  // preference — keep browser/PWA chrome in step with a manual override too
+  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((m) => {
+    m.content = THEME_BG[resolved];
+  });
+}
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
@@ -40,16 +54,10 @@ export function ThemeProvider({
   });
 
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-
     if (theme === 'system' && enableSystem) {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-      root.classList.add(systemTheme);
+      applyResolvedTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     } else {
-      root.classList.add(theme);
+      applyResolvedTheme(theme === 'dark' ? 'dark' : 'light');
     }
   }, [theme, enableSystem]);
 
@@ -58,9 +66,7 @@ export function ThemeProvider({
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
       const handleChange = () => {
-        const root = window.document.documentElement;
-        root.classList.remove('light', 'dark');
-        root.classList.add(mediaQuery.matches ? 'dark' : 'light');
+        applyResolvedTheme(mediaQuery.matches ? 'dark' : 'light');
       };
 
       mediaQuery.addEventListener('change', handleChange);

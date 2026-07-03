@@ -46,7 +46,7 @@ export default function Header() {
       type="button"
       onClick={() => i18n.changeLanguage(code)}
       aria-pressed={lang === code}
-      className="cursor-pointer text-xs px-1.5 py-2 -my-1"
+      className="cursor-pointer text-xs px-2.5 -mx-1 py-[14px] -my-[11px]"
       style={{
         background: 'none',
         border: 'none',
@@ -78,7 +78,7 @@ export default function Header() {
         }}
       >
         <div className="flex justify-between items-center gap-4">
-          <div className="text-[11.5px] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
+          <div className="text-[0.71875rem] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
             EOI&nbsp;POINTS
           </div>
           <div className="flex items-center gap-3.5">
@@ -90,10 +90,10 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-              aria-label="Toggle theme"
+              aria-label={t('themeHint')}
               aria-pressed={resolvedTheme === 'dark'}
               title={t('themeHint')}
-              className="theme-toggle w-[38px] h-[38px] -m-1.5 rounded-full cursor-pointer p-0 flex items-center justify-center"
+              className="theme-toggle w-11 h-11 -m-[9px] rounded-full cursor-pointer p-0 flex items-center justify-center"
               style={{ background: 'none', border: 'none' }}
             >
               <span
@@ -116,7 +116,7 @@ export default function Header() {
         className="font-normal mt-[58px] mb-0 max-w-[16em]"
         style={{
           fontFamily: 'var(--font-serif)',
-          fontSize: 'clamp(30px, 5.2vw, 44px)',
+          fontSize: 'clamp(1.875rem, 5.2vw, 2.75rem)',
           lineHeight: 1.32,
           letterSpacing: '0.01em',
         }}
@@ -127,7 +127,7 @@ export default function Header() {
         className="flex justify-between items-baseline gap-4 flex-wrap mt-[26px] pt-3.5"
         style={{ borderTop: '1px solid var(--hair)' }}
       >
-        <p className="m-0 text-[13px] tracking-[0.02em]" style={{ color: 'var(--muted)' }}>
+        <p className="m-0 text-[0.8125rem] tracking-[0.02em]" style={{ color: 'var(--muted)' }}>
           {t('subtitle')}
         </p>
         <span className="text-xs tabular-nums tracking-[0.1em]" style={{ color: 'var(--muted)' }}>

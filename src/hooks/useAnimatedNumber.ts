@@ -12,6 +12,10 @@ export function useAnimatedNumber(target: number, duration = 650): number {
   useEffect(() => {
     const from = displayRef.current;
     if (from === target) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplay(target);
+      return;
+    }
     const start = performance.now();
     const ease = (x: number) => 1 - Math.pow(1 - x, 3);
     const step = (now: number) => {
