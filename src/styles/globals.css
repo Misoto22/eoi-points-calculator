@@ -121,7 +121,10 @@ html.standalone {
 html.standalone body {
   height: 100dvh;
   min-height: 0;
-  overflow-y: auto;
+  /* x hidden, y auto — overflow-y alone would compute overflow-x to auto
+     and allow sideways panning. Shorthand form: Lightning CSS drops a
+     longhand overflow-x next to overflow-y when minifying. */
+  overflow: hidden auto;
   -webkit-overflow-scrolling: touch;
 }
 
