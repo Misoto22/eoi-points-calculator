@@ -108,6 +108,23 @@ body {
   transition: background 0.4s ease, color 0.4s ease;
 }
 
+/* Standalone (installed PWA) on iOS renders scrolled document content
+ * behind the status bar and reports safe-area-inset-top as 0, so padding
+ * fixes can't work. Instead the document never scrolls: body becomes the
+ * scroller, and the status bar always sits over the static html background.
+ * The .standalone class is set pre-paint by the inline script in layout. */
+html.standalone {
+  height: 100%;
+  overflow: hidden;
+}
+
+html.standalone body {
+  height: 100dvh;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 ::selection {
   background: var(--ink);
   color: var(--bg);

@@ -174,7 +174,13 @@ const PageContent = () => {
 
   const scrollToResults = useCallback(() => {
     const el = bandRef.current;
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 32, behavior: 'smooth' });
+    if (!el) return;
+    // Standalone mode scrolls the body, not the window (see globals.css)
+    const bodyScrolls = document.documentElement.classList.contains('standalone');
+    const currentTop = bodyScrolls ? document.body.scrollTop : window.scrollY;
+    const target = { top: el.getBoundingClientRect().top + currentTop - 32, behavior: 'smooth' as const };
+    if (bodyScrolls) document.body.scrollTo(target);
+    else window.scrollTo(target);
   }, []);
 
   if (!ready || !mounted) return <PageSkeleton />;

@@ -19,13 +19,19 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // Hairline under the sticky bar only once the page has scrolled
+  // Hairline under the sticky bar only once the page has scrolled.
+  // In standalone mode the body is the scroller (see globals.css), so
+  // listen on both — scroll events don't bubble from body to window.
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled((window.scrollY || document.body.scrollTop) > 8);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    document.body.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.body.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
