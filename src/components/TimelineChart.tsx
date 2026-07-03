@@ -140,8 +140,8 @@ function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLa
             <svg width="24" height="6" aria-hidden="true">
               <line x1="0" y1="3" x2="24" y2="3" stroke="var(--ink)" strokeWidth="1.6" strokeDasharray={DASHES[i % DASHES.length]} />
             </svg>
-            <span className="text-[13px] leading-none" style={{ fontFamily: 'var(--font-serif)' }}>{s.tag}</span>
-            <span className="text-[12px] leading-none" style={{ color: 'var(--ink-soft)' }}>
+            <span className="text-[0.8125rem] leading-none" style={{ fontFamily: 'var(--font-serif)' }}>{s.tag}</span>
+            <span className="text-[0.75rem] leading-none" style={{ color: 'var(--ink-soft)' }}>
               {seriesLabels?.[i] ?? ''}
             </span>
           </button>

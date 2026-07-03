@@ -83,8 +83,9 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
     setEditingYear(false);
   };
 
-  const stepBtn = 'cursor-pointer px-3 py-1 text-[13px] leading-none hover:text-[var(--ink)]';
-  const footBtn = 'cursor-pointer text-[11px] tracking-[0.08em] py-1 px-1 hover:text-[var(--ink)]';
+  // Hit areas padded toward 44px; negative margins keep the visual rows compact
+  const stepBtn = 'cursor-pointer px-3.5 py-3 -my-1.5 text-[0.8125rem] leading-none hover:text-[var(--ink)]';
+  const footBtn = 'cursor-pointer text-[0.6875rem] tracking-[0.08em] py-2.5 -my-1.5 px-2 -mx-1 hover:text-[var(--ink)]';
 
   return (
     <div ref={rootRef} className={inline ? 'relative inline-block max-w-full' : 'relative'}>
@@ -97,8 +98,8 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
         aria-expanded={open}
         onClick={() => (open ? close(false) : openPicker())}
         className={inline
-          ? 'box-border flex items-baseline gap-1.5 px-0 py-0.5 cursor-pointer text-left text-[12.5px] disabled:opacity-45 disabled:cursor-default focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2'
-          : 'w-full box-border flex justify-between items-center gap-2 px-3.5 py-[11px] text-[13.5px] cursor-pointer text-left disabled:opacity-45 disabled:cursor-default hover:border-[var(--muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2'}
+          ? 'box-border flex items-baseline gap-1.5 px-1 -mx-1 py-[10px] -my-[10px] cursor-pointer text-left text-[0.78125rem] disabled:opacity-45 disabled:cursor-default focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2'
+          : 'w-full box-border flex justify-between items-center gap-2 px-3.5 py-[11px] text-[0.84375rem] cursor-pointer text-left disabled:opacity-45 disabled:cursor-default hover:border-[var(--muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2'}
         style={inline
           ? { background: 'none', border: 'none', color: 'var(--ink)' }
           : {
@@ -136,7 +137,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
             tabIndex={-1}
             aria-hidden="true"
             onClick={(e) => { e.stopPropagation(); onChange(''); close(false); }}
-            className="text-[14px] leading-none px-1 hover:text-[var(--danger)]"
+            className="text-[0.875rem] leading-none px-2 -mx-1 py-2 -my-2 hover:text-[var(--danger)]"
             style={{ color: 'var(--muted)' }}
           >
             ×
@@ -170,14 +171,14 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
                 onChange={(e) => setYearDraft(e.target.value.replace(/\D/g, '').slice(0, 4))}
                 onBlur={commitYearDraft}
                 onKeyDown={(e) => { if (e.key === 'Enter') commitYearDraft(); }}
-                className="w-16 text-center text-[16px] tabular-nums outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2"
+                className="w-16 text-center text-[1rem] tabular-nums outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2"
                 style={{ fontFamily: 'var(--font-serif)', background: 'var(--bg)', border: '1px solid var(--hair)', color: 'var(--ink)', padding: '1px 0' }}
               />
             ) : (
               <button
                 type="button"
                 onClick={() => { setYearDraft(String(viewYear)); setEditingYear(true); }}
-                className="cursor-pointer text-[15px] tracking-[0.06em] tabular-nums px-2 py-0.5 hover:bg-[var(--hover)]"
+                className="cursor-pointer text-[0.9375rem] tracking-[0.06em] tabular-nums px-2 py-0.5 hover:bg-[var(--hover)]"
                 style={{ fontFamily: 'var(--font-serif)', background: 'none', border: 'none', color: 'var(--ink)' }}
               >
                 {viewYear}
@@ -196,7 +197,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
                   type="button"
                   aria-pressed={selected}
                   onClick={() => pick(m)}
-                  className="cursor-pointer text-[12px] py-[9px] text-center hover:bg-[var(--hover)]"
+                  className="cursor-pointer text-[0.75rem] py-[13px] text-center hover:bg-[var(--hover)]"
                   style={{
                     background: selected ? 'var(--ink)' : 'transparent',
                     color: selected ? 'var(--bg)' : 'var(--ink-soft)',

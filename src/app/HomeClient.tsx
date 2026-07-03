@@ -260,7 +260,14 @@ const PageContent = () => {
   const sec2Active = (openSelect !== null && !openSelect.startsWith('sh:')) || anySearchOpen;
 
   return (
-    <div className="max-w-[780px] wide:max-w-[1280px] mx-auto px-[26px]">
+    <div
+      className="max-w-[780px] wide:max-w-[1280px] mx-auto"
+      // Landscape on notched phones: keep content clear of the sensor housing
+      style={{
+        paddingLeft: 'max(26px, env(safe-area-inset-left))',
+        paddingRight: 'max(26px, env(safe-area-inset-right))',
+      }}
+    >
       <Header />
 
       {/* ≥wide: inputs flow in the left column, the results band sits sticky on the right.
@@ -286,7 +293,7 @@ const PageContent = () => {
             style={{ zIndex: sec2Active ? 30 : 'auto', animation: 'eoiFadeUp 0.7s ease 0.16s backwards' }}
           >
         <SectionHeading num="02" title={t('sections.jobs')} side="ASSESSMENTS" />
-        <p className="mt-3.5 mb-0 text-[12.5px] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
+        <p className="mt-3.5 mb-0 text-[0.78125rem] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
           {t('jobsNote')}
         </p>
 
@@ -318,7 +325,7 @@ const PageContent = () => {
                   setJobs((prev) => [...prev, nj]);
                   setOpenJobId(nj.id);
                 }}
-                className="w-full mt-[18px] p-[15px] cursor-pointer text-[12.5px] tracking-[0.14em] hover:bg-[var(--hover)] hover:border-[var(--ink)]"
+                className="w-full mt-[18px] p-[15px] cursor-pointer text-[0.78125rem] tracking-[0.14em] hover:bg-[var(--hover)] hover:border-[var(--ink)]"
                 style={{
                   background: 'none',
                   border: '1px dashed var(--muted)',

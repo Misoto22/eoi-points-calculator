@@ -128,27 +128,27 @@ function ResultsBand({
         </span>
         <div className="flex justify-between items-end gap-5 flex-wrap">
           <div className="flex flex-col gap-2.5 min-w-0">
-            <span className="text-[11.5px] tracking-[0.22em] font-medium" style={{ color: 'var(--band-muted)' }}>
+            <span className="text-[0.71875rem] tracking-[0.22em] font-medium" style={{ color: 'var(--band-muted)' }}>
               {t('totalCaps')}
             </span>
-            <span className="text-[13.5px]" style={{ fontFamily: 'var(--font-serif)', color: 'var(--band-ink)' }}>
+            <span className="text-[0.84375rem]" style={{ fontFamily: 'var(--font-serif)', color: 'var(--band-ink)' }}>
               {bestPathLine}
             </span>
-            <span className="text-[13px]" style={{ color: 'var(--band-soft)' }}>{statusLine}</span>
+            <span className="text-[0.8125rem]" style={{ color: 'var(--band-soft)' }}>{statusLine}</span>
           </div>
           <div className="flex items-baseline gap-3">
             <span
               className="font-light tabular-nums"
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '62px',
+                fontSize: '3.875rem',
                 lineHeight: 0.95,
                 letterSpacing: '-0.02em',
               }}
             >
               {displayTotal}
             </span>
-            <span className="text-[13px]" style={{ color: 'var(--band-muted)' }}>{t('points')}</span>
+            <span className="text-[0.8125rem]" style={{ color: 'var(--band-muted)' }}>{t('points')}</span>
           </div>
         </div>
 
@@ -164,7 +164,7 @@ function ResultsBand({
           />
         </div>
 
-        <div className="flex justify-between items-center gap-3.5 flex-wrap mt-3.5 text-[12.5px]" style={{ color: 'var(--band-muted)' }}>
+        <div className="flex justify-between items-center gap-3.5 flex-wrap mt-3.5 text-[0.78125rem]" style={{ color: 'var(--band-muted)' }}>
           <span>{t('minimum')} {MIN_POINTS}</span>
           <div className="flex items-center gap-2.5" role="group" aria-label={t('goal')}>
             <span>{t('goal')}</span>
@@ -173,14 +173,14 @@ function ResultsBand({
                 type="button"
                 onClick={onGoalDec}
                 aria-label="Decrease goal"
-                className="w-9 h-8 cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
+                className="w-11 h-11 cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
                 style={{ background: 'none', border: 'none', color: 'var(--band-soft)' }}
               >
                 −
               </button>
               <span
                 aria-live="polite"
-                className="flex items-center px-2.5 tabular-nums text-[13px]"
+                className="flex items-center px-2.5 tabular-nums text-[0.8125rem]"
                 style={{ color: 'var(--band-ink)', borderLeft: '1px solid var(--band-hair)', borderRight: '1px solid var(--band-hair)' }}
               >
                 {goal}
@@ -189,7 +189,7 @@ function ResultsBand({
                 type="button"
                 onClick={onGoalInc}
                 aria-label="Increase goal"
-                className="w-9 h-8 cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
+                className="w-11 h-11 cursor-pointer text-sm leading-none p-0 hover:bg-[var(--band-hair-soft)]"
                 style={{ background: 'none', border: 'none', color: 'var(--band-soft)' }}
               >
                 +
@@ -204,27 +204,27 @@ function ResultsBand({
               type="button"
               onClick={() => setShowBreakdown((v) => !v)}
               aria-expanded={showBreakdown}
-              className="w-full flex justify-between items-center cursor-pointer pt-3 pb-1 text-[11px] tracking-[0.22em] font-medium"
+              className="w-full flex justify-between items-center cursor-pointer pt-3 pb-1 text-[0.6875rem] tracking-[0.22em] font-medium"
               style={{ background: 'none', border: 'none', color: 'var(--band-muted)' }}
             >
               {t('sharedCaps')}
-              <span aria-hidden="true" className="text-[14px] font-light leading-none" style={{ transition: 'transform 0.3s ease', transform: showBreakdown ? 'rotate(45deg)' : 'none' }}>+</span>
+              <span aria-hidden="true" className="text-[0.875rem] font-light leading-none" style={{ transition: 'transform 0.3s ease', transform: showBreakdown ? 'rotate(45deg)' : 'none' }}>+</span>
             </button>
             {showBreakdown && (
               <>
                 {sharedRows.map((r) => (
                   <div
                     key={r.key}
-                    className="flex justify-between items-baseline gap-4 py-[7px] text-[12.5px]"
+                    className="flex justify-between items-baseline gap-4 py-[7px] text-[0.78125rem]"
                     style={{ borderTop: '1px solid var(--band-hair-soft)' }}
                   >
                     <span style={{ color: 'var(--band-soft)' }}>{r.label}</span>
-                    <span className="text-[13.5px] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{r.value}</span>
+                    <span className="text-[0.84375rem] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{r.value}</span>
                   </div>
                 ))}
-                <div className="flex justify-between items-baseline gap-4 py-[7px] text-[12.5px]" style={{ borderTop: '1px solid var(--band-hair-soft)' }}>
+                <div className="flex justify-between items-baseline gap-4 py-[7px] text-[0.78125rem]" style={{ borderTop: '1px solid var(--band-hair-soft)' }}>
                   <span style={{ color: 'var(--band-muted)' }}>{t('sharedSubtotal')}</span>
-                  <span className="text-[13.5px] font-medium tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{evaluation.sharedTotal}</span>
+                  <span className="text-[0.84375rem] font-medium tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{evaluation.sharedTotal}</span>
                 </div>
               </>
             )}
@@ -236,20 +236,20 @@ function ResultsBand({
             <div key={je.job.id} className="pt-3 pb-2.5" style={{ borderBottom: '1px solid var(--band-hair-soft)' }}>
               <div className="flex justify-between items-baseline gap-3">
                 <span className="min-w-0 flex items-baseline gap-2.5">
-                  <span className="text-[15px] flex-none" style={{ fontFamily: 'var(--font-serif)' }}>
+                  <span className="text-[0.9375rem] flex-none" style={{ fontFamily: 'var(--font-serif)' }}>
                     {String.fromCharCode(65 + je.index)}
                   </span>
-                  <span className="text-[12.5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{ color: 'var(--band-ink)' }}>
+                  <span className="text-[0.78125rem] overflow-hidden text-ellipsis whitespace-nowrap" style={{ color: 'var(--band-ink)' }}>
                     {je.occupation ? (lang === 'zh' ? je.occupation.zh : je.occupation.en) : t('noOccName')}
                   </span>
                 </span>
-                <span className="flex-none text-[14px] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{je.base}</span>
+                <span className="flex-none text-[0.875rem] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>{je.base}</span>
               </div>
               <div className="flex gap-4 mt-1.5 flex-wrap">
                 {je.pathways.map((p) => {
                   const pres = presentPath(p);
                   return (
-                    <span key={p.code} className="flex items-center gap-1.5 text-[11.5px] tabular-nums" style={{ color: pres.statusColor }}>
+                    <span key={p.code} className="flex items-center gap-1.5 text-[0.71875rem] tabular-nums" style={{ color: pres.statusColor }}>
                       <span className="w-[6px] h-[6px] rounded-full flex-none" style={{ border: `1px solid ${pres.dotBorder}`, background: pres.dotBg }} />
                       {p.code}&nbsp;{pres.totalText}
                     </span>
@@ -264,8 +264,8 @@ function ResultsBand({
           <div className="mt-3.5">
             {/* The MLTSSL structural hint unlocks 189 — never crowd it out */}
             {[...suggestions.filter((s) => s.key === 'mltssl'), ...suggestions.filter((s) => s.key !== 'mltssl')].slice(0, 3).map((s) => (
-              <div key={s.key} className="flex gap-3 items-baseline pt-2 text-[12px] leading-[1.5]">
-                <span className="flex-none text-[12.5px] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>+{s.points}</span>
+              <div key={s.key} className="flex gap-3 items-baseline pt-2 text-[0.75rem] leading-[1.5]">
+                <span className="flex-none text-[0.78125rem] tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>+{s.points}</span>
                 <span style={{ color: 'var(--band-soft)' }}>{t(`sug.${s.key}`)}</span>
               </div>
             ))}

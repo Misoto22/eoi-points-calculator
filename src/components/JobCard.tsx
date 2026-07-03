@@ -61,7 +61,7 @@ const END_FIELD: Record<JobSelectField, 'ausWorkEnd' | 'overseasWorkEnd'> = {
 };
 
 const listTagStyle = {
-  fontSize: '10px',
+  fontSize: '0.625rem',
   letterSpacing: '0.1em',
   color: 'var(--muted)',
   border: '1px solid var(--hair)',
@@ -162,16 +162,16 @@ export default function JobCard({
             transition: 'background 0.15s ease',
           }}
         >
-          <span className="text-[16px] leading-none flex-none" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
+          <span className="text-[1rem] leading-none flex-none" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
           {occ ? (
             <>
               <span className="text-xs tabular-nums flex-none" style={{ color: 'var(--muted)' }}>{occ.anzsco}</span>
-              <span className="text-[13px] overflow-hidden text-ellipsis whitespace-nowrap">
+              <span className="text-[0.8125rem] overflow-hidden text-ellipsis whitespace-nowrap">
                 {lang === 'zh' ? occ.zh : occ.en}
               </span>
             </>
           ) : (
-            <span className="text-[11.5px] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
+            <span className="text-[0.71875rem] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
               {t('jobCaps')}
             </span>
           )}
@@ -184,7 +184,7 @@ export default function JobCard({
           )}
           <span className="ml-auto flex-none text-xs" style={{ color: 'var(--muted)' }}>
             {t('jobSubtotal')}&nbsp;
-            <span className="text-[15px] tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}>
+            <span className="text-[0.9375rem] tabular-nums" style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}>
               {evaluation.base}
             </span>
           </span>
@@ -201,7 +201,7 @@ export default function JobCard({
             onClick={onRemove}
             title={t('removeJob')}
             aria-label={t('removeJob')}
-            className="cursor-pointer text-[16px] leading-none w-8 h-8 mr-2.5 flex-none flex items-center justify-center hover:text-[var(--danger)]"
+            className="cursor-pointer text-[1rem] leading-none w-11 h-11 mr-0.5 flex-none flex items-center justify-center hover:text-[var(--danger)]"
             style={{ background: 'none', border: 'none', color: 'var(--muted)' }}
           >
             ×
@@ -226,7 +226,7 @@ export default function JobCard({
         <label
           id={searchLabelId}
           htmlFor={searchId}
-          className="block text-[11.5px] tracking-[0.16em] font-medium mb-2.5"
+          className="block text-[0.71875rem] tracking-[0.16em] font-medium mb-2.5"
           style={{ color: 'var(--muted)' }}
         >
           {t('jobField')}
@@ -241,7 +241,7 @@ export default function JobCard({
               style={{ background: 'none', border: 'none', color: 'inherit' }}
             >
               <span className="text-xs tabular-nums flex-none" style={{ color: 'var(--muted)' }}>{occ.anzsco}</span>
-              <span className="text-[13.5px] leading-[1.4] overflow-hidden text-ellipsis whitespace-nowrap">
+              <span className="text-[0.84375rem] leading-[1.4] overflow-hidden text-ellipsis whitespace-nowrap">
                 {occupationDisplayName(occ, lang)}
               </span>
               <span className="flex-none" style={listTagStyle}>{occ.list}</span>
@@ -251,7 +251,7 @@ export default function JobCard({
               onClick={(e) => { e.stopPropagation(); onPatch({ anzsco: '' }); onUIPatch({ open: false, q: '' }); }}
               title={t('clearOcc')}
               aria-label={t('clearOcc')}
-              className="cursor-pointer text-[15px] px-4 hover:text-[var(--danger)]"
+              className="cursor-pointer text-[0.9375rem] px-4 hover:text-[var(--danger)]"
               style={{ background: 'none', border: 'none', borderLeft: '1px solid var(--hair)', color: 'var(--muted)' }}
             >
               ×
@@ -275,7 +275,7 @@ export default function JobCard({
               requestAnimationFrame(() => moveOptionFocus(e.key === 'ArrowDown' ? 1 : -1));
             }}
             placeholder={t('jobSearch')}
-            className="w-full box-border px-3.5 py-[13px] text-[16px] outline-none focus:border-[var(--muted)]"
+            className="w-full box-border px-3.5 py-[13px] text-[1rem] outline-none focus:border-[var(--muted)]"
             style={{
               background: 'var(--bg)',
               border: '1px solid var(--hair)',
@@ -316,7 +316,7 @@ export default function JobCard({
                   role="option"
                   aria-selected={job.anzsco === o.anzsco}
                   onClick={() => pickOccupation(o.anzsco)}
-                  className="grid items-baseline gap-3 w-full px-3.5 py-3 cursor-pointer text-[13px] text-left leading-[1.45] hover:bg-[var(--hover)]"
+                  className="grid items-baseline gap-3 w-full px-3.5 py-3 cursor-pointer text-[0.8125rem] text-left leading-[1.45] hover:bg-[var(--hover)]"
                   style={{
                     gridTemplateColumns: '62px 1fr auto',
                     background: 'transparent',
@@ -332,10 +332,10 @@ export default function JobCard({
               ))}
             </div>
             {filtered.length === 0 && (
-              <p className="m-0 p-3.5 text-[12.5px]" style={{ color: 'var(--muted)' }}>{t('occNo')}</p>
+              <p className="m-0 p-3.5 text-[0.78125rem]" style={{ color: 'var(--muted)' }}>{t('occNo')}</p>
             )}
             <div
-              className="px-3.5 py-[9px] text-[11px] tracking-[0.05em]"
+              className="px-3.5 py-[9px] text-[0.6875rem] tracking-[0.05em]"
               style={{ color: 'var(--muted)', borderTop: '1px solid var(--hair-soft)' }}
             >
               {t('occCount', { n: Math.min(MAX_RESULTS, filtered.length), m: filtered.length })}&nbsp;·&nbsp;{t('occHint')}

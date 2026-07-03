@@ -27,10 +27,10 @@ export default function FloatingChip({ visible, total, onClick }: FloatingChipPr
         animation: 'eoiFadeUp 0.35s ease backwards',
       }}
     >
-      <span className="text-[10.5px] tracking-[0.18em] font-medium" style={{ color: 'var(--band-muted)' }}>
+      <span className="text-[0.65625rem] tracking-[0.18em] font-medium" style={{ color: 'var(--band-muted)' }}>
         {t('totalCaps')}
       </span>
-      <span className="text-[21px] leading-none tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>
+      <span className="text-[1.3125rem] leading-none tabular-nums" style={{ fontFamily: 'var(--font-serif)' }}>
         {total}
       </span>
     </button>

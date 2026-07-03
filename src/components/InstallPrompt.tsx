@@ -86,10 +86,10 @@ export default function InstallPrompt() {
         animation: 'eoiFadeUp 0.4s ease backwards',
       }}
     >
-      <div className="text-[11px] tracking-[0.18em] font-medium" style={{ color: 'var(--band-muted)' }}>
+      <div className="text-[0.6875rem] tracking-[0.18em] font-medium" style={{ color: 'var(--band-muted)' }}>
         {t('pwaTitle')}
       </div>
-      <p className="m-0 mt-2 text-[12.5px] leading-[1.65]" style={{ color: 'var(--band-soft)' }}>
+      <p className="m-0 mt-2 text-[0.78125rem] leading-[1.65]" style={{ color: 'var(--band-soft)' }}>
         {mode === 'ios' ? (
           <>
             {t('pwaIosHintPre')} <ShareGlyph /> {t('pwaIosHintPost')}
@@ -103,7 +103,7 @@ export default function InstallPrompt() {
           <button
             type="button"
             onClick={install}
-            className="cursor-pointer text-[11.5px] tracking-[0.14em] font-medium px-4 py-2 hover:opacity-85"
+            className="cursor-pointer text-[0.71875rem] tracking-[0.14em] font-medium px-4 py-2 hover:opacity-85"
             style={{ background: 'var(--band-ink)', color: 'var(--band-bg)', border: 'none' }}
           >
             {t('pwaInstall')}
@@ -112,7 +112,7 @@ export default function InstallPrompt() {
         <button
           type="button"
           onClick={dismiss}
-          className="cursor-pointer text-[11.5px] tracking-[0.14em] px-2.5 py-2 underline underline-offset-4"
+          className="cursor-pointer text-[0.71875rem] tracking-[0.14em] px-2.5 py-2 underline underline-offset-4"
           style={{ background: 'none', border: 'none', color: 'var(--band-muted)', textDecorationColor: 'var(--band-hair)' }}
         >
           {t('pwaLater')}

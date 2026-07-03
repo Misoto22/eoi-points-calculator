@@ -40,7 +40,7 @@ export default function CheckRow({ label, checked, points, onToggle }: CheckRowP
           </svg>
         )}
       </span>
-      <span className="flex-1 text-[13.5px] leading-[1.55]">{label}</span>
+      <span className="flex-1 text-[0.84375rem] leading-[1.55]">{label}</span>
       <span className="flex-none mt-0.5 text-xs tabular-nums" style={{ color: 'var(--muted)' }}>
         {pointsTag(points)}
       </span>

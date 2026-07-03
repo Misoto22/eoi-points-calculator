@@ -31,11 +31,11 @@ export default function SubMonthRow({
   const showEnd = onEndChange !== undefined && value !== '';
   return (
     <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 mt-[7px] px-0.5">
-      <span className="flex-none text-[10px] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>{label}</span>
+      <span className="flex-none text-[0.625rem] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>{label}</span>
       <MonthPicker value={value} onChange={onChange} placeholder={placeholder} inline label={label} />
       {showEnd && (
         <>
-          <span className="flex-none text-[10px]" style={{ color: 'var(--muted)' }}>{endSeparator}</span>
+          <span className="flex-none text-[0.625rem]" style={{ color: 'var(--muted)' }}>{endSeparator}</span>
           <MonthPicker
             value={endValue ?? ''}
             onChange={onEndChange}
@@ -46,7 +46,7 @@ export default function SubMonthRow({
         </>
       )}
       {(warn || note) && (
-        <span className="ml-auto text-right text-[10.5px] leading-[1.5]" style={{ color: warn ? 'var(--danger)' : 'var(--muted)' }}>
+        <span className="ml-auto text-right text-[0.65625rem] leading-[1.5]" style={{ color: warn ? 'var(--danger)' : 'var(--muted)' }}>
           {warn || note}
         </span>
       )}

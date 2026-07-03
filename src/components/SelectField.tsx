@@ -73,7 +73,7 @@ export default function SelectField({
     <div data-dd="true" className="relative">
       <label
         id={labelId}
-        className="block text-[11.5px] tracking-[0.16em] font-medium mb-2.5"
+        className="block text-[0.71875rem] tracking-[0.16em] font-medium mb-2.5"
         style={{ color: 'var(--muted)' }}
       >
         {label}
@@ -98,7 +98,7 @@ export default function SelectField({
         }}
       >
         <span
-          className="text-[13.5px] leading-[1.4]"
+          className="text-[0.84375rem] leading-[1.4]"
           style={{ color: selected ? 'var(--ink)' : 'var(--muted)' }}
         >
           {selected ? selected.label : placeholder}
@@ -109,7 +109,7 @@ export default function SelectField({
           </span>
           {lockedNote ? (
             // In-place lock hint — replaces the chevron, no extra line below
-            <span className="text-[9.5px] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>{lockedNote}</span>
+            <span className="text-[0.59375rem] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>{lockedNote}</span>
           ) : (
             <svg
               width="10" height="6" viewBox="0 0 10 6" fill="none"
@@ -143,7 +143,7 @@ export default function SelectField({
               role="option"
               aria-selected={value === o.value && o.value !== ''}
               onClick={() => onPick(o.value)}
-              className="flex w-full justify-between items-baseline gap-4 px-3.5 py-3 cursor-pointer text-[13px] text-left leading-[1.45] hover:bg-[var(--hover)]"
+              className="flex w-full justify-between items-baseline gap-4 px-3.5 py-3 cursor-pointer text-[0.8125rem] text-left leading-[1.45] hover:bg-[var(--hover)]"
               style={{
                 background: value === o.value && o.value !== '' ? 'var(--hover)' : 'transparent',
                 border: 'none',

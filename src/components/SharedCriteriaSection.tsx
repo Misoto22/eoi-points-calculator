@@ -55,7 +55,7 @@ function SharedCriteriaSection({
       style={{ zIndex: zActive ? 30 : 'auto', animation: 'eoiFadeUp 0.7s ease 0.08s backwards' }}
     >
       <SectionHeading num="01" title={t('sections.shared')} side="SHARED" />
-      <p className="mt-3.5 mb-0 text-[12.5px] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
+      <p className="mt-3.5 mb-0 text-[0.78125rem] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
         {t('sharedNote')}
       </p>
 
@@ -104,7 +104,7 @@ function SharedCriteriaSection({
 
       {bonusGroups.map((group) => (
         <div key={group.id} className="mt-[30px]">
-          <div className="text-[11.5px] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
+          <div className="text-[0.71875rem] tracking-[0.16em] font-medium" style={{ color: 'var(--muted)' }}>
             {t(`groups.${group.id}`)}
           </div>
           <div className="grid gap-x-9 mt-1.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(290px, 100%), 1fr))' }}>
