@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { memo, useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
@@ -49,7 +49,7 @@ function Collapsible({ title, children }: { title: string; children: ReactNode }
   );
 }
 
-export default function ReferenceSection({ evaluation }: ReferenceSectionProps) {
+function ReferenceSection({ evaluation }: ReferenceSectionProps) {
   const { t } = useTranslation();
 
   const jobsWithOcc = evaluation.jobs.filter((je) => je.occupation);
@@ -152,3 +152,5 @@ export default function ReferenceSection({ evaluation }: ReferenceSectionProps) 
     </section>
   );
 }
+
+export default memo(ReferenceSection);

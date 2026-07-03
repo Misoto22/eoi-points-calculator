@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import { groupCauses, monthsBetween } from '@/lib/timeline';
@@ -19,7 +19,7 @@ interface TimelineSectionProps {
   today: string;
 }
 
-export default function TimelineSection({
+function TimelineSection({
   dates, jobs, timeline, goal, today,
 }: TimelineSectionProps) {
   const { t, i18n } = useTranslation();
@@ -27,10 +27,11 @@ export default function TimelineSection({
   // Hovering a legend row highlights the matching marker on the chart
   const [focusEvent, setFocusEvent] = useState<number | null>(null);
 
-  const seriesLabels = jobs.map((j) => {
+  // Stable identity keeps the memoized chart from reconciling on hover
+  const seriesLabels = useMemo(() => jobs.map((j) => {
     const occ = findOccupation(j.anzsco);
     return occ ? (lang === 'zh' ? occ.zh : occ.en) : t('noOccName');
-  });
+  }), [jobs, lang, t]);
 
   const hasAnyDate = isYm(dates.birth) || isYm(dates.englishTest)
     || jobs.some((j) => isYm(j.ausWorkStart) || isYm(j.overseasWorkStart) || isYm(j.assessmentDate));
@@ -92,3 +93,5 @@ export default function TimelineSection({
     </section>
   );
 }
+
+export default memo(TimelineSection);

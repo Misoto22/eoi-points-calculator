@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import SelectField from './SelectField';
@@ -29,7 +30,7 @@ interface SharedCriteriaSectionProps {
 
 const SELECT_FIELDS: SharedSelectField[] = ['age', 'english', 'education', 'partnerStatus'];
 
-export default function SharedCriteriaSection({
+function SharedCriteriaSection({
   shared, onPatch, openSelect, setOpenSelect, ageLocked, dates, onDatesPatch, today,
 }: SharedCriteriaSectionProps) {
   const { t } = useTranslation();
@@ -134,3 +135,5 @@ export default function SharedCriteriaSection({
     </section>
   );
 }
+
+export default memo(SharedCriteriaSection);

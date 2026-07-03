@@ -1,7 +1,7 @@
 // src/components/TimelineChart.tsx
 'use client';
 
-import { useMemo, useState } from 'react';
+import { memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { addMonths, monthsBetween } from '@/lib/timeline';
 import type { TimelineResult } from '@/lib/timeline';
@@ -23,11 +23,14 @@ const W = 720, H = 238, PL = 40, PR = 62, TOP = 30, AXIS = 182;
 const DASHES: (string | undefined)[] = [undefined, '7 4', '2 3', '9 3 2 3', '1 4'];
 const DIM = 0.24;
 
-export default function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLabels }: TimelineChartProps) {
+function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLabels }: TimelineChartProps) {
   const { t } = useTranslation();
   const { startScore, startBases, events, horizonEnd } = timeline;
   const [hoverM, setHoverM] = useState<number | null>(null);   // months from today
   const [focusLine, setFocusLine] = useState<number | null>(null);
+  // BCR is cached per hover session — reading it on every pointermove forces
+  // synchronous layout right when frames matter most
+  const rectRef = useRef<DOMRect | null>(null);
 
   const total = Math.max(1, monthsBetween(today, horizonEnd));
   const x = (m: number) => PL + (m / total) * (W - PL - PR);
@@ -100,7 +103,7 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
 
   // Hover → month + tooltip rows
   const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = rectRef.current ?? (rectRef.current = e.currentTarget.getBoundingClientRect());
     const px = ((e.clientX - rect.left) / rect.width) * W;
     if (px < PL || px > endX) { setHoverM(null); return; }
     setHoverM(Math.max(0, Math.min(total, Math.round(((px - PL) / (endX - PL)) * total))));
@@ -150,9 +153,10 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
         role="img"
         aria-label={t('tlChartSummary', { from: today, to: horizonEnd, score: startScore, n: events.length })}
         style={{ minWidth: 560, width: '100%', display: 'block', touchAction: 'pan-y' }}
+        onPointerEnter={(e) => { rectRef.current = e.currentTarget.getBoundingClientRect(); }}
         onPointerMove={onMove}
         onPointerDown={onMove}
-        onPointerLeave={() => { setHoverM(null); setFocusLine(null); }}
+        onPointerLeave={() => { rectRef.current = null; setHoverM(null); setFocusLine(null); }}
       >
         {/* y-grid + goal band + threshold lines */}
         {gridVals.map((v) => (
@@ -291,3 +295,5 @@ export default function TimelineChart({ timeline, goal, today, focusEventIndex =
     </div>
   );
 }
+
+export default memo(TimelineChart);

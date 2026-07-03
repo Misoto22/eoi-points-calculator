@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import type { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
@@ -76,7 +76,7 @@ function presentPath(p: PathwayResult): PathPresentation {
  * Compact results band — the single results view on every breakpoint:
  * inline on narrow screens, the sticky right panel on wide ones.
  */
-export default function ResultsBand({
+function ResultsBand({
   evaluation, shared, goal, displayTotal,
   onGoalDec, onGoalInc, onOpenExport, onCopyLink, copied, onReset, bandRef,
 }: ResultsBandProps) {
@@ -104,7 +104,7 @@ export default function ResultsBand({
     .filter((k) => evaluation.shared[k] > 0)
     .map((k) => ({ key: k, label: t(`bd.${k}`), value: evaluation.shared[k] }));
 
-  const suggestions = suggestionsFor(evaluation, shared, goal);
+  const suggestions = useMemo(() => suggestionsFor(evaluation, shared, goal), [evaluation, shared, goal]);
   const progressScale = Math.min(displayTotal / goal, 1);
 
   return (
@@ -309,5 +309,7 @@ export default function ResultsBand({
     </section>
   );
 }
+
+export default memo(ResultsBand);
 
 export { GOAL_RANGE };

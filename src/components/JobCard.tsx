@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SelectField, { pointsTag } from './SelectField';
 import CheckRow from './CheckRow';
@@ -46,6 +46,9 @@ export function occupationDisplayName(occ: Occupation | null, lang: string): str
 }
 
 const MAX_RESULTS = 8;
+// Prebuilt lowercase index so a search keystroke doesn't re-lowercase all
+// 500+ occupation names
+const searchIndex = occupations.map((o) => ({ occ: o, enLower: o.en.toLowerCase() }));
 const SELECT_FIELDS: JobSelectField[] = ['ausWork', 'overseasWork'];
 // Optional work-period inputs under each experience select — one home per fact
 const START_FIELD: Record<JobSelectField, 'ausWorkStart' | 'overseasWorkStart'> = {
@@ -100,11 +103,14 @@ export default function JobCard({
 
   const occ = evaluation.occupation;
   const tag = String.fromCharCode(65 + evaluation.index);
-  const q = ui.q.trim().toLowerCase();
-  const filtered = q
-    ? occupations.filter((o) =>
-        o.anzsco.includes(q) || o.en.toLowerCase().includes(q) || o.zh.includes(ui.q.trim()))
-    : occupations;
+  const qRaw = ui.q.trim();
+  const filtered = useMemo(() => {
+    if (!qRaw) return occupations;
+    const q = qRaw.toLowerCase();
+    return searchIndex
+      .filter((r) => r.occ.anzsco.includes(q) || r.enLower.includes(q) || r.occ.zh.includes(qRaw))
+      .map((r) => r.occ);
+  }, [qRaw]);
   const showDisplay = !!occ && !ui.open;
   const showSearch = !occ || ui.open;
   const cardActive = ui.open || !!openSelect?.startsWith(`${job.id}:`);

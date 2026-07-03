@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '@/components/Header';
 import SectionHeading from '@/components/SectionHeading';
@@ -17,6 +17,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { evaluate } from '@/lib/points';
+import type { JobEvaluation } from '@/lib/points';
 import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
 import { defaultPlanningDates, defaultSharedCriteria, isYm, newJob } from '@/lib/types';
 import { applyDates, buildTimeline } from '@/lib/timeline';
@@ -40,6 +41,51 @@ function PageSkeleton() {
     </div>
   );
 }
+
+const DEFAULT_JOB_UI: JobUIState = { q: '', open: false };
+
+interface JobCardSlotProps {
+  jobId: string;
+  job: JobAssessment;
+  evaluation: JobEvaluation;
+  canRemove: boolean;
+  ui: JobUIState;
+  openSelect: string | null;
+  setOpenSelect: (key: string | null) => void;
+  ausWorkLocked: boolean;
+  overseasWorkLocked: boolean;
+  collapsed: boolean;
+  patchJob: (id: string, patch: Partial<JobAssessment>) => void;
+  patchJobUI: (id: string, patch: Partial<JobUIState>) => void;
+  removeJob: (id: string) => void;
+  toggleJob: (id: string) => void;
+}
+
+// memo gate for the accordion cards: per-job closures are bound *below* the
+// prop comparison, so a keystroke in one card no longer reconciles the rest
+const JobCardSlot = memo(function JobCardSlot({
+  jobId, job, evaluation, canRemove, ui, openSelect, setOpenSelect,
+  ausWorkLocked, overseasWorkLocked, collapsed,
+  patchJob, patchJobUI, removeJob, toggleJob,
+}: JobCardSlotProps) {
+  return (
+    <JobCard
+      job={job}
+      evaluation={evaluation}
+      canRemove={canRemove}
+      ui={ui}
+      onPatch={(patch) => patchJob(jobId, patch)}
+      onUIPatch={(patch) => patchJobUI(jobId, patch)}
+      onRemove={() => removeJob(jobId)}
+      openSelect={openSelect}
+      setOpenSelect={setOpenSelect}
+      ausWorkLocked={ausWorkLocked}
+      overseasWorkLocked={overseasWorkLocked}
+      collapsed={collapsed}
+      onToggleCollapse={() => toggleJob(jobId)}
+    />
+  );
+});
 
 const PageContent = () => {
   const { t, ready } = useTranslation();
@@ -154,6 +200,30 @@ const PageContent = () => {
     });
   }, []);
 
+  const removeJob = useCallback((id: string) => {
+    setJobs((prev) => prev.filter((j) => j.id !== id));
+    if (openJobId === id) setOpenJobId(null);
+  }, [openJobId]);
+
+  const toggleJob = useCallback((id: string) => {
+    setOpenSelect(null);
+    // Close this card's occupation search too, so the collapsing body
+    // can clip cleanly (overflow flips to hidden mid-transition).
+    patchJobUI(id, { open: false });
+    setOpenJobId(openJobId === id ? null : id);
+  }, [openJobId, patchJobUI]);
+
+  const goalDec = useCallback(() => {
+    setGoalPoints((prev: number) => Math.max(GOAL_RANGE.min, prev - GOAL_RANGE.step));
+  }, [setGoalPoints]);
+
+  const goalInc = useCallback(() => {
+    setGoalPoints((prev: number) => Math.min(GOAL_RANGE.max, prev + GOAL_RANGE.step));
+  }, [setGoalPoints]);
+
+  const openExport = useCallback(() => setExportOpen(true), []);
+  const closeExport = useCallback(() => setExportOpen(false), []);
+
   const handleCopyLink = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -221,30 +291,22 @@ const PageContent = () => {
         </p>
 
         {jobs.map((job, i) => (
-          <JobCard
+          <JobCardSlot
             key={job.id}
+            jobId={job.id}
             job={derived.jobs[i]}
             evaluation={evaluation.jobs[i]}
             canRemove={jobs.length > 1}
-            ui={jobUI[job.id] ?? { q: '', open: false }}
-            onPatch={(patch) => patchJob(job.id, patch)}
-            onUIPatch={(patch) => patchJobUI(job.id, patch)}
-            onRemove={() => {
-              setJobs((prev) => prev.filter((j) => j.id !== job.id));
-              if (openJobId === job.id) setOpenJobId(null);
-            }}
+            ui={jobUI[job.id] ?? DEFAULT_JOB_UI}
             openSelect={openSelect}
             setOpenSelect={setOpenSelect}
             ausWorkLocked={isYm(jobs[i].ausWorkStart)}
             overseasWorkLocked={isYm(jobs[i].overseasWorkStart)}
             collapsed={openJobId !== job.id}
-            onToggleCollapse={() => {
-              setOpenSelect(null);
-              // Close this card's occupation search too, so the collapsing body
-              // can clip cleanly (overflow flips to hidden mid-transition).
-              patchJobUI(job.id, { open: false });
-              setOpenJobId(openJobId === job.id ? null : job.id);
-            }}
+            patchJob={patchJob}
+            patchJobUI={patchJobUI}
+            removeJob={removeJob}
+            toggleJob={toggleJob}
           />
         ))}
 
@@ -280,9 +342,9 @@ const PageContent = () => {
               shared={shared}
               goal={goalPoints}
               displayTotal={displayTotal}
-              onGoalDec={() => setGoalPoints((prev: number) => Math.max(GOAL_RANGE.min, prev - GOAL_RANGE.step))}
-              onGoalInc={() => setGoalPoints((prev: number) => Math.min(GOAL_RANGE.max, prev + GOAL_RANGE.step))}
-              onOpenExport={() => setExportOpen(true)}
+              onGoalDec={goalDec}
+              onGoalInc={goalInc}
+              onOpenExport={openExport}
               onCopyLink={handleCopyLink}
               copied={copied}
               onReset={handleReset}
@@ -340,7 +402,7 @@ const PageContent = () => {
 
       <ExportModal
         open={exportOpen}
-        onClose={() => setExportOpen(false)}
+        onClose={closeExport}
         evaluation={evaluation}
         goal={goalPoints}
       />
