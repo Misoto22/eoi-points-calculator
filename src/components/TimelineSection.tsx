@@ -5,6 +5,7 @@ import SectionHeading from './SectionHeading';
 import MonthField from './MonthField';
 import { addMonths, monthsBetween, naatiExpiryMonth } from '@/lib/timeline';
 import type { TimelineResult } from '@/lib/timeline';
+import TimelineChart from './TimelineChart';
 import type { JobAssessment, PlanningDates } from '@/lib/types';
 import { isYm } from '@/lib/types';
 import { assessingAuthority } from '@/data/assessingAuthorities';
@@ -24,10 +25,6 @@ export default function TimelineSection({
   dates, onDatesPatch, jobs, onJobPatch, naatiChecked, timeline, goal, today,
 }: TimelineSectionProps) {
   const { t } = useTranslation();
-
-  // Suppress unused-variable warnings for props consumed by Task 6 chart
-  void timeline;
-  void goal;
 
   const hasAnyDate = isYm(dates.birth) || isYm(dates.englishTest)
     || jobs.some((j) => isYm(j.ausWorkStart) || isYm(j.overseasWorkStart) || isYm(j.assessmentDate));
@@ -91,7 +88,29 @@ export default function TimelineSection({
       {!hasAnyDate && (
         <p className="mt-[26px] mb-0 text-[12.5px]" style={{ color: 'var(--muted)' }}>{t('tlEmpty')}</p>
       )}
-      {/* TimelineChart mounts here in Task 6 */}
+      {/* Over-45: ineligible — show note instead of chart */}
+      {isYm(dates.birth) && monthsBetween(dates.birth, today) >= 45 * 12 ? (
+        <p className="mt-[26px] mb-0 text-[12.5px]" style={{ color: 'var(--danger)' }}>{t('tlOver45')}</p>
+      ) : (
+        <>
+          {hasAnyDate && timeline.events.length > 0 && (
+            <>
+              <TimelineChart timeline={timeline} goal={goal} today={today} />
+              <ol className="sr-only">
+                {timeline.events.map((e) => (
+                  <li key={e.date}>
+                    {e.date}: {e.causes.map((c) => t(c.labelKey, c.params)).join(', ')}
+                    {e.delta !== 0 ? ` (${e.delta > 0 ? '+' : ''}${e.delta} → ${e.scoreAfter})` : ''}
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
+          {hasAnyDate && timeline.events.length === 0 && (
+            <p className="mt-[26px] mb-0 text-[12.5px]" style={{ color: 'var(--muted)' }}>{t('tlEmpty')}</p>
+          )}
+        </>
+      )}
     </section>
   );
 }
