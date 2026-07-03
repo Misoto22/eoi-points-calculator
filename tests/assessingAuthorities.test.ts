@@ -69,10 +69,32 @@ describe('assessingAuthority', () => {
     expect(assessingAuthority('252511').authority).toMatch(/AHPRA/);
   });
 
-  it('maps 2311xx pilots to CASA', () => {
+  it('maps pilots to CASA but Flying Instructor to VETASSESS', () => {
     expect(assessingAuthority('231111')).toEqual({ authority: 'CASA', validityYears: 3 });
-    expect(assessingAuthority('231113')).toEqual({ authority: 'CASA', validityYears: 3 });
     expect(assessingAuthority('231114')).toEqual({ authority: 'CASA', validityYears: 3 });
+    // 231113 Flying Instructor is the exception — VETASSESS, not CASA
+    expect(assessingAuthority('231113')).toEqual({ authority: 'VETASSESS', validityYears: 3 });
+  });
+
+  it('splits 3131 ICT support technicians between TRA and ACS', () => {
+    expect(assessingAuthority('313111')).toEqual({ authority: 'TRA', validityYears: 3 });
+    expect(assessingAuthority('313112')).toEqual({ authority: 'TRA', validityYears: 3 });
+    expect(assessingAuthority('313199')).toEqual({ authority: 'TRA', validityYears: 3 });
+    expect(assessingAuthority('313113')).toEqual({ authority: 'ACS', validityYears: 2 });
+  });
+
+  it('maps the whole 2712 judicial unit group to VETASSESS', () => {
+    expect(assessingAuthority('271214')).toEqual({ authority: 'VETASSESS', validityYears: 3 });
+    expect(assessingAuthority('271299')).toEqual({ authority: 'VETASSESS', validityYears: 3 });
+    // Barristers and Solicitors stay with the state legal admission authorities
+    expect(assessingAuthority('271111').authority).toMatch(/SLAA/);
+    expect(assessingAuthority('271311').authority).toMatch(/SLAA/);
+  });
+
+  it('maps 251411 Optometrist to OCANZ', () => {
+    expect(assessingAuthority('251411')).toEqual({ authority: 'OCANZ', validityYears: 3 });
+    // Orthoptist stays on the generic 251 rule
+    expect(assessingAuthority('251412').authority).toMatch(/AHPRA/);
   });
 
   it('maps 2312xx marine transport professionals to AMSA', () => {

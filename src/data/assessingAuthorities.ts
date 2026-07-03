@@ -40,7 +40,15 @@ const PREFIX_RULES: Record<string, AuthorityInfo> = {
   '261':  { authority: 'ACS', validityYears: 2 },   // ICT Business/Systems Analysts
   '262':  { authority: 'ACS', validityYears: 2 },   // ICT Database/Systems Administrators
   '263':  { authority: 'ACS', validityYears: 2 },   // ICT Network/Security Professionals (excl. 2633)
-  '313':  { authority: 'ACS', validityYears: 2 },   // ICT Support Technicians (3131 only; 3132 overridden below)
+
+  // ── ICT Support Technicians (3131) ── TRA / ACS split ────────────────────
+  // 313111 Hardware Technician, 313112 ICT Customer Support Officer and
+  // 313199 ICT Support Technicians nec are TRA; only 313113 Web Administrator
+  // is assessed by ACS.
+  // Source: https://www.anzscosearch.com/313111/ (TRA), /313112/ (TRA),
+  //         /313113/ (ACS), /313199/ (TRA)
+  '3131':   { authority: 'TRA', validityYears: 3 },
+  '313113': { authority: 'ACS', validityYears: 2 },
 
   // ── Telecommunications Engineering Professionals ── Engineers Australia ──
   // ANZSCO unit group 2633 (263311 Telecommunications Engineer,
@@ -77,11 +85,13 @@ const PREFIX_RULES: Record<string, AuthorityInfo> = {
   '232111': { authority: 'AACA', validityYears: 3 }, // Architect (232111 only; others → VETASSESS)
 
   // ── Air Transport Professionals ── CASA, 3 years ─────────────────────────
-  // Aeroplane Pilots (231111), Flying Instructors (231113), and Helicopter
-  // Pilots (231114) are assessed by the Civil Aviation Safety Authority (CASA),
-  // not by VETASSESS.
-  // Source: https://www.anzscosearch.com/231111/ (CASA)
-  '2311': { authority: 'CASA', validityYears: 3 },
+  // Aeroplane Pilots (231111) and Helicopter Pilots (231114) are assessed by
+  // the Civil Aviation Safety Authority (CASA). Flying Instructor (231113) is
+  // the exception: VETASSESS, not CASA — only actual pilots go to CASA.
+  // Source: https://www.anzscosearch.com/231111/ (CASA), /231114/ (CASA),
+  //         /231113/ (VETASSESS)
+  '2311':   { authority: 'CASA', validityYears: 3 },
+  '231113': { authority: 'VETASSESS', validityYears: 3 },
 
   // ── Marine Transport Professionals ── AMSA, 3 years ─────────────────────
   // Ship's Masters (231213) and other marine transport professionals (unit
@@ -104,6 +114,12 @@ const PREFIX_RULES: Record<string, AuthorityInfo> = {
   '251':  { authority: 'AHPRA / VETASSESS', validityYears: 3 }, // Health Diagnostic & Promotion
   '252':  { authority: 'AHPRA / VETASSESS', validityYears: 3 }, // Allied Health Therapists (excl. 2523)
 
+  // ── Optometrist ── OCANZ, 3 years ────────────────────────────────────────
+  // 251411 Optometrist is assessed by the Optometry Council of Australia and
+  // New Zealand.  251412 Orthoptist stays on the generic 251 rule.
+  // Source: https://www.ocanz.org/  ·  https://www.anzscosearch.com/251411/
+  '251411': { authority: 'OCANZ', validityYears: 3 },
+
   // ── Dental Professionals ── ADC (Australian Dental Council), 3 years ─────
   // Dentists (252312) and Dental Specialists (252311) are assessed by the
   // Australian Dental Council (ADC), not AHPRA or VETASSESS.
@@ -118,14 +134,13 @@ const PREFIX_RULES: Record<string, AuthorityInfo> = {
   // Source: immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment/assessing-authorities
   '271':  { authority: 'SLAA (state legal bodies)', validityYears: 3 }, // Barristers, Solicitors
 
-  // ── IP Lawyers / Judicial Professionals nec ── VETASSESS (not SLAA) ──────
-  // 271214 Intellectual Property Lawyer and 271299 Judicial and Other Legal
-  // Professionals nec are assessed by VETASSESS, not by state legal admission
-  // authorities.  Barristers (271111) and Solicitors (271311) still use SLAA.
+  // ── Judicial & Other Legal Professionals (2712) ── VETASSESS (not SLAA) ──
+  // The whole 2712 unit group (271211 Judge, 271212 Magistrate, 271213
+  // Tribunal Member, 271214 Intellectual Property Lawyer, 271299 nec) is
+  // assessed by VETASSESS.  Barristers (2711) and Solicitors (2713) use SLAA.
   // Source: https://www.vetassess.com.au/check-my-occupation/professional-occupations/intellectual-property-lawyer
   //         https://www.vetassess.com.au/check-my-occupation/professional-occupations/judicial-and-other-legal-professionals-nec
-  '271214': { authority: 'VETASSESS', validityYears: 3 },
-  '271299': { authority: 'VETASSESS', validityYears: 3 },
+  '2712': { authority: 'VETASSESS', validityYears: 3 },
 
   // ── Psychologists ── APS, 3 years ───────────────────────────────────────
   // Source: https://www.psychology.org.au/for-members/migration-skills-assessment
