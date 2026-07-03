@@ -113,6 +113,7 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
     <button
       type="button"
       onClick={() => setCardTheme(value)}
+      aria-pressed={cardTheme === value}
       className="cursor-pointer text-xs tracking-[0.1em] py-1"
       style={{
         background: 'none',

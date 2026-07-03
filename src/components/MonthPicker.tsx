@@ -13,6 +13,8 @@ interface MonthPickerProps {
   disabled?: boolean;
   /** Borderless footnote-style trigger for sub-rows under a parent field */
   inline?: boolean;
+  /** Screen-reader label for triggers without an external <label> (inline rows) */
+  label?: string;
 }
 
 const MONTH_COUNT = 12;
@@ -27,7 +29,7 @@ function monthNames(lang: string): string[] {
  * Editorial month picker: year stepper + 12-month grid in a hairline popover.
  * Emits YYYY-MM strings; replaces the browser-native month input.
  */
-export default function MonthPicker({ id, value, onChange, placeholder, disabled, inline }: MonthPickerProps) {
+export default function MonthPicker({ id, value, onChange, placeholder, disabled, inline, label }: MonthPickerProps) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [viewYear, setViewYear] = useState<number>(() => new Date().getFullYear());
@@ -106,6 +108,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
               transition: 'border-color 0.2s ease',
             }}
       >
+        {label && <span className="sr-only">{label}</span>}
         {valid ? (
           <span
             className="tabular-nums"
@@ -144,7 +147,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
       {open && (
         <div
           role="dialog"
-          aria-label={placeholder}
+          aria-label={label ?? placeholder}
           className="absolute z-50 left-0 w-[248px]"
           style={{
             top: 'calc(100% + 6px)',
@@ -167,7 +170,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
                 onChange={(e) => setYearDraft(e.target.value.replace(/\D/g, '').slice(0, 4))}
                 onBlur={commitYearDraft}
                 onKeyDown={(e) => { if (e.key === 'Enter') commitYearDraft(); }}
-                className="w-16 text-center text-[16px] tabular-nums outline-none"
+                className="w-16 text-center text-[16px] tabular-nums outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2"
                 style={{ fontFamily: 'var(--font-serif)', background: 'var(--bg)', border: '1px solid var(--hair)', color: 'var(--ink)', padding: '1px 0' }}
               />
             ) : (

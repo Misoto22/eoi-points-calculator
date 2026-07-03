@@ -166,7 +166,7 @@ export default function ResultsBand({
 
         <div className="flex justify-between items-center gap-3.5 flex-wrap mt-3.5 text-[12.5px]" style={{ color: 'var(--band-muted)' }}>
           <span>{t('minimum')} {MIN_POINTS}</span>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5" role="group" aria-label={t('goal')}>
             <span>{t('goal')}</span>
             <div className="flex items-stretch" style={{ border: '1px solid var(--band-hair)' }}>
               <button
@@ -179,6 +179,7 @@ export default function ResultsBand({
                 −
               </button>
               <span
+                aria-live="polite"
                 className="flex items-center px-2.5 tabular-nums text-[13px]"
                 style={{ color: 'var(--band-ink)', borderLeft: '1px solid var(--band-hair)', borderRight: '1px solid var(--band-hair)' }}
               >
