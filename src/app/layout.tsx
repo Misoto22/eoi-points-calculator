@@ -89,6 +89,9 @@ export default function RootLayout({
                 const root = document.documentElement;
                 root.classList.remove('light', 'dark');
                 root.classList.add(theme === 'system' ? systemTheme : theme);
+                if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) {
+                  root.classList.add('standalone');
+                }
               } catch (e) {}
             `,
           }}
