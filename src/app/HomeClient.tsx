@@ -55,8 +55,11 @@ const PageContent = () => {
 
   const [openSelect, setOpenSelect] = useState<string | null>(null);
   const [jobUI, setJobUI] = useState<Record<string, JobUIState>>({});
-  // Accordion: the one assessment currently expanded for editing
-  const [openJobId, setOpenJobId] = useState<string | null>(initial.jobs[0]?.id ?? null);
+  // Accordion: the one assessment currently expanded for editing.
+  // '__init' resolves to the first job at render time — capturing initial.jobs[0].id
+  // here can mismatch under StrictMode double-invocation (ids are regenerated).
+  const [openJobIdRaw, setOpenJobId] = useState<string | null>('__init');
+  const openJobId = openJobIdRaw === '__init' ? (jobs[0]?.id ?? null) : openJobIdRaw;
   const [copied, setCopied] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [chipShown, setChipShown] = useState(false);
@@ -195,6 +198,9 @@ const PageContent = () => {
             openSelect={openSelect}
             setOpenSelect={setOpenSelect}
             ageLocked={isYm(dates.birth)}
+            dates={dates}
+            onDatesPatch={patchDates}
+            today={today}
           />
 
           {/* 02 — Skills assessments */}
@@ -293,10 +299,7 @@ const PageContent = () => {
         <div className="min-w-0 wide:col-start-1 wide:row-start-2">
           <TimelineSection
             dates={dates}
-            onDatesPatch={patchDates}
             jobs={jobs}
-            onJobPatch={patchJob}
-            naatiChecked={shared.communityLanguage}
             timeline={timeline}
             goal={goalPoints}
             today={today}

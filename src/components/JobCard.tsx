@@ -4,12 +4,17 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import SelectField, { pointsTag } from './SelectField';
 import CheckRow from './CheckRow';
+import MonthField from './MonthField';
+import MonthPicker from './MonthPicker';
 import type { JobAssessment } from '@/lib/types';
+import { isYm } from '@/lib/types';
 import type { JobEvaluation } from '@/lib/points';
 import type { Occupation } from '@/data/occupations';
 import { occupations } from '@/data/occupations';
 import { jobSelectCriteria, professionalYearPoints } from '@/data/pointsCriteria';
 import type { JobSelectField } from '@/data/pointsCriteria';
+import { assessingAuthority } from '@/data/assessingAuthorities';
+import { addMonths } from '@/lib/timeline';
 
 export interface JobUIState {
   q: string;
@@ -42,6 +47,11 @@ export function occupationDisplayName(occ: Occupation | null, lang: string): str
 
 const MAX_RESULTS = 8;
 const SELECT_FIELDS: JobSelectField[] = ['ausWork', 'overseasWork'];
+// Optional start-month input under each experience select — one home per fact
+const START_FIELD: Record<JobSelectField, 'ausWorkStart' | 'overseasWorkStart'> = {
+  ausWork: 'ausWorkStart',
+  overseasWork: 'overseasWorkStart',
+};
 
 const listTagStyle = {
   fontSize: '10px',
@@ -287,27 +297,59 @@ export default function JobCard({
       <div className="grid gap-x-7 gap-y-[22px] mt-[22px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))' }}>
         {SELECT_FIELDS.map((field) => {
           const key = `${job.id}:${field}`;
+          const startField = START_FIELD[field];
           // Derive lock state per field from parent-provided booleans
           const locked = field === 'ausWork' ? ausWorkLocked : field === 'overseasWork' ? overseasWorkLocked : false;
           return (
-            <SelectField
-              key={field}
-              label={t(`fields.${field}`)}
-              placeholder={t('placeholder')}
-              options={jobSelectCriteria[field].map((o) => ({
-                value: o.value,
-                label: t(`options.${field}.${o.value || 'none'}`),
-                points: o.points,
-              }))}
-              value={job[field]}
-              open={openSelect === key}
-              onToggle={() => setOpenSelect(openSelect === key ? null : key)}
-              onPick={(v) => { onPatch({ [field]: v }); setOpenSelect(null); }}
-              fieldBg="bg"
-              lockedNote={locked ? t('tlDerived') : undefined}
-            />
+            <div key={field}>
+              <SelectField
+                label={t(`fields.${field}`)}
+                placeholder={t('placeholder')}
+                options={jobSelectCriteria[field].map((o) => ({
+                  value: o.value,
+                  label: t(`options.${field}.${o.value || 'none'}`),
+                  points: o.points,
+                }))}
+                value={job[field]}
+                open={openSelect === key}
+                onToggle={() => setOpenSelect(openSelect === key ? null : key)}
+                onPick={(v) => { onPatch({ [field]: v }); setOpenSelect(null); }}
+                fieldBg="bg"
+                lockedNote={locked ? t('tlDerived') : undefined}
+              />
+              {/* Precise alternative to the bracket: a start month that derives it */}
+              <div className="mt-2 flex items-center gap-2.5">
+                <span className="flex-none text-[10px] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>
+                  {t('jobStartMonth')}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <MonthPicker
+                    value={job[startField]}
+                    onChange={(v) => onPatch({ [startField]: v })}
+                    placeholder={t('tlPickMonth')}
+                    compact
+                  />
+                </div>
+              </div>
+            </div>
           );
         })}
+
+        <MonthField
+          label={t('tlAssessDate')}
+          value={job.assessmentDate}
+          onChange={(v) => onPatch({ assessmentDate: v })}
+          note={(() => {
+            if (!job.anzsco) return undefined;
+            const info = assessingAuthority(job.anzsco);
+            if (isYm(job.assessmentDate) && info.validityYears !== null) {
+              return t('tlExpiresOn', { authority: info.authority, years: info.validityYears, date: addMonths(job.assessmentDate, info.validityYears * 12) });
+            }
+            return info.validityYears !== null
+              ? t('tlAuthorityNote', { authority: info.authority, years: info.validityYears })
+              : info.authority;
+          })()}
+        />
       </div>
 
       <div className="mt-3.5">

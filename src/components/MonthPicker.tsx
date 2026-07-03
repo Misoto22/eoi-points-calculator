@@ -11,6 +11,8 @@ interface MonthPickerProps {
   onChange: (value: string) => void;
   placeholder: string;
   disabled?: boolean;
+  /** Slimmer trigger for sub-field placements (e.g. under an experience select) */
+  compact?: boolean;
 }
 
 const MONTH_COUNT = 12;
@@ -25,7 +27,7 @@ function monthNames(lang: string): string[] {
  * Editorial month picker: year stepper + 12-month grid in a hairline popover.
  * Emits YYYY-MM strings; replaces the browser-native month input.
  */
-export default function MonthPicker({ id, value, onChange, placeholder, disabled }: MonthPickerProps) {
+export default function MonthPicker({ id, value, onChange, placeholder, disabled, compact }: MonthPickerProps) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [viewYear, setViewYear] = useState<number>(() => new Date().getFullYear());
@@ -92,7 +94,7 @@ export default function MonthPicker({ id, value, onChange, placeholder, disabled
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => (open ? close(false) : openPicker())}
-        className="w-full box-border flex justify-between items-center gap-2 px-3.5 py-[11px] cursor-pointer text-left text-[13.5px] disabled:opacity-45 disabled:cursor-default hover:border-[var(--muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2"
+        className={`w-full box-border flex justify-between items-center gap-2 cursor-pointer text-left disabled:opacity-45 disabled:cursor-default hover:border-[var(--muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--muted)] focus-visible:outline-offset-2 ${compact ? 'px-2.5 py-[6px] text-[12px]' : 'px-3.5 py-[11px] text-[13.5px]'}`}
         style={{
           background: 'var(--bg)',
           border: `1px solid ${open ? 'var(--muted)' : 'var(--hair)'}`,

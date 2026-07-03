@@ -13,17 +13,15 @@ interface MonthFieldProps {
   /** Danger-colored helper line (takes precedence over note) */
   warnNote?: string;
   disabled?: boolean;
-  /** Visually hide the label at md+ (a shared column header replaces it) */
-  hideLabelOnMd?: boolean;
 }
 
 /** Labelled month field — a themed popover picker instead of the native input */
-export default function MonthField({ label, value, onChange, note, warnNote, disabled, hideLabelOnMd }: MonthFieldProps) {
+export default function MonthField({ label, value, onChange, note, warnNote, disabled }: MonthFieldProps) {
   const id = useId();
   const { t } = useTranslation();
   return (
     <div>
-      <label htmlFor={id} className={`block text-[11.5px] tracking-[0.16em] font-medium mb-2.5${hideLabelOnMd ? ' md:sr-only' : ''}`} style={{ color: 'var(--muted)' }}>
+      <label htmlFor={id} className="block text-[11.5px] tracking-[0.16em] font-medium mb-2.5" style={{ color: 'var(--muted)' }}>
         {label}
       </label>
       <MonthPicker id={id} value={value} onChange={onChange} placeholder={t('tlPickMonth')} disabled={disabled} />

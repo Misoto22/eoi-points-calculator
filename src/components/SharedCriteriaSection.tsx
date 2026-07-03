@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import SelectField from './SelectField';
 import CheckRow from './CheckRow';
-import type { SharedCriteria } from '@/lib/types';
+import MonthPicker from './MonthPicker';
+import type { PlanningDates, SharedCriteria } from '@/lib/types';
+import { isYm } from '@/lib/types';
+import { addMonths, monthsBetween, naatiExpiryMonth } from '@/lib/timeline';
 import {
   bonusGroups,
   sharedBonusCriteria,
@@ -19,16 +22,57 @@ interface SharedCriteriaSectionProps {
   setOpenSelect: (key: string | null) => void;
   /** When true, the age select shows the date-derived bracket and is locked. */
   ageLocked?: boolean;
+  dates: PlanningDates;
+  onDatesPatch: (patch: Partial<PlanningDates>) => void;
+  today: string;
 }
 
 const SELECT_FIELDS: SharedSelectField[] = ['age', 'english', 'education', 'partnerStatus'];
 
+/** Small labelled sub-row: an optional precise month under its parent field */
+function SubMonthRow({ label, value, onChange, placeholder, note, warn }: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  note?: string;
+  warn?: string;
+}) {
+  return (
+    <div className="mt-2">
+      <div className="flex items-center gap-2.5">
+        <span className="flex-none text-[10px] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>{label}</span>
+        <div className="flex-1 min-w-0">
+          <MonthPicker value={value} onChange={onChange} placeholder={placeholder} compact />
+        </div>
+      </div>
+      {(warn || note) && (
+        <p className="m-0 mt-1.5 text-[11px] leading-[1.5]" style={{ color: warn ? 'var(--danger)' : 'var(--muted)' }}>
+          {warn || note}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function SharedCriteriaSection({
-  shared, onPatch, openSelect, setOpenSelect, ageLocked,
+  shared, onPatch, openSelect, setOpenSelect, ageLocked, dates, onDatesPatch, today,
 }: SharedCriteriaSectionProps) {
   const { t } = useTranslation();
 
   const zActive = openSelect?.startsWith('sh:');
+
+  // Future birth or an implied age under 18 both invalidate the derivation
+  const birthWarn = isYm(dates.birth)
+    ? (dates.birth >= today ? t('tlFutureBirth')
+      : monthsBetween(dates.birth, today) < 18 * 12 ? t('tlUnder18') : undefined)
+    : undefined;
+  const englishNote = isYm(dates.englishTest)
+    ? t('tlEnglishExpires', { date: addMonths(dates.englishTest, 36) })
+    : undefined;
+  const naatiNote = shared.communityLanguage && isYm(dates.naatiCert)
+    ? t('tlNaatiExpires', { date: naatiExpiryMonth(dates.naatiCert) })
+    : undefined;
 
   return (
     <section
@@ -44,22 +88,41 @@ export default function SharedCriteriaSection({
         {SELECT_FIELDS.map((field) => {
           const key = `sh:${field}`;
           return (
-            <SelectField
-              key={field}
-              label={t(`fields.${field}`)}
-              placeholder={t('placeholder')}
-              options={sharedSelectCriteria[field].map((o) => ({
-                value: o.value,
-                label: t(`options.${field}.${o.value || 'none'}`),
-                points: o.points,
-              }))}
-              value={shared[field]}
-              open={openSelect === key}
-              onToggle={() => setOpenSelect(openSelect === key ? null : key)}
-              onPick={(v) => { onPatch({ [field]: v }); setOpenSelect(null); }}
-              fieldBg="surface"
-              lockedNote={field === 'age' && ageLocked ? t('tlDerived') : undefined}
-            />
+            <div key={field}>
+              <SelectField
+                label={t(`fields.${field}`)}
+                placeholder={t('placeholder')}
+                options={sharedSelectCriteria[field].map((o) => ({
+                  value: o.value,
+                  label: t(`options.${field}.${o.value || 'none'}`),
+                  points: o.points,
+                }))}
+                value={shared[field]}
+                open={openSelect === key}
+                onToggle={() => setOpenSelect(openSelect === key ? null : key)}
+                onPick={(v) => { onPatch({ [field]: v }); setOpenSelect(null); }}
+                fieldBg="surface"
+                lockedNote={field === 'age' && ageLocked ? t('tlDerived') : undefined}
+              />
+              {field === 'age' && (
+                <SubMonthRow
+                  label={t('tlBirth')}
+                  value={dates.birth}
+                  onChange={(v) => onDatesPatch({ birth: v })}
+                  placeholder={t('tlPickMonth')}
+                  warn={birthWarn}
+                />
+              )}
+              {field === 'english' && (
+                <SubMonthRow
+                  label={t('tlTestShort')}
+                  value={dates.englishTest}
+                  onChange={(v) => onDatesPatch({ englishTest: v })}
+                  placeholder={t('tlPickMonth')}
+                  note={englishNote}
+                />
+              )}
+            </div>
           );
         })}
       </div>
@@ -71,13 +134,25 @@ export default function SharedCriteriaSection({
           </div>
           <div className="grid gap-x-9 mt-1.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(290px, 100%), 1fr))' }}>
             {group.items.map((name: SharedBonusField) => (
-              <CheckRow
-                key={name}
-                label={t(`boxes.${name}`)}
-                checked={shared[name]}
-                points={sharedBonusCriteria[name]}
-                onToggle={() => onPatch({ [name]: !shared[name] })}
-              />
+              <div key={name}>
+                <CheckRow
+                  label={t(`boxes.${name}`)}
+                  checked={shared[name]}
+                  points={sharedBonusCriteria[name]}
+                  onToggle={() => onPatch({ [name]: !shared[name] })}
+                />
+                {name === 'communityLanguage' && shared.communityLanguage && (
+                  <div className="pl-7 pr-1.5 pb-2">
+                    <SubMonthRow
+                      label={t('tlCertShort')}
+                      value={dates.naatiCert}
+                      onChange={(v) => onDatesPatch({ naatiCert: v })}
+                      placeholder={t('tlPickMonth')}
+                      note={naatiNote}
+                    />
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
