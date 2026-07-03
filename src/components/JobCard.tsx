@@ -187,7 +187,9 @@ export default function JobCard({
         style={{ gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1)' }}
         onTransitionEnd={(e) => { if (e.propertyName === 'grid-template-rows') setAnimating(false); }}
       >
-        <div className={cardActive || (open && !animating) ? 'overflow-visible' : 'overflow-hidden'}>
+        {/* min-w-0: with overflow visible the grid item's automatic minimum
+            width is min-content, which lets nowrap text widen the card */}
+        <div className={`min-w-0 ${cardActive || (open && !animating) ? 'overflow-visible' : 'overflow-hidden'}`}>
           <div style={{ padding: '0 clamp(18px, 3.4vw, 28px) clamp(18px, 3.4vw, 28px)' }}>
 
       {/* Occupation: searchable dropdown */}
