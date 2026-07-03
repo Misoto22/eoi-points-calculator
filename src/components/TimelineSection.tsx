@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import { groupCauses, monthsBetween } from '@/lib/timeline';
@@ -21,6 +22,8 @@ export default function TimelineSection({
   dates, jobs, timeline, goal, today,
 }: TimelineSectionProps) {
   const { t } = useTranslation();
+  // Hovering a legend row highlights the matching marker on the chart
+  const [focusEvent, setFocusEvent] = useState<number | null>(null);
 
   const hasAnyDate = isYm(dates.birth) || isYm(dates.englishTest)
     || jobs.some((j) => isYm(j.ausWorkStart) || isYm(j.overseasWorkStart) || isYm(j.assessmentDate));
@@ -42,10 +45,10 @@ export default function TimelineSection({
         <>
           {hasAnyDate && timeline.events.length > 0 && (
             <>
-              <TimelineChart timeline={timeline} goal={goal} today={today} />
+              <TimelineChart timeline={timeline} goal={goal} today={today} focusEventIndex={focusEvent} />
               {/* Event legend: numbers match the chart markers; identical causes
                   across assessments are merged with their tags (A · B · C). */}
-              <ol className="m-0 mt-2 p-0 list-none">
+              <ol className="m-0 mt-2 p-0 list-none" onMouseLeave={() => setFocusEvent(null)}>
                 {timeline.events.map((e, i) => {
                   const isEnd = e.causes.some((c) => c.kind === 'eligibilityEnd');
                   const danger = e.warning || e.delta < 0 || isEnd;
@@ -55,8 +58,9 @@ export default function TimelineSection({
                   return (
                     <li
                       key={e.date}
-                      className="grid items-baseline gap-x-3.5 py-[9px] text-[13px]"
-                      style={{ gridTemplateColumns: '20px 62px 1fr auto auto', borderBottom: '1px solid var(--hair-soft)' }}
+                      onMouseEnter={() => setFocusEvent(i)}
+                      className="grid items-baseline gap-x-3.5 py-[9px] text-[13px] hover:bg-[var(--hover)]"
+                      style={{ gridTemplateColumns: '20px 62px 1fr auto auto', borderBottom: '1px solid var(--hair-soft)', transition: 'background 0.15s ease' }}
                     >
                       <span className="text-[13px]" style={{ fontFamily: 'var(--font-serif)', color: danger ? 'var(--danger)' : 'var(--muted)' }}>{i + 1}</span>
                       <span className="text-xs tabular-nums" style={{ color: danger ? 'var(--danger)' : 'var(--muted)' }}>{e.date}</span>
