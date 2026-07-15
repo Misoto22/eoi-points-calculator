@@ -92,13 +92,16 @@ function EmployerSponsorshipSection({ jobs, shared, dates, today, inputs, onPatc
         {t('spNote')}
       </p>
 
-      <div className="grid gap-x-9 gap-y-[30px] mt-[26px]" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(290px, 100%), 1fr))' }}>
+      {/* One coherent vertical list — a 3-across grid here would fragment
+          unevenly on wide screens since the salary picker's natural height
+          doesn't match the toggle rows either side of it. */}
+      <div className="mt-[26px]">
         <ToggleRow
           label={t('spHasSponsor')}
           checked={inputs.hasSponsor}
           onToggle={() => onPatch({ hasSponsor: !inputs.hasSponsor })}
         />
-        <div>
+        <div className="py-[18px]" style={{ borderBottom: '1px solid var(--hair)' }}>
           <div className="text-[0.71875rem] tracking-[0.16em] font-medium mb-2.5" style={{ color: 'var(--muted)' }}>
             {t('spSalaryLabel')}
           </div>
@@ -121,7 +124,7 @@ function EmployerSponsorshipSection({ jobs, shared, dates, today, inputs, onPatc
         />
       </div>
 
-      <p className="mt-[22px] mb-0 text-[0.78125rem] leading-[1.6]" style={{ color: 'var(--ink-soft)' }}>
+      <p className="mt-[18px] mb-0 text-[0.78125rem] leading-[1.6]" style={{ color: 'var(--ink-soft)' }}>
         {evalResult.ageYears !== null
           ? t('spAgeLine', { age: evalResult.ageYears })
           : evalResult.ageUnder45 === true
@@ -134,39 +137,44 @@ function EmployerSponsorshipSection({ jobs, shared, dates, today, inputs, onPatc
       {jobsWithOcc.length === 0 ? (
         <p className="mt-[18px] mb-0 text-[0.78125rem]" style={{ color: 'var(--muted)' }}>{t('spEmpty')}</p>
       ) : (
-        <div className="mt-[22px] flex flex-col gap-[26px]">
+        <div className="mt-[26px] flex flex-col gap-[26px]">
           {jobsWithOcc.map((jr) => {
             const occ = findOccupation(jr.job.anzsco);
             const tag = String.fromCharCode(65 + jr.index);
             return (
               <div key={jr.job.id}>
-                <div className="flex items-baseline gap-2.5 mb-2.5">
+                <div className="flex items-baseline gap-2.5 mb-1">
                   <span className="text-[0.96875rem]" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
                   <span className="text-[0.84375rem]" style={{ color: 'var(--ink)' }}>
                     {occ ? (lang === 'zh' ? occ.zh : occ.en) : jr.job.anzsco}
                   </span>
                   <span className="text-xs tabular-nums" style={{ color: 'var(--muted)' }}>{jr.job.anzsco}</span>
                 </div>
-                <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))' }}>
-                  {jr.streams.map((s) => {
-                    const failed = s.gates.filter((g) => !g.ok);
-                    return (
-                      <div key={s.code} className="py-2.5 px-3" style={{ border: '1px solid var(--hair)' }}>
-                        <div className="flex justify-between items-baseline gap-3">
-                          <span className="text-[0.8125rem]" style={{ color: 'var(--ink)' }}>{t(STREAM_LABEL_KEY[s.code])}</span>
-                          <span className="text-[0.6875rem] tracking-[0.1em] uppercase" style={{ color: s.eligible ? 'var(--ink-soft)' : 'var(--danger)' }}>
-                            {s.eligible ? t('spEligible') : t('spNotEligible')}
-                          </span>
-                        </div>
+                {jr.streams.map((s) => {
+                  const failed = s.gates.filter((g) => !g.ok);
+                  return (
+                    <div
+                      key={s.code}
+                      className="grid gap-4 py-[11px] items-baseline"
+                      style={{ gridTemplateColumns: '1fr auto', borderBottom: '1px solid var(--hair-soft)' }}
+                    >
+                      <div className="min-w-0">
+                        <div className="text-[0.8125rem] leading-[1.5]" style={{ color: 'var(--ink)' }}>{t(STREAM_LABEL_KEY[s.code])}</div>
                         {!s.eligible && (
-                          <div className="mt-1.5 text-xs leading-[1.6]" style={{ color: 'var(--muted)' }}>
+                          <div className="text-xs leading-[1.5] mt-[2px]" style={{ color: 'var(--muted)' }}>
                             {failed.map((g) => t(GATE_LABEL_KEY[g.key], g.params)).join(' · ')}
                           </div>
                         )}
                       </div>
-                    );
-                  })}
-                </div>
+                      <span
+                        className="text-[0.6875rem] tracking-[0.1em] uppercase whitespace-nowrap"
+                        style={{ color: s.eligible ? 'var(--ink-soft)' : 'var(--danger)' }}
+                      >
+                        {s.eligible ? t('spEligible') : t('spNotEligible')}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             );
           })}
