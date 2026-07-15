@@ -12,6 +12,7 @@ import ResultsBand from '@/components/ResultsBand';
 import ReferenceSection from '@/components/ReferenceSection';
 import Pr191Section from '@/components/Pr191Section';
 import FeeEstimateSection from '@/components/FeeEstimateSection';
+import EmployerSponsorshipSection from '@/components/EmployerSponsorshipSection';
 import TimelineSection from '@/components/TimelineSection';
 import ExportModal from '@/components/ExportModal';
 import FloatingChip from '@/components/FloatingChip';
@@ -21,8 +22,8 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { evaluate } from '@/lib/points';
 import type { JobEvaluation } from '@/lib/points';
-import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
-import { defaultPlanningDates, defaultSharedCriteria, isYm, newJob } from '@/lib/types';
+import type { JobAssessment, PlanningDates, SharedCriteria, SponsorshipInputs } from '@/lib/types';
+import { defaultPlanningDates, defaultSharedCriteria, defaultSponsorshipInputs, isYm, newJob } from '@/lib/types';
 import { applyDates, buildTimeline } from '@/lib/timeline';
 import { mergeQueryString, persistState, readInitialState } from '@/lib/urlState';
 import { GOAL_RANGE, MAX_JOBS } from '@/data/pointsCriteria';
@@ -102,6 +103,7 @@ const PageContent = () => {
   // dates wired to UI in Task 4; initialised here for URL/storage round-trip
   const [dates, setDates] = useState<PlanningDates>(initial.dates);
   const [goalPoints, setGoalPoints] = useLocalStorage<number>('eoi-goal', GOAL_RANGE.min);
+  const [sponsorship, setSponsorship] = useLocalStorage<SponsorshipInputs>('eoi-sponsorship', defaultSponsorshipInputs);
 
   const [openSelect, setOpenSelect] = useState<string | null>(null);
   const [jobUI, setJobUI] = useState<Record<string, JobUIState>>({});
@@ -192,6 +194,10 @@ const PageContent = () => {
     setDates((prev) => ({ ...prev, ...patch }));
   }, []);
 
+  const patchSponsorship = useCallback((patch: Partial<SponsorshipInputs>) => {
+    setSponsorship((prev) => ({ ...prev, ...patch }));
+  }, [setSponsorship]);
+
   const patchJob = useCallback((id: string, patch: Partial<JobAssessment>) => {
     setJobs((prev) => prev.map((j) => (j.id === id ? { ...j, ...patch } : j)));
   }, []);
@@ -243,7 +249,8 @@ const PageContent = () => {
     setOpenJobId(nj.id);
     setDates({ ...defaultPlanningDates });
     setGoalPoints(GOAL_RANGE.min);
-  }, [setGoalPoints]);
+    setSponsorship({ ...defaultSponsorshipInputs });
+  }, [setGoalPoints, setSponsorship]);
 
   const scrollToResults = useCallback(() => {
     const el = bandRef.current;
@@ -380,6 +387,14 @@ const PageContent = () => {
       <ReferenceSection evaluation={evaluation} />
       <FeeEstimateSection evaluation={evaluation} shared={shared} />
       <Pr191Section dates={dates} onDatesPatch={patchDates} today={today} />
+      <EmployerSponsorshipSection
+        jobs={derived.jobs}
+        shared={derived.shared}
+        dates={dates}
+        today={today}
+        inputs={sponsorship}
+        onPatch={patchSponsorship}
+      />
 
       {/* Footer */}
       <footer

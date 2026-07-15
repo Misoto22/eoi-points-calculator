@@ -22,6 +22,7 @@
 - 📅 **Score Timeline**: Enter real months (birth, work start, test/assessment dates) to project your score over the next 5 years — age-bracket drops, work milestones, and credential expiries (English test, skills assessment per authority, NAATI CCL) plotted on a step chart
 - 🏡 **Path to Permanent Residence**: For 491/494 holders, projects the earliest subclass 191 eligibility date from your grant month, alongside the current holding-period, income-year and application-fee requirements
 - 💰 **Cost Estimate**: A rough visa application charge + skills assessment + English test + state nomination fee budget, built from your entered criteria
+- 🤝 **Employer Sponsorship Checklist**: A separate, non-points-tested screen for subclass 482 (Core Skills / Specialist Skills) and 186 (Direct Entry / Temporary Residence Transition) — checks your entered occupations against the Core Skills Occupation List, salary thresholds (CSIT/SSIT), work experience, the under-45 age limit and English, for applicants who can't yet reach 65 points
 - 🖼️ **Share Card & Report Export**: Generate a Cream or Charcoal PNG summary card, or a detailed printable report (print / save as PDF) covering the full breakdown
 - 🌐 **Bilingual Support**: Full support for English and Simplified Chinese (简体中文)
 - 📱 **Responsive Design**: Optimized for all devices from mobile to desktop
@@ -30,7 +31,7 @@
 - 💾 **Persistent Storage**: Form data saved locally for convenience
 - 🔍 **SEO Optimized**: Complete Open Graph and Twitter Cards integration, with a dynamic per-score OG image for shared links
 
-All point values, pathway rules, per-state occupation lists, program status, permanent-residence requirements and fee figures live in `src/data/` (`pointsCriteria.ts`, `occupations.ts`, `stateLists.ts`, `programStatus.ts`, `pr191.ts`, `fees.ts`) — nothing is hardcoded in the UI or the calculation engine.
+All point values, pathway rules, per-state occupation lists, program status, permanent-residence requirements, fee figures and the employer-sponsorship thresholds/occupation list live in `src/data/` (`pointsCriteria.ts`, `occupations.ts`, `stateLists.ts`, `programStatus.ts`, `pr191.ts`, `fees.ts`, `csol.ts`, `sponsorship.ts`) — nothing is hardcoded in the UI or the calculation engine.
 
 ## 🛠️ Tech Stack
 
