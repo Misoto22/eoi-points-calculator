@@ -9,10 +9,19 @@
     "jobs": "Skills assessments",
     "result": "Result",
     "reference": "Reference",
-    "timeline": "Score timeline"
+    "timeline": "Score timeline",
+    "pr191": "Path to permanent residence",
+    "fees": "Cost estimate"
   },
   "sharedNote": "These belong to you as the applicant and apply to every assessment: age, English, qualification, partner status, plus STEM, Australian study, regional study and NAATI bonuses.",
   "jobsNote": "An applicant may hold several skills assessments. Work experience and the Professional Year must relate to the nominated occupation, so they are entered per occupation.",
+  "compareTitle": "COMPARE",
+  "compareTag": "",
+  "compareOcc": "Occupation",
+  "compareList": "List",
+  "compareBest": "Best pathway",
+  "compareStates": "States",
+  "compareNone": "No eligible pathway yet",
   "fields": {
     "age": "Age",
     "english": "English proficiency",
@@ -129,38 +138,52 @@
   "statesIntro": "Federal lists (MLTSSL / STSOL / ROL) are only the entry ticket: each state and territory keeps its own occupation list, selection method and extra requirements (residence, local work, higher English or points), adjusted through the year. 20,350 nomination places nationally in 2025–26. Once you pick an occupation, the states that can nominate it are tagged below.",
   "statesNote": "A 2025–26 snapshot — always check each state's official page.",
   "visit": "Website",
+  "programStatus": {
+    "open": "Open",
+    "closed": "Closed",
+    "limited": "Limited",
+    "asOf": "as of {{month}}"
+  },
   "states": {
     "NSW": {
       "how": "Separate 190 & 491 skills lists (no priority tiers)",
-      "tip": "NSW work valued; ICT, health, engineering, construction first"
+      "tip": "NSW work valued; ICT, health, engineering, construction first",
+      "statusNote": "2025–26 allocation fully committed; 2026-27 settings under review"
     },
     "VIC": {
       "how": "No fixed list · ROI selection (Live in Melbourne)",
-      "tip": "Health, teaching, STEM prioritised; local work & study count"
+      "tip": "Health, teaching, STEM prioritised; local work & study count",
+      "statusNote": "ROI intake stopped 30 Apr 2026 (allocation met); 2026-27 not yet open"
     },
     "QLD": {
       "how": "QSOL · onshore / offshore / graduate streams",
-      "tip": "Onshore usually needs 6+ months of QLD work"
+      "tip": "Onshore usually needs 6+ months of QLD work",
+      "statusNote": "ROI intake closed, 2025–26 allocation exhausted"
     },
     "WA": {
       "how": "WASMOL Schedule 1 / 2 + graduate list",
-      "tip": "General stream often needs a 6-month WA contract; mining, construction, health"
+      "tip": "General stream often needs a 6-month WA contract; mining, construction, health",
+      "statusNote": "Still running invitation rounds under the 2025–26 program"
     },
     "SA": {
       "how": "Broadest state list (hundreds of onshore roles)",
-      "tip": "Per-occupation extra requirements; monthly invitation data"
+      "tip": "Per-occupation extra requirements; monthly invitation data",
+      "statusNote": "ROI intake closed 2 Jun 2026; 2026-27 list not yet published"
     },
     "TAS": {
       "how": "Pathway-based (employment / residence), no single list",
-      "tip": "Usually 6–9 months of TAS work; settlement focus"
+      "tip": "Usually 6–9 months of TAS work; settlement focus",
+      "statusNote": "State-connected pathways accept ROIs year-round; offshore-only stream is on hold"
     },
     "ACT": {
       "how": "ACT Nominated Migration Program Occupation List + Canberra Matrix",
-      "tip": "Canberra residence & work history required; mostly local invitees"
+      "tip": "Canberra residence & work history required; mostly local invitees",
+      "statusNote": "Portal offline for the 2026-27 transition, reopening late Jul 2026"
     },
     "NT": {
       "how": "Offshore MOL · onshore needs NT connection",
-      "tip": "About 1,650 places in 2025–26; onshore applicants need NT ties"
+      "tip": "About 1,650 places in 2025–26; onshore applicants need NT ties",
+      "statusNote": "Portal closed — 2025–26 allocation reached; 2026-27 pending confirmation"
     }
   },
   "suggestionCaps": "HOW TO GAIN MORE POINTS",
@@ -183,6 +206,9 @@
   "cardCream": "Cream",
   "cardCharcoal": "Charcoal",
   "cardPreviewAlt": "EOI share card preview",
+  "exportModeCard": "Card",
+  "exportModeReport": "Report",
+  "printReport": "PRINT / SAVE AS PDF",
   "roundsTitle": "Recent invitation rounds (189)",
   "roundsDate": "Date",
   "roundsVisa": "Visa",
@@ -235,6 +261,29 @@
   "tlGoalLine": "Goal {{n}}",
   "tlMinLine": "Minimum {{n}}",
   "tlChartSummary": "Projected score timeline from {{from}} to {{to}}, starting at {{score}} points with {{n}} events.",
+  "pr191Note": "Subclass 491/494 is provisional — after {{years}} years of regional-compliant residence, holders can apply for the permanent Subclass 191. Enter your 491/494 grant month to project your earliest eligibility date.",
+  "pr191GrantLabel": "491 / 494 grant month",
+  "pr191Empty": "Enter a grant month to see your projected eligibility date.",
+  "pr191EligibleNow": "You've held the visa long enough — eligible now, subject to the conditions below.",
+  "pr191EligibleFrom": "Earliest eligible {{date}} — {{n}} months from now.",
+  "pr191ReqTitle": "Conditions beyond the holding period",
+  "pr191ReqRegional": "Compliance with visa condition 8579 throughout: live, work and study only in a designated regional area (excludes Sydney, Melbourne, Brisbane, Gold Coast and Perth).",
+  "pr191ReqIncome": "{{n}} lodged ATO Notices of Assessment within the visa's {{validity}}-year validity — any reported income counts, there is no fixed minimum-income figure.",
+  "pr191ReqHealth": "Standard health and character (police clearance) requirements at time of application.",
+  "pr191Fee": "Application charge: {{primary}} primary applicant · +{{partner}} partner (18+) · +{{child}} child, from 1 Jul 2026.",
+  "pr191Disclaimer": "A guide only — this cannot verify your actual regional residence or income-year compliance. Confirm current requirements with the Department of Home Affairs before applying.",
+  "feesNote": "A rough order-of-magnitude budget from the criteria and occupations you've entered above — not a quote. Real costs vary by assessing body, agent fees (if any) and exchange rate.",
+  "feesEmpty": "Select an occupation above to see an estimate.",
+  "feesVisaCharge": "Visa application charge ({{visa}}, primary applicant)",
+  "feesPartnerCharge": "Partner (secondary applicant, 18+)",
+  "feesAssessment": "{{tag}} skills assessment · {{authority}}",
+  "feesAssessmentRange": "typical range, not this occupation's exact fee",
+  "feesEnglishTest": "English test (IELTS / PTE)",
+  "feesNaati": "NAATI CCL test",
+  "feesNomination": "State nomination fee",
+  "feesNominationFree": "free in at least one eligible state",
+  "feesTotal": "Estimated total",
+  "feesDisclaimer": "Figures are AUD estimates compiled 2026-07 from public fee schedules and may already be out of date — confirm current charges with the Department of Home Affairs, your assessing authority and the nominating state before budgeting.",
   "disclaimer": "This calculator is for reference only. Immigration rules change frequently — always verify with the Department of Home Affairs or a registered migration agent.",
   "cardFoot": "Reference only · verify with the Department of Home Affairs",
   "cardGoal": "Goal",

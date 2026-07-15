@@ -200,3 +200,20 @@ input::placeholder {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Print only the detailed report (ExportModal "Report" mode) — everything
+   else on the page, including the modal chrome around it, is hidden. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-report,
+  .print-report * {
+    visibility: visible;
+  }
+  .print-report {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+}
