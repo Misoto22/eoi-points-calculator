@@ -1,6 +1,7 @@
 # Occupation-list audit — 2025–26 program year
 
-**Audited:** 2026-07 · **Scope:** federal 189/190/491 occupation-list model + 8 state/territory 190/491 lists
+**Audited:** 2026-07 (updated 2026-07: fixed-list states' real ANZSCO membership added) · **Scope:**
+federal 189/190/491 occupation-list model + 8 state/territory 190/491 lists
 · **Files:** `src/data/occupations.ts`, `src/data/stateLists.ts`, `src/data/pointsCriteria.ts`
 
 This records a research + audit pass against official sources and the changes applied. Data changes
@@ -57,38 +58,40 @@ narrow sector groups which wrongly excluded valid occupations. Their sector entr
 - ACT description corrected: "Critical Skills List" → "ACT Nominated Migration Program Occupation List
   + Canberra Matrix" (both locales).
 
-## Per-state program structure (verified) vs list membership (approximated)
-
-Program **structure** (fixed-list-or-not, selection method) was verified at high confidence. Actual
-per-state ANZSCO **membership** for the fixed-list states is a curated sector-group approximation —
-reference only.
+## Per-state program structure and list membership (both verified 2026-07)
 
 | State | Fixed list? | Selection mechanism |
 |-------|-------------|---------------------|
 | NSW | Yes (190 & 491, published at 4-digit unit-group) | Fixed list + EOI invitation rounds |
-| VIC | **No** | ROI ranking; accepts any federal-SOL occupation |
-| QLD | Yes (QSOL, onshore/offshore) | ROI ranking |
+| VIC | **No** — confirmed genuinely open, no ceiling mechanism | ROI ranking; accepts any federal-SOL occupation |
+| QLD | Yes (Onshore + Offshore Skilled Occupation Lists) | ROI ranking |
 | WA  | Yes (WASMOL Sch 1 & 2 + Graduate) | Fixed list + ranked monthly rounds |
 | SA  | Yes (single list, per-occupation 190/491 flags) | ROI (onshore) / EOI (offshore) |
-| TAS | **No** | ROI ranking with priority pass categories |
-| ACT | Yes (ACT Nominated Migration Program Occupation List) | Fixed list + Canberra Matrix |
-| NT  | **No** onshore (offshore Priority stream uses NTOMOL) | EOI/registration, weighted |
+| TAS | **No** for the common (Tasmania-connected) case; fixed ~83-code list gates the offshore-no-ties 190 pathway only | ROI ranking with priority pass categories |
+| ACT | Yes (ACT Nominated Migration Program Occupation List, Oct 2025) — hard gate, not just ranking | Fixed list + Canberra Matrix |
+| NT  | **No** for 190 (onshore-only, no list) or for 3 of 4 offshore-491 streams; 139-code NTOMOL gates only the offshore-no-ties 491 stream | EOI/registration, weighted |
+
+`stateLists.ts` now carries each fixed-list state's actual published ANZSCO membership (one row per
+occupation, `[anzsco, eligible190, eligible491]`), replacing the earlier sector-group approximation.
+Cross-checked against `occupations.ts`: every code referenced by every state list already exists there
+— zero gaps found, so no federal-list additions were needed for this pass.
 
 ## Confidence & remaining gaps
 
-- **High:** federal legal basis, CSOL determination, the three reclassifications, per-state program structure.
-- **Low:** exact ANZSCO membership of each state's live list (sector-group approximations, unverified).
-- **Done since (follow-up):** the occupation list is now **complete** — all 504 occupations from the
-  LIN 19/051 schedules (MLTSSL 212 + STSOL 215 + ROL 77), replacing the earlier ~70-item curated subset.
-  Counts were verified against the official totals, and the retired codes the old subset carried
-  (`135111` Chief Information Officer, `399999` Technicians and Trades Workers nec — not on any current
-  list) were dropped. `immi.homeaffairs.gov.au` still returns HTTP 403 to automated fetches, so the list
-  was compiled from the LIN 19/051 schedule tables rather than the rendered Home Affairs page.
-- **Not done (future work):**
-  - Replace fixed-list-state sector approximations (NSW, QLD, WA, SA, ACT) with the actual published
-    ANZSCO codes (NSW publishes at 4-digit unit-group level).
-  - Program allocations for QLD/TAS/NT 2025–26 are already exhausted — consider surfacing a
-    "program may be closed" caveat.
+- **High:** federal legal basis, CSOL determination, the federal-list reclassifications, per-state
+  program structure, and (new) per-state ANZSCO list membership — each compiled directly from the
+  state's own published list/table, with source URL and effective date recorded in `stateLists.ts`.
+- **Known simplifications** (see per-state comments in `stateLists.ts` for detail): stream-level nuance
+  collapsed to "eligible if any stream lists it" (NSW Pathway 1, WA's 6-month-contract requirement, SA's
+  4-stream flags, ACT's Small Business Owner carve-out); QLD's offshore list (subset of onshore) is not
+  carried separately; VIC/TAS/NT's narrow list-gated sub-pathways are not modelled (see `openListStates`
+  doc comment) since the app has no onshore/offshore/stream input dimension.
+- Several 2025–26 program allocations (NSW, QLD, SA, WA) had exhausted their intake and paused new
+  applications at the time of research (2026-07), with 2026-27 lists not yet published — list
+  *membership* recorded is the most recently published version, not a live application-status feed.
+- **Done since (follow-up):** the federal occupation list is complete (504 occupations, MLTSSL 212 +
+  STSOL 215 + ROL 77) and every fixed-list state's real ANZSCO membership has been researched and
+  applied — the prior "not done" gap here is closed.
 
-Re-verify at the start of each program year; a future GSM list consolidation was signalled but had not
-taken effect as of July 2026.
+Re-verify at the start of each program year (state lists commonly refresh around 1 July, sometimes with
+a lag); a future GSM list consolidation was signalled but had not taken effect as of July 2026.
