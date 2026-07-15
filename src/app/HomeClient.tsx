@@ -16,7 +16,8 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import Footer from '@/components/Footer';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
-import { evaluate } from '@/lib/points';
+import { useMounted } from '@/hooks/useMounted';
+import { evaluate, hasOccupation } from '@/lib/points';
 import type { PlanningDates } from '@/lib/types';
 import { applyDates, buildTimeline } from '@/lib/timeline';
 import { mergeQueryString, persistDates, readInitialState } from '@/lib/urlState';
@@ -36,8 +37,7 @@ function PageSkeleton() {
 const PageContent = () => {
   const { ready, t } = useTranslation();
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   // shared/jobs are read-only here — they belong to the Profile page.
   // This page only ever mutates `dates.visa491Grant` (the PR-pathway grant
@@ -154,7 +154,7 @@ const PageContent = () => {
   if (!ready || !mounted) return <PageSkeleton />;
 
   const chipVisible = chipShown && bareScore > 0 && !exportOpen && !footerNear && !installPromptVisible;
-  const hasProfile = jobs.some((j) => j.anzsco !== '');
+  const hasProfile = evaluation.jobs.some(hasOccupation);
 
   return (
     <div
