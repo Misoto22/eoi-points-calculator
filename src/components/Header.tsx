@@ -102,17 +102,10 @@ export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }:
           animation: 'eoiFadeUp 0.7s ease backwards',
         }}
       >
-        <div className="flex justify-between items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-[0.71875rem] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
-              EOI&nbsp;POINTS
-            </Link>
-            <span className="w-px h-3" style={{ background: 'var(--hair)' }} />
-            <nav className="flex items-center gap-3.5" aria-label={t('navLabel')}>
-              {navLink('/', t('navIndependent'))}
-              {navLink('/sponsorship', t('sections.sponsorship'))}
-            </nav>
-          </div>
+        <div className="flex justify-between items-center gap-4">
+          <Link href="/" className="text-[0.71875rem] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
+            EOI&nbsp;POINTS
+          </Link>
           <div className="flex items-center gap-3.5">
             <div className="flex items-center gap-2.5 text-xs">
               {langButton('zh', '中文')}
@@ -141,6 +134,16 @@ export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }:
             </button>
           </div>
         </div>
+
+        {/* Own row on every viewport — inline with the logo it either wraps
+            labels mid-word on narrow screens or forces a two-line jump when
+            the lang/theme cluster overflows. A dedicated row scales cleanly
+            down to mobile without either problem. */}
+        <nav className="flex items-center gap-4 mt-3" aria-label={t('navLabel')}>
+          {navLink('/profile', t('navProfile'))}
+          {navLink('/', t('navIndependent'))}
+          {navLink('/sponsorship', t('navSponsorship'))}
+        </nav>
       </div>
 
       <header style={{ animation: 'eoiFadeUp 0.7s ease backwards' }}>
