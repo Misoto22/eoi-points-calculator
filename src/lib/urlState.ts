@@ -16,7 +16,7 @@ const FLAG_PARAMS: Record<string, keyof SharedCriteria> = {
   rs: 'regionalStudy',
   cl: 'communityLanguage',
 };
-const DATE_PARAMS: Record<string, keyof PlanningDates> = { b: 'birth', et: 'englishTest', nc: 'naatiCert' };
+const DATE_PARAMS: Record<string, keyof PlanningDates> = { b: 'birth', et: 'englishTest', nc: 'naatiCert', vg: 'visa491Grant' };
 
 const V2_SHARED_KEY = 'eoi-v2-shared';
 const V2_JOBS_KEY = 'eoi-v2-jobs';

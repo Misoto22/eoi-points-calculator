@@ -7,8 +7,11 @@ import SectionHeading from '@/components/SectionHeading';
 import SharedCriteriaSection from '@/components/SharedCriteriaSection';
 import JobCard from '@/components/JobCard';
 import type { JobUIState } from '@/components/JobCard';
+import ComparisonTable from '@/components/ComparisonTable';
 import ResultsBand from '@/components/ResultsBand';
 import ReferenceSection from '@/components/ReferenceSection';
+import Pr191Section from '@/components/Pr191Section';
+import FeeEstimateSection from '@/components/FeeEstimateSection';
 import TimelineSection from '@/components/TimelineSection';
 import ExportModal from '@/components/ExportModal';
 import FloatingChip from '@/components/FloatingChip';
@@ -318,6 +321,8 @@ const PageContent = () => {
           />
         ))}
 
+        <ComparisonTable evaluation={evaluation} />
+
             {jobs.length < MAX_JOBS && (
               <button
                 type="button"
@@ -373,6 +378,8 @@ const PageContent = () => {
       </div>
 
       <ReferenceSection evaluation={evaluation} />
+      <FeeEstimateSection evaluation={evaluation} shared={shared} />
+      <Pr191Section dates={dates} onDatesPatch={patchDates} today={today} />
 
       {/* Footer */}
       <footer
@@ -413,6 +420,10 @@ const PageContent = () => {
         onClose={closeExport}
         evaluation={evaluation}
         goal={goalPoints}
+        shared={derived.shared}
+        jobs={derived.jobs}
+        dates={dates}
+        today={today}
       />
     </div>
   );

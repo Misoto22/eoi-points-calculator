@@ -30,9 +30,11 @@ export interface PlanningDates {
   birth: string;
   englishTest: string;
   naatiCert: string;
+  /** 491/494 visa grant month — powers the subclass 191 (permanent) eligibility projection */
+  visa491Grant: string;
 }
 
-export const defaultPlanningDates: PlanningDates = { birth: '', englishTest: '', naatiCert: '' };
+export const defaultPlanningDates: PlanningDates = { birth: '', englishTest: '', naatiCert: '', visa491Grant: '' };
 
 /** Month-string guard shared by url parsing, timeline math and inputs */
 export function isYm(s: string): boolean {

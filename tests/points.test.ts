@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  bestPathwayForJob,
   calculateSharedPoints,
   calculateJobPoints,
   evaluate,
@@ -206,6 +207,20 @@ describe('evaluate', () => {
     expect(ev.best!.total).toBe(90);
     expect(ev.best!.code).toBe('491');
     expect(ev.bestTotal).toBe(90);
+  });
+
+  it('bestPathwayForJob returns the highest-scoring eligible pathway per job', () => {
+    const shared = makeShared({ age: '25-32', english: 'ielts7', education: 'bachelor', partnerStatus: 'single' }); // 65
+    const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
+    const best = bestPathwayForJob(ev.jobs[0]);
+    expect(best?.code).toBe('491');
+    expect(best?.total).toBe(80);
+  });
+
+  it('bestPathwayForJob returns null when nothing is eligible', () => {
+    const shared = makeShared({ age: '40-44' }); // 15, below the 65-point floor
+    const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
+    expect(bestPathwayForJob(ev.jobs[0])).toBeNull();
   });
 
   it('falls back to highest base when nothing is eligible', () => {

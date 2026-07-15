@@ -140,3 +140,12 @@ export function evaluate(shared: SharedCriteria, jobs: JobAssessment[]): Evaluat
 
   return { shared: sharedPoints, sharedTotal, jobs: jobEvaluations, best, bestTotal, bareScore };
 }
+
+/** The highest-scoring eligible pathway for a single assessment, or null if none is eligible. */
+export function bestPathwayForJob(je: JobEvaluation): PathwayResult | null {
+  let best: PathwayResult | null = null;
+  for (const p of je.pathways) {
+    if (p.eligible && (!best || p.total > best.total)) best = p;
+  }
+  return best;
+}

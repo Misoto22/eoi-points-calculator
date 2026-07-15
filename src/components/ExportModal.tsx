@@ -6,6 +6,8 @@ import type { Evaluation } from '@/lib/points';
 import { drawCard, ensureCardFonts } from '@/lib/exportCard';
 import type { CardLabels } from '@/lib/exportCard';
 import type { CardTheme } from '@/data/cardThemes';
+import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
+import ReportView from './ReportView';
 import { todayLabel } from './Header';
 
 interface ExportModalProps {
@@ -13,7 +15,13 @@ interface ExportModalProps {
   onClose: () => void;
   evaluation: Evaluation;
   goal: number;
+  shared: SharedCriteria;
+  jobs: JobAssessment[];
+  dates: PlanningDates;
+  today: string;
 }
+
+type ExportMode = 'card' | 'report';
 
 const BD_KEYS = [
   'age', 'english', 'education', 'partnerStatus',
@@ -21,10 +29,11 @@ const BD_KEYS = [
   'ausWork', 'overseasWork', 'professionalYear',
 ];
 
-export default function ExportModal({ open, onClose, evaluation, goal }: ExportModalProps) {
+export default function ExportModal({ open, onClose, evaluation, goal, shared, jobs, dates, today }: ExportModalProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
 
+  const [mode, setMode] = useState<ExportMode>('card');
   const [cardTheme, setCardTheme] = useState<CardTheme>('cream');
   const [img, setImg] = useState('');
   const [loading, setLoading] = useState(false);
@@ -60,7 +69,7 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
   };
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || mode !== 'card') return;
     let cancelled = false;
     const seq = (genSeqRef.current += 1);
     setLoading(true);
@@ -95,7 +104,7 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
       }
     })();
     return () => { cancelled = true; };
-  }, [open, cardTheme, lang, evaluation, goal, t]);
+  }, [open, mode, cardTheme, lang, evaluation, goal, t]);
 
   if (!open) return null;
 
@@ -109,6 +118,8 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
     a.click();
   };
 
+  const printReport = () => window.print();
+
   const themeTab = (value: CardTheme, label: string) => (
     <button
       type="button"
@@ -120,6 +131,23 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
         border: 'none',
         color: cardTheme === value ? 'var(--overlay-ink)' : 'var(--overlay-dim)',
         borderBottom: cardTheme === value ? '1px solid var(--overlay-ink)' : '1px solid transparent',
+      }}
+    >
+      {label}
+    </button>
+  );
+
+  const modeTab = (value: ExportMode, label: string) => (
+    <button
+      type="button"
+      onClick={() => setMode(value)}
+      aria-pressed={mode === value}
+      className="cursor-pointer text-xs tracking-[0.1em] py-3 -my-2"
+      style={{
+        background: 'none',
+        border: 'none',
+        color: mode === value ? 'var(--overlay-ink)' : 'var(--overlay-dim)',
+        borderBottom: mode === value ? '1px solid var(--overlay-ink)' : '1px solid transparent',
       }}
     >
       {label}
@@ -145,12 +173,15 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
         tabIndex={-1}
         onKeyDown={trapTab}
         className="relative flex flex-col gap-3.5 outline-none"
-        style={{ width: 'min(86vw, 380px)', animation: 'eoiModalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards' }}
+        style={{ width: mode === 'card' ? 'min(86vw, 380px)' : 'min(92vw, 640px)', animation: 'eoiModalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards' }}
       >
         <div className="flex justify-between items-center">
           <div className="flex gap-3.5 text-xs">
-            {themeTab('cream', t('cardCream'))}
-            {themeTab('charcoal', t('cardCharcoal'))}
+            {modeTab('card', t('exportModeCard'))}
+            {modeTab('report', t('exportModeReport'))}
+            {mode === 'card' && <span style={{ width: '1px', alignSelf: 'stretch', background: 'var(--overlay-hair)' }} />}
+            {mode === 'card' && themeTab('cream', t('cardCream'))}
+            {mode === 'card' && themeTab('charcoal', t('cardCharcoal'))}
           </div>
           <button
             type="button"
@@ -162,39 +193,45 @@ export default function ExportModal({ open, onClose, evaluation, goal }: ExportM
             ×
           </button>
         </div>
-        <div className="flex justify-center" style={{ maxHeight: '64vh' }}>
-          {img && !loading && (
-            /* Canvas-generated preview, not a static asset */
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={img}
-              alt={t('cardPreviewAlt')}
-              className="block"
-              style={{ maxWidth: '100%', maxHeight: '64vh', boxShadow: 'var(--overlay-shadow)' }}
-            />
-          )}
-          {loading && (
-            <div
-              className="w-full flex items-center justify-center text-[0.78125rem] tracking-[0.12em]"
-              style={{
-                aspectRatio: '3 / 4',
-                background: 'var(--overlay-surface)',
-                border: '1px solid var(--overlay-hair-soft)',
-                color: 'var(--overlay-muted)',
-              }}
-            >
-              {t('generating')}
-            </div>
-          )}
-        </div>
+        {mode === 'card' ? (
+          <div className="flex justify-center" style={{ maxHeight: '64vh' }}>
+            {img && !loading && (
+              /* Canvas-generated preview, not a static asset */
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={img}
+                alt={t('cardPreviewAlt')}
+                className="block"
+                style={{ maxWidth: '100%', maxHeight: '64vh', boxShadow: 'var(--overlay-shadow)' }}
+              />
+            )}
+            {loading && (
+              <div
+                className="w-full flex items-center justify-center text-[0.78125rem] tracking-[0.12em]"
+                style={{
+                  aspectRatio: '3 / 4',
+                  background: 'var(--overlay-surface)',
+                  border: '1px solid var(--overlay-hair-soft)',
+                  color: 'var(--overlay-muted)',
+                }}
+              >
+                {t('generating')}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="overflow-y-auto" style={{ maxHeight: '64vh', boxShadow: 'var(--overlay-shadow)' }}>
+            <ReportView evaluation={evaluation} shared={shared} jobs={jobs} goal={goal} dates={dates} today={today} dateLabel={todayLabel()} />
+          </div>
+        )}
         <div className="flex gap-2.5">
           <button
             type="button"
-            onClick={download}
+            onClick={mode === 'card' ? download : printReport}
             className="flex-1 cursor-pointer text-[0.78125rem] tracking-[0.18em] font-medium px-5 py-3.5 hover:opacity-88"
             style={{ background: 'var(--overlay-ink)', color: 'var(--overlay-contrast)', border: 'none' }}
           >
-            {t('download')}
+            {mode === 'card' ? t('download') : t('printReport')}
           </button>
           <button
             type="button"
