@@ -44,7 +44,7 @@
     "lang": "语言"
   },
   "boxes": {
-    "stem": "STEM / IT 研究型硕士或博士(澳洲院校,2 年)",
+    "stem": "STEM / IT 研究型硕士或博士（澳洲院校，2 年）",
     "ausStudy": "在澳完成 2 年全日制学习",
     "regionalStudy": "在偏远地区学习 2 年",
     "communityLanguage": "NAATI 社区语言认证（CCL / 口译 / 笔译）"
@@ -192,11 +192,10 @@
     },
     "NT": {
       "how": "离岸 MOL 清单 · 在岸看北领地关联",
-      "tip": "2025–26 约 1,650 个名额;在岸申请需北领地关联",
+      "tip": "2025–26 约 1,650 个名额；在岸申请需北领地关联",
       "statusNote": "通道已关闭 — 2025–26 名额已满，2026-27 待确认"
     }
   },
-  "suggestionCaps": "如何获得更多分数 · SUGGESTIONS",
   "sug": {
     "ielts7": "提升英语至熟练水平（雅思 4 个 7）",
     "ielts8": "提升英语至精通水平（雅思 4 个 8）",
@@ -225,16 +224,12 @@
   "roundsMin": "技工底线分",
   "roundsInv": "邀请数",
   "roundsNote": "189 现采用每年少数几次、约按季度的大批量邀请，并按职业需求排名。65 分仅是高需求技工职业的最低门槛；专业、STEM 与医疗类职业在同一轮次通常需要 85–115 分。",
-  "tlNote": "推演图由你在上方各字段旁填写的年月自动生成(出生、英语考试、工作起止、评估获得)——未来 5 年的年龄跨档、工龄里程碑与证件时效。工龄按移民局『过去 10 年窗口』计算;未填结束月视为工作持续至今。",
+  "tlNote": "推演图由你在上方各字段旁填写的年月自动生成（出生、英语考试、工作起止、评估获得）——未来 5 年的年龄跨档、工龄里程碑与证件时效。工龄按移民局『过去 10 年窗口』计算；未填结束月视为工作持续至今。",
   "tlBirth": "出生年月",
   "tlTestShort": "考试年月",
   "tlCertShort": "认证年月",
-  "tlEnglishTest": "英语考试年月",
-  "tlNaatiCert": "NAATI CCL 认证年月",
   "tlNaatiHint": "勾选上方 NAATI 加分后启用",
   "tlNaatiExpires": "{{date}} 到期",
-  "tlAusStart": "澳洲工作起始",
-  "tlOvsStart": "海外工作起始",
   "tlAssessDate": "职业评估获得月",
   "jobStartMonth": "起始月",
   "tlOngoing": "至今…",
@@ -244,7 +239,6 @@
   "tlExpiresOn": "{{authority}} · 有效期 {{years}} 年 · {{date}} 到期",
   "tlAuthorityNote": "{{authority}} · 评估有效期 {{years}} 年",
   "tlEnglishExpires": "{{date}} 到期（有效期 3 年）",
-  "tlInvalidDate": "请输入形如 2026-07 的年月",
   "tlPickMonth": "请选择年月…",
   "tlClear": "清除",
   "tlThisMonth": "本月",
@@ -253,24 +247,24 @@
   "tlFutureBirth": "出生年月须早于今天",
   "tlUnder18": "未满 18 岁——年龄加分要求 18 岁以上",
   "tlOver45": "已满 45 岁——不再符合这些签证的申请条件",
-  "tlEmpty": "在上方任意字段旁填入年月(出生年月、工作起始月等)即可生成推演图。",
+  "tlEmpty": "在上方任意字段旁填入年月（出生年月、工作起始月等）即可生成推演图。",
   "tl": {
-    "age25": "满 25 岁,年龄档上调",
-    "age33": "满 33 岁,年龄档下调",
-    "age40": "满 40 岁,年龄档下调",
-    "age45": "满 45 岁,失去申请资格",
+    "age25": "满 25 岁，年龄档上调",
+    "age33": "满 33 岁，年龄档下调",
+    "age40": "满 40 岁，年龄档下调",
+    "age45": "满 45 岁，失去申请资格",
     "ausWork": "澳洲工龄满 {{years}} 年",
     "overseasWork": "海外工龄满 {{years}} 年",
     "englishExpiry": "英语成绩到期",
     "assessmentExpiry": "{{authority}} 职业评估到期",
     "naatiExpiry": "NAATI CCL 认证到期",
-    "ausWorkDrop": "澳洲工龄滑出 10 年窗口,不足 {{years}} 年",
-    "overseasWorkDrop": "海外工龄滑出 10 年窗口,不足 {{years}} 年"
+    "ausWorkDrop": "澳洲工龄滑出 10 年窗口，不足 {{years}} 年",
+    "overseasWorkDrop": "海外工龄滑出 10 年窗口，不足 {{years}} 年"
   },
   "tlToday": "今天",
   "tlGoalLine": "目标 {{n}}",
   "tlMinLine": "最低 {{n}}",
-  "tlChartSummary": "{{from}} 至 {{to}} 的分数推演,起始 {{score}} 分,共 {{n}} 个事件。",
+  "tlChartSummary": "{{from}} 至 {{to}} 的分数推演，起始 {{score}} 分，共 {{n}} 个事件。",
   "pr191Note": "491/494 是临时签证——持有人在满足偏远地区居住条件 {{years}} 年后，可申请永居的 191 签证。填写您的 491/494 获签月份，即可推算最早可申请日期。",
   "pr191GrantLabel": "491 / 494 获签月份",
   "pr191Empty": "填写获签月份即可查看预计资格日期。",
@@ -337,9 +331,9 @@
   "cardPathways": "职业路径 · PATHWAYS",
   "cardShared": "共同条件 · SHARED",
   "pwaTitle": "添加到主屏幕",
-  "pwaIosHintPre": "把计算器装成应用:点击 Safari 的分享按钮",
+  "pwaIosHintPre": "把计算器装成应用：点击 Safari 的分享按钮",
   "pwaIosHintPost": ",然后选择「添加到主屏幕」。",
-  "pwaChromiumHint": "把计算器安装为应用——独立窗口运行,支持离线使用。",
+  "pwaChromiumHint": "把计算器安装为应用——独立窗口运行，支持离线使用。",
   "pwaInstall": "安装应用",
   "pwaLater": "暂不"
 }
