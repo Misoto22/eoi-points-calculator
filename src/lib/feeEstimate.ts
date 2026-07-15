@@ -1,4 +1,5 @@
 import type { Evaluation } from './points';
+import { hasOccupation } from './points';
 import type { SharedCriteria } from './types';
 import { assessingAuthority } from '@/data/assessingAuthorities';
 import type { VisaCode } from '@/data/pointsCriteria';
@@ -12,13 +13,10 @@ import {
   visaApplicationCharge,
 } from '@/data/fees';
 
-export interface AssessmentFeeLine {
-  jobTag: string;
-  authority: string;
-  /** A single figure when the authority has a known fee, otherwise null (see `range`) */
-  fee: number | null;
-  range: [number, number] | null;
-}
+/** A single figure when the authority has a known fee, otherwise a typical range — never both. */
+export type AssessmentFeeLine =
+  | { jobTag: string; authority: string; fee: number; range: null }
+  | { jobTag: string; authority: string; fee: null; range: [number, number] };
 
 export interface FeeEstimate {
   visaCharge: number | null;
@@ -37,21 +35,28 @@ export interface FeeEstimate {
 // being included on the visa application (skills-assessed or English-only) does.
 const PARTNER_STATUSES = new Set(['partnerSkills', 'partnerEnglish']);
 
+/** [low, high] for a fee line — a known fee is a single-point range, an unknown one uses its fallback range. */
+function assessmentRange(a: AssessmentFeeLine): [number, number] {
+  return a.fee !== null ? [a.fee, a.fee] : a.range;
+}
+
 export function estimateFees(evaluation: Evaluation, shared: SharedCriteria): FeeEstimate {
   const best = evaluation.best;
   const visaCharge = best ? visaApplicationCharge[best.code] : null;
   const partnerCharge = PARTNER_STATUSES.has(shared.partnerStatus) ? secondaryApplicantCharge.partner : 0;
 
   const assessments: AssessmentFeeLine[] = evaluation.jobs
-    .filter((je) => je.occupation)
-    .map((je) => {
+    .filter(hasOccupation)
+    .map((je): AssessmentFeeLine => {
       const tag = String.fromCharCode(65 + je.index);
-      const info = assessingAuthority(je.occupation!.anzsco);
-      const fee = assessmentFeeByAuthority[info.authority] ?? null;
-      return { jobTag: tag, authority: info.authority, fee, range: fee === null ? assessmentFeeFallbackRange : null };
+      const info = assessingAuthority(je.occupation.anzsco);
+      const fee = assessmentFeeByAuthority[info.authority];
+      return fee !== undefined
+        ? { jobTag: tag, authority: info.authority, fee, range: null }
+        : { jobTag: tag, authority: info.authority, fee: null, range: assessmentFeeFallbackRange };
     });
 
-  const englishFee = shared.english ? englishTestFee.ielts : 0;
+  const englishFee = shared.english ? englishTestFee : 0;
   const naatiFee = shared.communityLanguage ? naatiCclFee : 0;
 
   let nominationFeeRange: [number, number] | null = null;
@@ -63,8 +68,8 @@ export function estimateFees(evaluation: Evaluation, shared: SharedCriteria): Fe
     if (fees.length > 0) nominationFeeRange = [Math.min(...fees), Math.max(...fees)];
   }
 
-  const assessLow = assessments.reduce((sum, a) => sum + (a.fee ?? a.range![0]), 0);
-  const assessHigh = assessments.reduce((sum, a) => sum + (a.fee ?? a.range![1]), 0);
+  const assessLow = assessments.reduce((sum, a) => sum + assessmentRange(a)[0], 0);
+  const assessHigh = assessments.reduce((sum, a) => sum + assessmentRange(a)[1], 0);
   const fixed = (visaCharge ?? 0) + partnerCharge + englishFee + naatiFee;
 
   return {
@@ -102,11 +107,12 @@ export function feeLineItems(fee: FeeEstimate, bestVisa: VisaCode | undefined): 
     items.push({ labelKey: 'feesPartnerCharge', amountLow: fee.partnerCharge, amountHigh: fee.partnerCharge });
   }
   for (const a of fee.assessments) {
+    const [amountLow, amountHigh] = assessmentRange(a);
     items.push({
       labelKey: 'feesAssessment',
       labelParams: { tag: a.jobTag, authority: a.authority },
-      amountLow: a.fee ?? a.range![0],
-      amountHigh: a.fee ?? a.range![1],
+      amountLow,
+      amountHigh,
       noteKey: a.fee === null ? 'feesAssessmentRange' : undefined,
     });
   }

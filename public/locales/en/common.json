@@ -173,7 +173,7 @@
     "TAS": {
       "how": "Pathway-based (employment / residence), no single list",
       "tip": "Usually 6–9 months of TAS work; settlement focus",
-      "statusNote": "State-connected pathways accept ROIs year-round; offshore-only stream is on hold"
+      "statusNote": "2025–26 places fully used; ROI Gateway closed for maintenance pending 2026-27"
     },
     "ACT": {
       "how": "ACT Nominated Migration Program Occupation List + Canberra Matrix",
@@ -272,7 +272,7 @@
   "pr191ReqHealth": "Standard health and character (police clearance) requirements at time of application.",
   "pr191Fee": "Application charge: {{primary}} primary applicant · +{{partner}} partner (18+) · +{{child}} child, from 1 Jul 2026.",
   "pr191Disclaimer": "A guide only — this cannot verify your actual regional residence or income-year compliance. Confirm current requirements with the Department of Home Affairs before applying.",
-  "feesNote": "A rough order-of-magnitude budget from the criteria and occupations you've entered above — not a quote. Real costs vary by assessing body, agent fees (if any) and exchange rate.",
+  "feesNote": "A rough order-of-magnitude budget from the criteria and occupations you've entered above — not a quote. Each occupation you've entered gets its own skills-assessment fee (you'd need a separate assessment for each one you keep as an option); the visa application and state nomination fees apply once, for whichever pathway currently scores highest. Real costs vary by assessing body, agent fees (if any) and exchange rate.",
   "feesEmpty": "Select an occupation above to see an estimate.",
   "feesVisaCharge": "Visa application charge ({{visa}}, primary applicant)",
   "feesPartnerCharge": "Partner (secondary applicant, 18+)",

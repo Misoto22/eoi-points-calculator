@@ -141,6 +141,11 @@ export function evaluate(shared: SharedCriteria, jobs: JobAssessment[]): Evaluat
   return { shared: sharedPoints, sharedTotal, jobs: jobEvaluations, best, bestTotal, bareScore };
 }
 
+/** Narrows `occupation` from nullable to present — lets `.filter(hasOccupation).map(...)` read `je.occupation` without a `!` assertion. */
+export function hasOccupation(je: JobEvaluation): je is JobEvaluation & { occupation: Occupation } {
+  return je.occupation !== null;
+}
+
 /** The highest-scoring eligible pathway for a single assessment, or null if none is eligible. */
 export function bestPathwayForJob(je: JobEvaluation): PathwayResult | null {
   let best: PathwayResult | null = null;

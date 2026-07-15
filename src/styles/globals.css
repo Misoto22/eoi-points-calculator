@@ -201,19 +201,20 @@ input::placeholder {
   }
 }
 
-/* Print only the detailed report (ExportModal "Report" mode) — everything
-   else on the page, including the modal chrome around it, is hidden. */
+/* Print only the detailed report (ExportModal "Report" mode). `.print-report`
+   is portaled directly onto <body> (a sibling of <main>, not nested inside
+   the modal — see ExportModal.tsx) specifically so this rule can stay this
+   simple: hide body's other direct children, show only the portal. Scoped
+   with :has() so printing the page normally (Ctrl+P without the export
+   modal open) is unaffected — there's no `.print-report` to switch on. */
+.print-report {
+  display: none;
+}
 @media print {
-  body * {
-    visibility: hidden;
-  }
-  .print-report,
-  .print-report * {
-    visibility: visible;
+  body:has(.print-report) > :not(.print-report) {
+    display: none;
   }
   .print-report {
-    position: absolute;
-    inset: 0;
-    width: 100%;
+    display: block;
   }
 }

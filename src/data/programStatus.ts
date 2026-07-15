@@ -15,9 +15,12 @@
 // - WA: still running invitation rounds under the 2025-26 WASMOL/GOL framework
 //   (a trades round ran 20 May 2026); no closure notice found.
 // - SA: ROI intake closed 9am, 2 June 2026; 2026-27 list not yet published.
-// - TAS: the state-connected pathways (TSE/TSG/TER) accept ROIs year-round, no
-//   closure found; the offshore-only OSOP stream remains non-operational (no
-//   finalised occupation list) — status reflects the common (state-connected) case.
+// - TAS: fully delivered its 2025-26 nomination program (all 1,200 subclass-190
+//   and 650 subclass-491 places used) by early-to-mid July 2026; ROI Gateway and
+//   application portal closed for maintenance pending 2026-27. (Earlier research
+//   in this file had this as "open" based on the state-connected pathways'
+//   normal year-round intake — corrected 2026-07 once the program's actual
+//   mid-2026 exhaustion was found.)
 // - ACT: application portal down for the 2026-27 transition from the week of
 //   13 Jul 2026, scheduled to reopen the week of 27 Jul 2026 — temporary, not a
 //   program-wide closure.
@@ -39,7 +42,7 @@ export const programStatus: Record<StateCode, ProgramStatusInfo> = {
   QLD: { status: 'closed', asOf: '2026-07' },
   WA: { status: 'open', asOf: '2026-07' },
   SA: { status: 'closed', asOf: '2026-07' },
-  TAS: { status: 'open', asOf: '2026-07' },
+  TAS: { status: 'closed', asOf: '2026-07' },
   ACT: { status: 'limited', asOf: '2026-07' },
   NT: { status: 'closed', asOf: '2026-07' },
 };

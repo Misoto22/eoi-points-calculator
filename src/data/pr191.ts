@@ -9,22 +9,22 @@
 // relying on this for a real application.
 export const PR191_HOLDING_YEARS = 3;
 // The 3 years need not be continuous — periods that total at least 3 years
-// are accepted, provided the applicant otherwise stays compliant with visa
-// condition 8579 (live / work / study only in a designated regional area,
-// which excludes Sydney, Melbourne, Brisbane, Gold Coast and Perth).
+// on a single eligible visa type (491 or 494, not combined) are accepted,
+// provided the applicant otherwise stays compliant with visa condition 8579
+// (live / work / study only in a designated regional area, which excludes
+// Sydney, Melbourne, Brisbane, Gold Coast and Perth).
 
 export const PR191_INCOME_YEARS_REQUIRED = 3;
 export const PR191_VISA_VALIDITY_YEARS = 5;
-/**
- * As of a 2024 policy change there is NO fixed minimum taxable-income dollar
- * figure — the requirement is 3 lodged ATO Notices of Assessment (any
- * reported income counts) within the visa's 5-year validity. This reverses
- * the older, commonly-cited ~$53,900 threshold; treat that figure as retired.
- * Source: immi.homeaffairs.gov.au news item "Income requirement for the
- * Subclass 191 visa" (existence confirmed, full text unreachable) —
- * corroborated by racc.net.au, sellanesclark.com, ausstudyvisa.com.au.
- */
-export const PR191_HAS_INCOME_THRESHOLD = false;
+// As of a ~20 June 2023 policy change there is NO fixed minimum taxable-income
+// dollar figure — the requirement (see pr191ReqIncome in the locale files) is
+// 3 lodged ATO Notices of Assessment (any reported income counts) within the
+// visa's 5-year validity. This reverses the older, commonly-cited ~$53,900
+// threshold; treat that figure as retired.
+// Source: immi.homeaffairs.gov.au news item "Income requirement for the
+// Subclass 191 visa" (existence confirmed, full text unreachable) —
+// corroborated by migrationalliance.com.au, sbsconsultant.com.au,
+// kbaglobal.com.au, racc.net.au, sellanesclark.com, ausstudyvisa.com.au.
 
 export interface Pr191Fees {
   primary: number;

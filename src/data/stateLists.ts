@@ -231,14 +231,15 @@ const WA_LIST: ListRow[] = [
   ['441211', 0, 1], ['451211', 0, 1], ['451399', 0, 1], ['599915', 0, 1], ['612112', 0, 1],
 ];
 
-// South Australia Skilled Occupation List (2025–26): one list (395 occupations across 21 industry
-// categories), each with independent eligibility across 4 streams (SA Graduate, Skilled Employment
-// in SA, Outer Regional Skilled Employment, Offshore) — collapsed here to "eligible under any
-// stream". All 395 occupations are 491-eligible; the 190 flag (305 of 395) is the differentiator.
-// 116 of the 395 are excluded from the Offshore stream specifically (only available onshore) — not
-// modelled. Two ANZSCO codes are published as two list rows with different extra requirements
-// (234914 Physicist: medical vs non-medical; 242211 Vocational Education Teacher: trades vs
-// non-trades) — merged to one row each here since both share the same 190/491 flags.
+// South Australia Skilled Occupation List (2025–26): one list (395 occupations as published, across
+// 21 industry categories), each with independent eligibility across 4 streams (SA Graduate, Skilled
+// Employment in SA, Outer Regional Skilled Employment, Offshore) — collapsed here to "eligible under
+// any stream". All occupations are 491-eligible; the 190 flag is the differentiator. 116 of the 395
+// are excluded from the Offshore stream specifically (only available onshore) — not modelled. Two
+// ANZSCO codes are published as two list rows with different extra requirements (234914 Physicist:
+// medical vs non-medical; 242211 Vocational Education Teacher: trades vs non-trades) — merged to one
+// row each below since both share the same 190/491 flags, so SA_LIST has 393 rows (304 with v190),
+// not 395/305 — the two duplicates accounted for one 190-eligible pair each.
 // Source: migration.sa.gov.au/before-applying/work-in-sa/occupation-lists/occupations-list
 const SA_LIST: ListRow[] = [
   ['131112', 0, 1], ['131113', 0, 1], ['131114', 0, 1], ['132111', 1, 1], ['132211', 1, 1], ['132311', 1, 1],
@@ -249,7 +250,7 @@ const SA_LIST: ListRow[] = [
   ['139913', 1, 1], ['139914', 1, 1], ['139915', 0, 1], ['139999', 1, 1], ['141111', 0, 1], ['141311', 0, 1],
   ['141999', 0, 1], ['142115', 0, 1], ['149112', 0, 1], ['149212', 1, 1], ['149311', 1, 1], ['149413', 0, 1],
   ['149913', 1, 1], ['212411', 0, 1], ['212412', 0, 1], ['212413', 0, 1], ['212415', 0, 1], ['212416', 0, 1],
-  ['212499', 0, 1], ['221111', 0, 1], ['221112', 0, 1], ['221113', 0, 1], ['221213', 1, 1], ['221214', 1, 1],
+  ['212499', 0, 1], ['221111', 0, 1], ['221112', 0, 1], ['221113', 0, 1], ['221213', 0, 1], ['221214', 1, 1],
   ['222111', 1, 1], ['222112', 1, 1], ['222113', 1, 1], ['222199', 1, 1], ['222311', 1, 1], ['222312', 1, 1],
   ['223111', 0, 1], ['223112', 1, 1], ['223113', 0, 1], ['223211', 0, 1], ['224111', 1, 1], ['224112', 1, 1],
   ['224113', 1, 1], ['224213', 1, 1], ['224214', 1, 1], ['224311', 1, 1], ['224412', 0, 1], ['224611', 1, 1],
@@ -412,6 +413,17 @@ export const stateOccupationLists: Record<StateCode, Record<Extract<VisaCode, '1
  */
 export const openListStates: StateCode[] = ['VIC', 'TAS', 'NT'];
 
+// Set-backed mirror of stateOccupationLists for O(1) membership checks.
+// statesListing() runs inside evaluate() for every (job × pathway), and
+// evaluate() itself re-runs up to HORIZON_MONTHS times per timeline build
+// (see timeline.ts) — the same reason points.ts indexes occupations by a
+// Map instead of scanning the ~500-row array. `stateOccupationLists` itself
+// stays arrays (its only other consumer, the data-integrity test, and any
+// future UI code, has no reason to want Set semantics).
+const stateOccupationSets: Record<StateCode, Record<'190' | '491', Set<string>>> = Object.fromEntries(
+  stateCodes.map((s) => [s, { '190': new Set(stateOccupationLists[s]['190']), '491': new Set(stateOccupationLists[s]['491']) }]),
+) as Record<StateCode, Record<'190' | '491', Set<string>>>;
+
 /**
  * States whose 190/491 list includes the given occupation.
  * The caller applies the federal MLTSSL/STSOL/ROL gate first, so open-list states
@@ -421,6 +433,6 @@ export const openListStates: StateCode[] = ['VIC', 'TAS', 'NT'];
 export function statesListing(anzsco: string, visa: '190' | '491'): StateCode[] {
   if (!anzsco) return [];
   return stateCodes.filter(
-    (s) => openListStates.includes(s) || stateOccupationLists[s][visa].includes(anzsco),
+    (s) => openListStates.includes(s) || stateOccupationSets[s][visa].has(anzsco),
   );
 }

@@ -1,4 +1,5 @@
 import type { Evaluation } from './points';
+import { pathwayStatus } from './points';
 import { MIN_POINTS } from '@/data/pointsCriteria';
 import type { CardTheme } from '@/data/cardThemes';
 import { cardPalettes } from '@/data/cardThemes';
@@ -230,7 +231,10 @@ export function drawCard({ evaluation, goal, lang, theme, labels, dateLabel, sca
       ctx.fillText(subStr, P + 40, jy + 51);
       je.pathways.forEach((p, k) => {
         const x = W - P - slotW * (pathCount - 1 - k);
-        const totStr = !je.occupation || p.listOk ? String(p.total) : '—';
+        // Dash only for the federal-list gate (not on MLTSSL/STSOL/ROL for this pathway) — the
+        // same precedence ResultsBand and ReportView use, so the card never shows a different
+        // reason than the live UI does for the same pathway.
+        const totStr = pathwayStatus(p) === 'listNo' ? '—' : String(p.total);
         ctx.textAlign = 'right';
         ctx.font = `500 28px ${SERIF}`;
         ctx.fillStyle = p.eligible ? C.ink : C.muted;

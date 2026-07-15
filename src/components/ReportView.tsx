@@ -37,7 +37,6 @@ export default function ReportView({ evaluation, shared, jobs, goal, dates, toda
 
   return (
     <div
-      className="print-report"
       style={{ background: '#fff', color: '#1a1a1a', padding: '28px', fontFamily: 'var(--font-serif), serif', fontSize: '13px', lineHeight: 1.6 }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '2px solid #1a1a1a', paddingBottom: '10px', marginBottom: '18px' }}>
