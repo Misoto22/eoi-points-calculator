@@ -52,6 +52,20 @@ export const defaultSharedCriteria: SharedCriteria = {
   communityLanguage: false,
 };
 
+/** Inputs for the employer-sponsorship checklist (482/186) — persisted separately from the points-tested state. */
+export interface SponsorshipInputs {
+  hasSponsor: boolean;
+  salaryBand: '' | 'belowCsit' | 'csitToSsit' | 'ssitPlus';
+  /** Cumulative ≥2 years on the nominating employer's 482/457 in the nominated occupation (186 TRT gate) */
+  trtEligible: boolean;
+}
+
+export const defaultSponsorshipInputs: SponsorshipInputs = {
+  hasSponsor: false,
+  salaryBand: '',
+  trtEligible: false,
+};
+
 let jobSeq = 0;
 
 export function newJob(): JobAssessment {
