@@ -17,6 +17,7 @@ import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
 import { defaultPlanningDates, defaultSharedCriteria, isYm, newJob } from '@/lib/types';
 import { applyDates } from '@/lib/timeline';
 import { mergeQueryString, persistState, readInitialState } from '@/lib/urlState';
+import { useMounted } from '@/hooks/useMounted';
 import { MAX_JOBS } from '@/data/pointsCriteria';
 import '@/app/i18n/client';
 
@@ -85,8 +86,7 @@ const JobCardSlot = memo(function JobCardSlot({
 const PageContent = () => {
   const { t, ready } = useTranslation();
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   const initial = useMemo(() => readInitialState(), []);
   const [shared, setShared] = useState<SharedCriteria>(initial.shared);

@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import EmployerSponsorshipSection from '@/components/EmployerSponsorshipSection';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useMounted } from '@/hooks/useMounted';
 import { applyDates } from '@/lib/timeline';
 import { defaultSponsorshipInputs } from '@/lib/types';
 import type { SponsorshipInputs } from '@/lib/types';
@@ -29,8 +30,7 @@ function PageSkeleton() {
 
 const PageContent = () => {
   const { ready } = useTranslation();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   // Read-only: this page never writes back to the shared/jobs/dates state —
   // editing those only happens on the Independent Migration page.

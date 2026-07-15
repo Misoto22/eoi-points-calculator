@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
+import { useMounted } from '@/hooks/useMounted';
 
 export function todayLabel(): string {
   const d = new Date();
@@ -25,8 +26,7 @@ export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }:
 
   // Theme is only known on the client; render the pre-mount state identically
   // to the server markup to avoid hydration mismatches.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   // Hairline under the sticky bar only once the page has scrolled.
   // In standalone mode the body is the scroller (see globals.css), so
