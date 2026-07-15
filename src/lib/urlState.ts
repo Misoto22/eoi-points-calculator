@@ -156,6 +156,21 @@ export function persistState(shared: SharedCriteria, jobs: JobAssessment[], date
   }
 }
 
+/**
+ * Narrower than `persistState`: writes only `dates`. The Independent
+ * Migration page only ever mutates `dates.visa491Grant` locally — it reads
+ * `shared`/`jobs` but never owns them (that's the Profile page), so it must
+ * not write stale copies of those back over an edit made there, e.g. in
+ * another tab.
+ */
+export function persistDates(dates: PlanningDates): void {
+  try {
+    localStorage.setItem(V2_DATES_KEY, JSON.stringify(dates));
+  } catch {
+    // Ignore quota errors
+  }
+}
+
 /** Priority: URL params → v2 storage → migrated v1 form → defaults */
 export function readInitialState(): AppState {
   if (typeof window === 'undefined') {
