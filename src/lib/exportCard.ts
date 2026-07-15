@@ -1,5 +1,5 @@
 import type { Evaluation } from './points';
-import { pathwayStatus } from './points';
+import { hasOccupation, pathwayStatus } from './points';
 import { MIN_POINTS } from '@/data/pointsCriteria';
 import type { CardTheme } from '@/data/cardThemes';
 import { cardPalettes } from '@/data/cardThemes';
@@ -11,6 +11,7 @@ export interface CardLabels {
   cardGoal: string;
   cardMin: string;
   noBestPath: string;
+  noPathEligible: string;
   bestPathPrefix: string;
   cardEmpty: string;
   cardShared: string;
@@ -131,7 +132,7 @@ export function drawCard({ evaluation, goal, lang, theme, labels, dateLabel, sca
   // Best pathway line
   ctx.font = `400 28px ${SERIF}`;
   ctx.fillStyle = C.soft;
-  let bestLine = labels.noBestPath;
+  let bestLine = ev.jobs.some(hasOccupation) ? labels.noPathEligible : labels.noBestPath;
   if (ev.best) {
     const occ = ev.best.job.occupation;
     const occName = occ ? (lang === 'zh' ? occ.zh : occ.en) : '';

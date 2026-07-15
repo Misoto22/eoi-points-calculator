@@ -85,6 +85,7 @@ export default function ExportModal({ open, onClose, evaluation, goal, shared, j
         cardGoal: t('cardGoal'),
         cardMin: t('cardMin'),
         noBestPath: t('noBestPath'),
+        noPathEligible: t('noPathEligible'),
         bestPathPrefix: t('bestPathPrefix'),
         cardEmpty: t('cardEmpty'),
         cardShared: t('cardShared'),

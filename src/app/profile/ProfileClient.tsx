@@ -14,7 +14,7 @@ import Footer from '@/components/Footer';
 import { evaluate } from '@/lib/points';
 import type { JobEvaluation } from '@/lib/points';
 import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
-import { isYm, newJob } from '@/lib/types';
+import { defaultPlanningDates, defaultSharedCriteria, isYm, newJob } from '@/lib/types';
 import { applyDates } from '@/lib/timeline';
 import { mergeQueryString, persistState, readInitialState } from '@/lib/urlState';
 import { MAX_JOBS } from '@/data/pointsCriteria';
@@ -182,6 +182,17 @@ const PageContent = () => {
     setOpenJobId(openJobId === id ? null : id);
   }, [openJobId, patchJobUI]);
 
+  const handleReset = useCallback(() => {
+    const nj = newJob();
+    setShared({ ...defaultSharedCriteria });
+    setJobs([nj]);
+    setJobUI({});
+    setOpenJobId(nj.id);
+    // Preserve visa491Grant — it's the Independent Migration page's field,
+    // not this page's, so a Profile reset shouldn't clear it out from under it.
+    setDates((prev) => ({ ...defaultPlanningDates, visa491Grant: prev.visa491Grant }));
+  }, []);
+
   if (!ready || !mounted) return <PageSkeleton />;
 
   const anySearchOpen = Object.values(jobUI).some((u) => u?.open);
@@ -272,6 +283,15 @@ const PageContent = () => {
             {t('navSponsorship')} →
           </Link>
         </p>
+
+        <button
+          type="button"
+          onClick={handleReset}
+          className="mt-3.5 cursor-pointer text-xs tracking-[0.14em] px-0 py-1 underline underline-offset-4 hover:text-[var(--ink)]"
+          style={{ background: 'none', color: 'var(--muted)', border: 'none', textDecorationColor: 'var(--hair)' }}
+        >
+          {t('profileReset')}
+        </button>
       </div>
 
       <Footer />

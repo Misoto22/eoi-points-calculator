@@ -18,7 +18,6 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { evaluate } from '@/lib/points';
 import type { PlanningDates } from '@/lib/types';
-import { defaultPlanningDates } from '@/lib/types';
 import { applyDates, buildTimeline } from '@/lib/timeline';
 import { mergeQueryString, persistDates, readInitialState } from '@/lib/urlState';
 import { GOAL_RANGE } from '@/data/pointsCriteria';
@@ -124,11 +123,6 @@ const PageContent = () => {
     setTimeout(() => setCopied(false), 1800);
   }, []);
 
-  const handleReset = useCallback(() => {
-    setDates({ ...defaultPlanningDates });
-    setGoalPoints(GOAL_RANGE.min);
-  }, [setGoalPoints]);
-
   const scrollToResults = useCallback(() => {
     const el = bandRef.current;
     if (!el) return;
@@ -182,7 +176,6 @@ const PageContent = () => {
           onOpenExport={openExport}
           onCopyLink={handleCopyLink}
           copied={copied}
-          onReset={handleReset}
           bandRef={bandRef}
         />
       </div>
