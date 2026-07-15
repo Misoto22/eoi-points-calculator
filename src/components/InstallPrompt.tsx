@@ -10,6 +10,12 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+interface InstallPromptProps {
+  /** Fires whenever the banner mounts/unmounts, so a page can keep other
+   *  fixed bottom-anchored elements (e.g. FloatingChip) from sitting under it. */
+  onVisibilityChange?: (visible: boolean) => void;
+}
+
 /** iOS share glyph — the hint references the button this draws */
 function ShareGlyph() {
   return (
@@ -25,10 +31,15 @@ function ShareGlyph() {
  * standalone) visitors get a one-time "share → add to Home Screen" hint;
  * Chromium browsers get a custom install button via beforeinstallprompt.
  */
-export default function InstallPrompt() {
+export default function InstallPrompt({ onVisibilityChange }: InstallPromptProps) {
   const { t } = useTranslation();
   const [mode, setMode] = useState<'ios' | 'chromium' | null>(null);
   const bipRef = useRef<BeforeInstallPromptEvent | null>(null);
+
+  useEffect(() => {
+    onVisibilityChange?.(mode !== null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
 
   useEffect(() => {
     try {

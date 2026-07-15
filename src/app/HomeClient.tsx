@@ -51,7 +51,10 @@ const PageContent = () => {
   const [copied, setCopied] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [chipShown, setChipShown] = useState(false);
+  const [footerNear, setFooterNear] = useState(false);
+  const [installPromptVisible, setInstallPromptVisible] = useState(false);
   const bandRef = useRef<HTMLDivElement | null>(null);
+  const footerRef = useRef<HTMLDivElement | null>(null);
 
   // today as YYYY-MM — PageContent only renders after the mounted gate, so this is client-safe
   const today = useMemo(() => {
@@ -100,6 +103,19 @@ const PageContent = () => {
     return () => io.disconnect();
   }, [ready, mounted]);
 
+  // ...and hides again once the footer scrolls into view, so the fixed chip
+  // never sits on top of the footer's links at the bottom of the page.
+  useEffect(() => {
+    const el = footerRef.current;
+    if (!el || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(
+      (entries) => setFooterNear(entries[0].isIntersecting),
+      { threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ready, mounted]);
+
   const patchDates = useCallback((patch: Partial<PlanningDates>) => {
     setDates((prev) => ({ ...prev, ...patch }));
   }, []);
@@ -137,7 +153,7 @@ const PageContent = () => {
 
   if (!ready || !mounted) return <PageSkeleton />;
 
-  const chipVisible = chipShown && bareScore > 0 && !exportOpen;
+  const chipVisible = chipShown && bareScore > 0 && !exportOpen && !footerNear && !installPromptVisible;
   const hasProfile = jobs.some((j) => j.anzsco !== '');
 
   return (
@@ -192,10 +208,12 @@ const PageContent = () => {
       <FeeEstimateSection evaluation={evaluation} shared={shared} />
       <Pr191Section dates={dates} onDatesPatch={patchDates} today={today} />
 
-      <Footer />
+      <div ref={footerRef}>
+        <Footer />
+      </div>
 
       <FloatingChip visible={chipVisible} total={bareScore} onClick={scrollToResults} />
-      <InstallPrompt />
+      <InstallPrompt onVisibilityChange={setInstallPromptVisible} />
 
       <ExportModal
         open={exportOpen}

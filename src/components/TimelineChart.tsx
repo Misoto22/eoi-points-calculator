@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { addMonths, monthsBetween } from '@/lib/timeline';
 import type { TimelineResult } from '@/lib/timeline';
 import { MIN_POINTS } from '@/data/pointsCriteria';
+import HScrollFade from './HScrollFade';
 
 interface TimelineChartProps {
   timeline: TimelineResult;
@@ -147,7 +148,7 @@ function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLa
           </span>
         ))}
       </div>
-      <div className="overflow-x-auto">
+      <HScrollFade>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
@@ -291,7 +292,7 @@ function TimelineChart({ timeline, goal, today, focusEventIndex = null, seriesLa
           </g>
         )}
       </svg>
-      </div>
+      </HScrollFade>
     </div>
   );
 }
