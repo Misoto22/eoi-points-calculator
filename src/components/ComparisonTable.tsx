@@ -5,6 +5,7 @@ import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Evaluation } from '@/lib/points';
 import { bestPathwayForJob, hasOccupation } from '@/lib/points';
+import HScrollFade from './HScrollFade';
 
 interface ComparisonTableProps {
   evaluation: Evaluation;
@@ -27,10 +28,11 @@ function ComparisonTable({ evaluation }: ComparisonTableProps) {
   if (rows.length < 2) return null;
 
   return (
-    <div className="mt-[22px] mb-[6px]" style={{ overflowX: 'auto' }}>
+    <div className="mt-[22px] mb-[6px]">
       <div className="text-[0.71875rem] tracking-[0.16em] font-medium mb-2.5" style={{ color: 'var(--muted)' }}>
         {t('compareTitle')}
       </div>
+      <HScrollFade>
       <table className="w-full text-[0.8125rem]" style={{ borderCollapse: 'collapse', minWidth: '520px' }}>
         <thead>
           <tr style={{ borderBottom: '1px solid var(--ink)' }}>
@@ -65,6 +67,7 @@ function ComparisonTable({ evaluation }: ComparisonTableProps) {
           })}
         </tbody>
       </table>
+      </HScrollFade>
     </div>
   );
 }
