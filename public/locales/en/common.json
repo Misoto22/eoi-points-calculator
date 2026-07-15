@@ -196,7 +196,6 @@
       "statusNote": "Portal closed — 2025–26 allocation reached; 2026-27 pending confirmation"
     }
   },
-  "suggestionCaps": "HOW TO GAIN MORE POINTS",
   "sug": {
     "ielts7": "Improve English to Proficient (IELTS 7 each)",
     "ielts8": "Improve English to Superior (IELTS 8 each)",
@@ -229,12 +228,8 @@
   "tlBirth": "Birth month",
   "tlTestShort": "TEST MONTH",
   "tlCertShort": "CREDENTIAL MONTH",
-  "tlEnglishTest": "English test month",
-  "tlNaatiCert": "NAATI CCL credential month",
   "tlNaatiHint": "Enabled with the NAATI bonus above",
   "tlNaatiExpires": "Expires {{date}}",
-  "tlAusStart": "Australian work start",
-  "tlOvsStart": "Overseas work start",
   "tlAssessDate": "Assessment issue month",
   "jobStartMonth": "START MONTH",
   "tlOngoing": "ongoing…",
@@ -244,7 +239,6 @@
   "tlExpiresOn": "{{authority}} · valid {{years}} yrs · expires {{date}}",
   "tlAuthorityNote": "{{authority}} · assessments valid {{years}} yrs",
   "tlEnglishExpires": "Expires {{date}} (valid 3 years)",
-  "tlInvalidDate": "Enter a month like 2026-07",
   "tlPickMonth": "Select month…",
   "tlClear": "Clear",
   "tlThisMonth": "This month",
