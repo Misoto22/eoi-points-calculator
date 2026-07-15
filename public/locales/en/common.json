@@ -131,7 +131,7 @@
   "visit": "Website",
   "states": {
     "NSW": {
-      "how": "190 Priority Skilled Occupation List (High / Med / Low tiers)",
+      "how": "Separate 190 & 491 skills lists (no priority tiers)",
       "tip": "NSW work valued; ICT, health, engineering, construction first"
     },
     "VIC": {
