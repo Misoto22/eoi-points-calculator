@@ -5,6 +5,7 @@ import type { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import type { Evaluation, PathwayResult } from '@/lib/points';
+import { PATHWAY_STATUS_LABEL_KEY, pathwayStatus } from '@/lib/points';
 import type { SharedCriteria } from '@/lib/types';
 import { suggestionsFor } from '@/lib/suggestions';
 import { GOAL_RANGE, MIN_POINTS } from '@/data/pointsCriteria';
@@ -43,18 +44,20 @@ function presentPath(p: PathwayResult): PathPresentation {
     dotBorder: 'var(--band-muted)',
     totalColor: 'var(--band-muted)',
   };
-  if (!p.hasOccupation) {
-    return { statusKey: 'pathNoOcc', totalText: String(p.total), ...mutedRow };
+  const status = pathwayStatus(p);
+  const statusKey = PATHWAY_STATUS_LABEL_KEY[status];
+  if (status === 'noOcc') {
+    return { statusKey, totalText: String(p.total), ...mutedRow };
   }
-  if (!p.listOk) {
-    return { statusKey: 'pathListNo', totalText: '—', ...mutedRow };
+  if (status === 'listNo') {
+    return { statusKey, totalText: '—', ...mutedRow };
   }
-  if (p.code !== '189' && p.states.length === 0) {
-    return { statusKey: 'pathNoState', totalText: String(p.total), ...mutedRow };
+  if (status === 'noState') {
+    return { statusKey, totalText: String(p.total), ...mutedRow };
   }
-  if (p.total < MIN_POINTS) {
+  if (status === 'low') {
     return {
-      statusKey: 'pathLow',
+      statusKey,
       totalText: String(p.total),
       statusColor: 'var(--band-danger)',
       dotBg: 'transparent',
@@ -63,7 +66,7 @@ function presentPath(p: PathwayResult): PathPresentation {
     };
   }
   return {
-    statusKey: 'pathOk',
+    statusKey,
     totalText: String(p.total),
     statusColor: 'var(--band-ink)',
     dotBg: 'var(--band-ink)',

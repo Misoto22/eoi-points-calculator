@@ -149,3 +149,29 @@ export function bestPathwayForJob(je: JobEvaluation): PathwayResult | null {
   }
   return best;
 }
+
+export type PathwayStatus = 'noOcc' | 'listNo' | 'noState' | 'low' | 'ok';
+
+/**
+ * Why a pathway is or isn't eligible, in the same precedence every ineligibility
+ * display in the app should follow: no occupation picked, then the federal
+ * list gate, then the per-state list gate (190/491 only), then the points
+ * floor. Shared by ResultsBand (live UI) and ReportView (export) so the two
+ * never drift into showing different reasons for the same pathway.
+ */
+export function pathwayStatus(p: PathwayResult): PathwayStatus {
+  if (!p.hasOccupation) return 'noOcc';
+  if (!p.listOk) return 'listNo';
+  if (p.code !== '189' && p.states.length === 0) return 'noState';
+  if (p.total < MIN_POINTS) return 'low';
+  return 'ok';
+}
+
+/** i18n key per `pathwayStatus()` result — shared so every surface labels the same reason the same way. */
+export const PATHWAY_STATUS_LABEL_KEY: Record<PathwayStatus, string> = {
+  noOcc: 'pathNoOcc',
+  listNo: 'pathListNo',
+  noState: 'pathNoState',
+  low: 'pathLow',
+  ok: 'pathOk',
+};

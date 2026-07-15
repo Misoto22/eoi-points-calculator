@@ -1,6 +1,7 @@
 import type { Evaluation } from './points';
 import type { SharedCriteria } from './types';
 import { assessingAuthority } from '@/data/assessingAuthorities';
+import type { VisaCode } from '@/data/pointsCriteria';
 import {
   assessmentFeeByAuthority,
   assessmentFeeFallbackRange,
@@ -31,7 +32,10 @@ export interface FeeEstimate {
   totalHigh: number;
 }
 
-const PARTNER_STATUSES = new Set(['partnerSkills', 'partnerCitizen', 'partnerEnglish']);
+// A partner who is already an AU citizen/PR isn't a migrating secondary
+// applicant, so they don't add a visa application charge — only a partner
+// being included on the visa application (skills-assessed or English-only) does.
+const PARTNER_STATUSES = new Set(['partnerSkills', 'partnerEnglish']);
 
 export function estimateFees(evaluation: Evaluation, shared: SharedCriteria): FeeEstimate {
   const best = evaluation.best;
@@ -73,4 +77,52 @@ export function estimateFees(evaluation: Evaluation, shared: SharedCriteria): Fe
     totalLow: fixed + assessLow + (nominationFeeRange?.[0] ?? 0),
     totalHigh: fixed + assessHigh + (nominationFeeRange?.[1] ?? 0),
   };
+}
+
+export interface FeeLineItem {
+  labelKey: string;
+  labelParams?: Record<string, string | number>;
+  amountLow: number;
+  amountHigh: number;
+  noteKey?: string;
+}
+
+/**
+ * Every line contributing to `totalLow`/`totalHigh`, as one list. The card
+ * (FeeEstimateSection) and the printable report (ReportView) both render
+ * from this instead of each re-deriving their own row set, so the total they
+ * show can never drift from the rows visible above it.
+ */
+export function feeLineItems(fee: FeeEstimate, bestVisa: VisaCode | undefined): FeeLineItem[] {
+  const items: FeeLineItem[] = [];
+  if (fee.visaCharge !== null && bestVisa) {
+    items.push({ labelKey: 'feesVisaCharge', labelParams: { visa: bestVisa }, amountLow: fee.visaCharge, amountHigh: fee.visaCharge });
+  }
+  if (fee.partnerCharge > 0) {
+    items.push({ labelKey: 'feesPartnerCharge', amountLow: fee.partnerCharge, amountHigh: fee.partnerCharge });
+  }
+  for (const a of fee.assessments) {
+    items.push({
+      labelKey: 'feesAssessment',
+      labelParams: { tag: a.jobTag, authority: a.authority },
+      amountLow: a.fee ?? a.range![0],
+      amountHigh: a.fee ?? a.range![1],
+      noteKey: a.fee === null ? 'feesAssessmentRange' : undefined,
+    });
+  }
+  if (fee.englishTestFee > 0) {
+    items.push({ labelKey: 'feesEnglishTest', amountLow: fee.englishTestFee, amountHigh: fee.englishTestFee });
+  }
+  if (fee.naatiFee > 0) {
+    items.push({ labelKey: 'feesNaati', amountLow: fee.naatiFee, amountHigh: fee.naatiFee });
+  }
+  if (fee.nominationFeeRange) {
+    items.push({
+      labelKey: 'feesNomination',
+      amountLow: fee.nominationFeeRange[0],
+      amountHigh: fee.nominationFeeRange[1],
+      noteKey: fee.nominationFeeRange[0] === 0 ? 'feesNominationFree' : undefined,
+    });
+  }
+  return items;
 }

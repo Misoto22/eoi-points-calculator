@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { estimateFees } from '@/lib/feeEstimate';
+import { estimateFees, feeLineItems } from '@/lib/feeEstimate';
 import { evaluate } from '@/lib/points';
 import { defaultSharedCriteria, newJob } from '@/lib/types';
 import type { JobAssessment, SharedCriteria } from '@/lib/types';
@@ -30,7 +30,7 @@ describe('estimateFees', () => {
     expect(fee.visaCharge).toBe(visaApplicationCharge['491']);
   });
 
-  it('adds the partner charge only for partner-implying statuses', () => {
+  it('adds the partner charge only when the partner is a migrating secondary applicant', () => {
     const shared = makeShared({ age: '25-32', english: 'ielts7', education: 'bachelor', partnerStatus: 'partnerSkills' });
     const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
     const fee = estimateFees(ev, shared);
@@ -39,6 +39,12 @@ describe('estimateFees', () => {
     const single = makeShared({ ...shared, partnerStatus: 'single' });
     const evSingle = evaluate(single, [makeJob({ anzsco: '261313' })]);
     expect(estimateFees(evSingle, single).partnerCharge).toBe(0);
+
+    // partnerCitizen = partner is already an AU citizen/PR — not a migrating
+    // secondary applicant, so no visa application charge for them.
+    const citizen = makeShared({ ...shared, partnerStatus: 'partnerCitizen' });
+    const evCitizen = evaluate(citizen, [makeJob({ anzsco: '261313' })]);
+    expect(estimateFees(evCitizen, citizen).partnerCharge).toBe(0);
   });
 
   it('looks up a known assessment fee by authority (261313 -> ACS)', () => {
@@ -59,9 +65,24 @@ describe('estimateFees', () => {
   });
 
   it('totalHigh is never less than totalLow', () => {
-    const shared = makeShared({ age: '25-32', english: 'ielts8', education: 'phd', partnerStatus: 'partnerCitizen', communityLanguage: true });
+    const shared = makeShared({ age: '25-32', english: 'ielts8', education: 'phd', partnerStatus: 'partnerSkills', communityLanguage: true });
     const ev = evaluate(shared, [makeJob({ anzsco: '271311' })]); // Solicitor -> SLAA fallback range
     const fee = estimateFees(ev, shared);
     expect(fee.totalHigh).toBeGreaterThanOrEqual(fee.totalLow);
+  });
+
+  it('feeLineItems always sums to exactly totalLow/totalHigh, so a rendered report total never drifts from its visible rows', () => {
+    const shared = makeShared({
+      age: '25-32', english: 'ielts7', education: 'bachelor', partnerStatus: 'partnerSkills', communityLanguage: true,
+    });
+    const ev = evaluate(shared, [makeJob({ anzsco: '261313' }), makeJob({ anzsco: '271311' })]);
+    const fee = estimateFees(ev, shared);
+    const items = feeLineItems(fee, ev.best?.code);
+    const sumLow = items.reduce((s, it) => s + it.amountLow, 0);
+    const sumHigh = items.reduce((s, it) => s + it.amountHigh, 0);
+    expect(sumLow).toBe(fee.totalLow);
+    expect(sumHigh).toBe(fee.totalHigh);
+    // partner charge must actually be represented as a line, not just folded into the total silently
+    expect(items.some((it) => it.labelKey === 'feesPartnerCharge')).toBe(true);
   });
 });

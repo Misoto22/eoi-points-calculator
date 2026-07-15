@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { Evaluation } from '@/lib/points';
-import { findOccupation } from '@/lib/points';
-import { estimateFees } from '@/lib/feeEstimate';
+import { PATHWAY_STATUS_LABEL_KEY, findOccupation, pathwayStatus } from '@/lib/points';
+import { estimateFees, feeLineItems } from '@/lib/feeEstimate';
 import { projectPr191 } from '@/lib/pr191';
 import { PR191_INCOME_YEARS_REQUIRED, PR191_VISA_VALIDITY_YEARS } from '@/data/pr191';
 import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
@@ -32,6 +32,7 @@ export default function ReportView({ evaluation, shared, jobs, goal, dates, toda
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
   const fee = estimateFees(evaluation, shared);
+  const feeItems = feeLineItems(fee, evaluation.best?.code);
   const pr191 = isYm(dates.visa491Grant) ? projectPr191(dates.visa491Grant, today) : null;
 
   return (
@@ -87,7 +88,7 @@ export default function ReportView({ evaluation, shared, jobs, goal, dates, toda
                       <tr key={code} style={{ borderBottom: '1px solid #eee' }}>
                         <td style={{ padding: '3px 0', color: '#555' }}>{code}</td>
                         <td style={{ padding: '3px 0' }}>{t(`pathNoteByCode.${code}`)}</td>
-                        <td style={{ padding: '3px 0' }}>{p.eligible ? t('pathOk') : t('pathLow')}</td>
+                        <td style={{ padding: '3px 0' }}>{t(PATHWAY_STATUS_LABEL_KEY[pathwayStatus(p)])}</td>
                         <td style={{ padding: '3px 0', textAlign: 'right' }}>{p.total} {t('points')}</td>
                       </tr>
                     );
@@ -102,19 +103,16 @@ export default function ReportView({ evaluation, shared, jobs, goal, dates, toda
       <h2 style={{ fontSize: '13px', letterSpacing: '0.08em', borderBottom: '1px solid #ccc', paddingBottom: '4px' }}>{t('sections.fees')}</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
         <tbody>
-          {fee.visaCharge !== null && evaluation.best && (
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: '4px 0', color: '#555' }}>{t('feesVisaCharge', { visa: evaluation.best.code })}</td>
-              <td style={{ padding: '4px 0', textAlign: 'right' }}>{fmt(fee.visaCharge)}</td>
-            </tr>
-          )}
-          {fee.assessments.map((a) => (
-            <tr key={a.jobTag} style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: '4px 0', color: '#555' }}>{t('feesAssessment', { tag: a.jobTag, authority: a.authority })}</td>
-              <td style={{ padding: '4px 0', textAlign: 'right' }}>{a.fee !== null ? fmt(a.fee) : fmtRange(a.range!)}</td>
+          {feeItems.map((it, i) => (
+            <tr key={i} style={{ borderBottom: '1px solid #eee' }}>
+              <td style={{ padding: '4px 0', color: '#555' }}>
+                {t(it.labelKey, it.labelParams)}
+                {it.noteKey && <div style={{ fontSize: '10px', color: '#888' }}>{t(it.noteKey)}</div>}
+              </td>
+              <td style={{ padding: '4px 0', textAlign: 'right' }}>{fmtRange([it.amountLow, it.amountHigh])}</td>
             </tr>
           ))}
-          {fee.visaCharge !== null && (
+          {feeItems.length > 0 && (
             <tr>
               <td style={{ padding: '6px 0', fontWeight: 600 }}>{t('feesTotal')}</td>
               <td style={{ padding: '6px 0', textAlign: 'right', fontWeight: 600 }}>{fmtRange([fee.totalLow, fee.totalHigh])}</td>

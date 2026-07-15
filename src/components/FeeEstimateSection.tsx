@@ -4,18 +4,12 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import type { Evaluation } from '@/lib/points';
-import { estimateFees } from '@/lib/feeEstimate';
+import { estimateFees, feeLineItems } from '@/lib/feeEstimate';
 import type { SharedCriteria } from '@/lib/types';
 
 interface FeeEstimateSectionProps {
   evaluation: Evaluation;
   shared: SharedCriteria;
-}
-
-interface Row {
-  label: string;
-  value: string;
-  note?: string;
 }
 
 const fmt = (n: number) => `$${n.toLocaleString('en-US')}`;
@@ -25,34 +19,7 @@ function FeeEstimateSection({ evaluation, shared }: FeeEstimateSectionProps) {
   const { t } = useTranslation();
   const fee = estimateFees(evaluation, shared);
   const hasAnything = fee.visaCharge !== null || fee.assessments.length > 0;
-
-  const rows: Row[] = [];
-  if (fee.visaCharge !== null && evaluation.best) {
-    rows.push({ label: t('feesVisaCharge', { visa: evaluation.best.code }), value: fmt(fee.visaCharge) });
-  }
-  if (fee.partnerCharge > 0) {
-    rows.push({ label: t('feesPartnerCharge'), value: fmt(fee.partnerCharge) });
-  }
-  for (const a of fee.assessments) {
-    rows.push({
-      label: t('feesAssessment', { tag: a.jobTag, authority: a.authority }),
-      value: a.fee !== null ? fmt(a.fee) : fmtRange(a.range!),
-      note: a.fee === null ? t('feesAssessmentRange') : undefined,
-    });
-  }
-  if (fee.englishTestFee > 0) {
-    rows.push({ label: t('feesEnglishTest'), value: fmt(fee.englishTestFee) });
-  }
-  if (fee.naatiFee > 0) {
-    rows.push({ label: t('feesNaati'), value: fmt(fee.naatiFee) });
-  }
-  if (fee.nominationFeeRange) {
-    rows.push({
-      label: t('feesNomination'),
-      value: fmtRange(fee.nominationFeeRange),
-      note: fee.nominationFeeRange[0] === 0 ? t('feesNominationFree') : undefined,
-    });
-  }
+  const items = feeLineItems(fee, evaluation.best?.code);
 
   return (
     <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.36s backwards' }}>
@@ -66,20 +33,20 @@ function FeeEstimateSection({ evaluation, shared }: FeeEstimateSectionProps) {
       ) : (
         <>
           <div className="mt-[22px]">
-            {rows.map((r, i) => (
+            {items.map((it, i) => (
               <div
                 key={i}
                 className="grid gap-4 py-[11px] items-baseline"
                 style={{ gridTemplateColumns: '1fr auto', borderBottom: '1px solid var(--hair-soft)' }}
               >
                 <div className="min-w-0">
-                  <div className="text-[0.8125rem] leading-[1.5]" style={{ color: 'var(--ink)' }}>{r.label}</div>
-                  {r.note && (
-                    <div className="text-xs leading-[1.5] mt-[2px]" style={{ color: 'var(--muted)' }}>{r.note}</div>
+                  <div className="text-[0.8125rem] leading-[1.5]" style={{ color: 'var(--ink)' }}>{t(it.labelKey, it.labelParams)}</div>
+                  {it.noteKey && (
+                    <div className="text-xs leading-[1.5] mt-[2px]" style={{ color: 'var(--muted)' }}>{t(it.noteKey)}</div>
                   )}
                 </div>
                 <span className="text-[0.875rem] tabular-nums whitespace-nowrap" style={{ fontFamily: 'var(--font-serif)' }}>
-                  {r.value}
+                  {fmtRange([it.amountLow, it.amountHigh])}
                 </span>
               </div>
             ))}
