@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
 
@@ -10,9 +12,16 @@ export function todayLabel(): string {
   return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}`;
 }
 
-export default function Header() {
+interface HeaderProps {
+  /** Defaults to the points-tested calculator's own title/subtitle (t('title')/t('subtitle')) */
+  titleKey?: string;
+  subtitleKey?: string;
+}
+
+export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }: HeaderProps) {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
 
   // Theme is only known on the client; render the pre-mount state identically
   // to the server markup to avoid hydration mismatches.
@@ -60,6 +69,22 @@ export default function Header() {
     </button>
   );
 
+  const navLink = (href: string, label: string) => {
+    const active = pathname === href;
+    return (
+      <Link
+        href={href}
+        aria-current={active ? 'page' : undefined}
+        className="text-xs tracking-[0.1em] px-1 -mx-1 py-[14px] -my-[11px] hover:text-[var(--ink)]"
+        style={{ color: active ? 'var(--ink)' : 'var(--muted)' }}
+      >
+        <span style={{ borderBottom: active ? '1px solid var(--ink)' : '1px solid transparent', paddingBottom: 2 }}>
+          {label}
+        </span>
+      </Link>
+    );
+  };
+
   return (
     // Fragment: the nav bar must be a direct child of the page container so
     // position:sticky can pin it for the whole page, not just the header.
@@ -77,9 +102,16 @@ export default function Header() {
           animation: 'eoiFadeUp 0.7s ease backwards',
         }}
       >
-        <div className="flex justify-between items-center gap-4">
-          <div className="text-[0.71875rem] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
-            EOI&nbsp;POINTS
+        <div className="flex justify-between items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="text-[0.71875rem] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
+              EOI&nbsp;POINTS
+            </Link>
+            <span className="w-px h-3" style={{ background: 'var(--hair)' }} />
+            <nav className="flex items-center gap-3.5" aria-label={t('navLabel')}>
+              {navLink('/', t('navIndependent'))}
+              {navLink('/sponsorship', t('sections.sponsorship'))}
+            </nav>
           </div>
           <div className="flex items-center gap-3.5">
             <div className="flex items-center gap-2.5 text-xs">
@@ -121,14 +153,14 @@ export default function Header() {
           letterSpacing: '0.01em',
         }}
       >
-        {t('title')}
+        {t(titleKey)}
       </h1>
       <div
         className="flex justify-between items-baseline gap-4 flex-wrap mt-[26px] pt-3.5"
         style={{ borderTop: '1px solid var(--hair)' }}
       >
         <p className="m-0 text-[0.8125rem] tracking-[0.02em]" style={{ color: 'var(--muted)' }}>
-          {t('subtitle')}
+          {t(subtitleKey)}
         </p>
         <span className="text-xs tabular-nums tracking-[0.1em]" style={{ color: 'var(--muted)' }}>
           {todayLabel()}

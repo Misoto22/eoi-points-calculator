@@ -12,18 +12,18 @@ import ResultsBand from '@/components/ResultsBand';
 import ReferenceSection from '@/components/ReferenceSection';
 import Pr191Section from '@/components/Pr191Section';
 import FeeEstimateSection from '@/components/FeeEstimateSection';
-import EmployerSponsorshipSection from '@/components/EmployerSponsorshipSection';
 import TimelineSection from '@/components/TimelineSection';
 import ExportModal from '@/components/ExportModal';
 import FloatingChip from '@/components/FloatingChip';
 import InstallPrompt from '@/components/InstallPrompt';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import Footer from '@/components/Footer';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { evaluate } from '@/lib/points';
 import type { JobEvaluation } from '@/lib/points';
-import type { JobAssessment, PlanningDates, SharedCriteria, SponsorshipInputs } from '@/lib/types';
-import { defaultPlanningDates, defaultSharedCriteria, defaultSponsorshipInputs, isYm, newJob } from '@/lib/types';
+import type { JobAssessment, PlanningDates, SharedCriteria } from '@/lib/types';
+import { defaultPlanningDates, defaultSharedCriteria, isYm, newJob } from '@/lib/types';
 import { applyDates, buildTimeline } from '@/lib/timeline';
 import { mergeQueryString, persistState, readInitialState } from '@/lib/urlState';
 import { GOAL_RANGE, MAX_JOBS } from '@/data/pointsCriteria';
@@ -103,7 +103,6 @@ const PageContent = () => {
   // dates wired to UI in Task 4; initialised here for URL/storage round-trip
   const [dates, setDates] = useState<PlanningDates>(initial.dates);
   const [goalPoints, setGoalPoints] = useLocalStorage<number>('eoi-goal', GOAL_RANGE.min);
-  const [sponsorship, setSponsorship] = useLocalStorage<SponsorshipInputs>('eoi-sponsorship', defaultSponsorshipInputs);
 
   const [openSelect, setOpenSelect] = useState<string | null>(null);
   const [jobUI, setJobUI] = useState<Record<string, JobUIState>>({});
@@ -194,10 +193,6 @@ const PageContent = () => {
     setDates((prev) => ({ ...prev, ...patch }));
   }, []);
 
-  const patchSponsorship = useCallback((patch: Partial<SponsorshipInputs>) => {
-    setSponsorship((prev) => ({ ...prev, ...patch }));
-  }, [setSponsorship]);
-
   const patchJob = useCallback((id: string, patch: Partial<JobAssessment>) => {
     setJobs((prev) => prev.map((j) => (j.id === id ? { ...j, ...patch } : j)));
   }, []);
@@ -249,8 +244,7 @@ const PageContent = () => {
     setOpenJobId(nj.id);
     setDates({ ...defaultPlanningDates });
     setGoalPoints(GOAL_RANGE.min);
-    setSponsorship({ ...defaultSponsorshipInputs });
-  }, [setGoalPoints, setSponsorship]);
+  }, [setGoalPoints]);
 
   const scrollToResults = useCallback(() => {
     const el = bandRef.current;
@@ -387,45 +381,8 @@ const PageContent = () => {
       <ReferenceSection evaluation={evaluation} />
       <FeeEstimateSection evaluation={evaluation} shared={shared} />
       <Pr191Section dates={dates} onDatesPatch={patchDates} today={today} />
-      <EmployerSponsorshipSection
-        jobs={derived.jobs}
-        shared={derived.shared}
-        dates={dates}
-        today={today}
-        inputs={sponsorship}
-        onPatch={patchSponsorship}
-      />
 
-      {/* Footer */}
-      <footer
-        className="mt-[84px] pt-[26px] pb-12 flex flex-col gap-5"
-        style={{ borderTop: '1px solid var(--hair)' }}
-      >
-        <p className="m-0 text-xs leading-[1.8] max-w-[56em]" style={{ color: 'var(--muted)' }}>
-          {t('disclaimer')}
-        </p>
-        <div className="flex justify-between items-baseline gap-3 flex-wrap text-xs" style={{ color: 'var(--muted)' }}>
-          <span>© 2026 Henry Chen</span>
-          <div className="flex gap-5">
-            {[
-              { href: 'https://github.com/Misoto22/eoi-points-calculator', label: 'GitHub' },
-              { href: 'https://www.linkedin.com/in/henry-misoto22/', label: 'LinkedIn' },
-              { href: 'https://www.misoto22.com/', label: 'Website' },
-            ].map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-4 hover:text-[var(--ink)]"
-                style={{ color: 'var(--muted)', textDecorationColor: 'var(--hair)' }}
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <FloatingChip visible={chipVisible} total={bareScore} onClick={scrollToResults} />
       <InstallPrompt />
