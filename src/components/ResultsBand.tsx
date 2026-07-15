@@ -5,7 +5,7 @@ import type { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import type { Evaluation, PathwayResult } from '@/lib/points';
-import { PATHWAY_STATUS_LABEL_KEY, pathwayStatus } from '@/lib/points';
+import { PATHWAY_STATUS_LABEL_KEY, hasOccupation, pathwayStatus } from '@/lib/points';
 import type { SharedCriteria } from '@/lib/types';
 import { suggestionsFor } from '@/lib/suggestions';
 import { GOAL_RANGE, MIN_POINTS } from '@/data/pointsCriteria';
@@ -20,7 +20,8 @@ interface ResultsBandProps {
   onOpenExport: () => void;
   onCopyLink: () => void;
   copied: boolean;
-  onReset: () => void;
+  /** Omit where this page doesn't own enough of the scored data for "reset" to mean anything (see Independent Migration, which reads shared/jobs read-only from the Profile page). */
+  onReset?: () => void;
   bandRef?: RefObject<HTMLDivElement | null>;
 }
 
@@ -76,8 +77,8 @@ function presentPath(p: PathwayResult): PathPresentation {
 }
 
 /**
- * Compact results band — the single results view on every breakpoint:
- * inline on narrow screens, the sticky right panel on wide ones.
+ * Compact results band — the single results view on every breakpoint,
+ * leading the Independent Migration page at a fixed compact width.
  */
 function ResultsBand({
   evaluation, shared, goal, displayTotal,
@@ -97,7 +98,11 @@ function ResultsBand({
   else if (total < MIN_POINTS) statusLine = t('statusBelowMin', { n: MIN_POINTS - total });
   else statusLine = t('statusMin', { n: goal - total });
 
-  let bestPathLine = t('noBestPath');
+  // `evaluation.best` is null both when no occupation is entered yet AND when
+  // one is entered but nothing clears the list/state/points gates — those
+  // need different copy, or a user who's already picked an occupation gets
+  // told to go pick one.
+  let bestPathLine = evaluation.jobs.some(hasOccupation) ? t('noPathEligible') : t('noBestPath');
   if (evaluation.best) {
     const occ = evaluation.best.job.occupation;
     const occName = occ ? (lang === 'zh' ? occ.zh : occ.en) : '';
@@ -299,7 +304,7 @@ function ResultsBand({
           >
             {copied ? t('copied') : t('copyLink')}
           </button>
-          {total > 0 && (
+          {onReset && total > 0 && (
             <button
               type="button"
               onClick={onReset}

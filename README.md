@@ -13,6 +13,14 @@
 
 </div>
 
+## 🗺️ Pages
+
+The app is three pages sharing one header nav:
+
+- **Profile** (`/profile`) — the only place shared criteria (age, English, education, partner status, bonuses) and nominated occupations/skills assessments are entered. Both other pages read this data read-only and link back here to edit it.
+- **Independent Migration** (`/`) — the points-tested result for subclass 189/190/491: score, timeline, reference info, cost estimate and the subclass 191 permanent-residence pathway.
+- **Employer Sponsorship** (`/sponsorship`) — the non-points-tested checklist for subclass 482/186, checking the occupations/English/age entered on Profile against the Core Skills Occupation List, salary thresholds, work experience and the under-45 age limit.
+
 ## ✨ Features
 
 - 📊 **Real-time Calculation**: Instant EOI points calculation based on current immigration rules
@@ -22,7 +30,7 @@
 - 📅 **Score Timeline**: Enter real months (birth, work start, test/assessment dates) to project your score over the next 5 years — age-bracket drops, work milestones, and credential expiries (English test, skills assessment per authority, NAATI CCL) plotted on a step chart
 - 🏡 **Path to Permanent Residence**: For 491/494 holders, projects the earliest subclass 191 eligibility date from your grant month, alongside the current holding-period, income-year and application-fee requirements
 - 💰 **Cost Estimate**: A rough visa application charge + skills assessment + English test + state nomination fee budget, built from your entered criteria
-- 🤝 **Employer Sponsorship Checklist**: A separate `/sponsorship` page (own nav tab) for the non-points-tested subclass 482 (Core Skills / Specialist Skills) and 186 (Direct Entry / Temporary Residence Transition) pathways — checks the occupations, English level and age already entered on the points-tested page against the Core Skills Occupation List, salary thresholds (CSIT/SSIT), work experience and the under-45 age limit, for applicants who can't yet reach 65 points
+- 🤝 **Employer Sponsorship Checklist**: A separate `/sponsorship` page (own nav tab) for the non-points-tested subclass 482 (Core Skills / Specialist Skills) and 186 (Direct Entry / Temporary Residence Transition) pathways — checks the occupations, English level and age already entered on the Profile page against the Core Skills Occupation List, salary thresholds (CSIT/SSIT), work experience and the under-45 age limit, for applicants who can't yet reach 65 points
 - 🖼️ **Share Card & Report Export**: Generate a Cream or Charcoal PNG summary card, or a detailed printable report (print / save as PDF) covering the full breakdown
 - 🌐 **Bilingual Support**: Full support for English and Simplified Chinese (简体中文)
 - 📱 **Responsive Design**: Optimized for all devices from mobile to desktop

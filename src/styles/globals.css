@@ -5,7 +5,8 @@
 @theme {
   --font-serif: var(--font-noto-serif), 'Songti SC', 'Noto Serif SC', serif;
   --font-sans: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
-  /* Two-column desktop layout kicks in here (inputs left, sticky results right) */
+  /* Desktop breakpoint for minor spacing bumps — every page is a single
+     reading column at every width, so this is no longer a layout switch. */
   --breakpoint-wide: 75rem;
 }
 
