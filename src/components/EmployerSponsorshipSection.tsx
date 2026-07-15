@@ -2,6 +2,7 @@
 
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
 import SectionHeading from './SectionHeading';
 import type { JobAssessment, PlanningDates, SharedCriteria, SponsorshipInputs } from '@/lib/types';
 import { findOccupation } from '@/lib/points';
@@ -23,6 +24,27 @@ interface EmployerSponsorshipSectionProps {
 }
 
 const fmt = (n: number) => `$${n.toLocaleString('en-US')}`;
+
+function ProfileRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div
+      className="grid gap-4 py-[11px] items-baseline"
+      style={{ gridTemplateColumns: '140px 1fr', borderBottom: '1px solid var(--hair-soft)' }}
+    >
+      <span className="text-[0.71875rem] tracking-[0.1em]" style={{ color: 'var(--muted)' }}>{label}</span>
+      <div className="text-[0.8125rem] leading-[1.5]">{children}</div>
+    </div>
+  );
+}
+
+function EditLink() {
+  const { t } = useTranslation();
+  return (
+    <Link href="/" className="underline underline-offset-4 hover:text-[var(--ink)]" style={{ color: 'var(--muted)', textDecorationColor: 'var(--hair)' }}>
+      {t('spProfileEditLink')}
+    </Link>
+  );
+}
 
 function ToggleRow({ label, hint, checked, onToggle }: { label: string; hint?: string; checked: boolean; onToggle: () => void }) {
   return (
@@ -86,105 +108,147 @@ function EmployerSponsorshipSection({ jobs, shared, dates, today, inputs, onPatc
   ];
 
   return (
-    <section className="mt-[72px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.4s backwards' }}>
-      <SectionHeading num="08" title={t('sections.sponsorship')} side="SPONSORSHIP" />
-      <p className="mt-3.5 mb-0 text-[0.78125rem] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
-        {t('spNote')}
-      </p>
+    <>
+      {/* 01 — read-only snapshot of what's already entered on the Independent
+          Migration page; this page never edits shared/jobs/dates itself. */}
+      <section className="mt-[58px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.08s backwards' }}>
+        <SectionHeading num="01" title={t('spProfileTitle')} side="PROFILE" />
+        <p className="mt-3.5 mb-0 text-[0.78125rem] leading-[1.7] max-w-[46em]" style={{ color: 'var(--muted)' }}>
+          {t('spNote')}
+        </p>
 
-      {/* One coherent vertical list — a 3-across grid here would fragment
-          unevenly on wide screens since the salary picker's natural height
-          doesn't match the toggle rows either side of it. */}
-      <div className="mt-[26px]">
-        <ToggleRow
-          label={t('spHasSponsor')}
-          checked={inputs.hasSponsor}
-          onToggle={() => onPatch({ hasSponsor: !inputs.hasSponsor })}
-        />
-        <div className="py-[18px]" style={{ borderBottom: '1px solid var(--hair)' }}>
-          <div className="text-[0.71875rem] tracking-[0.16em] font-medium mb-2.5" style={{ color: 'var(--muted)' }}>
-            {t('spSalaryLabel')}
-          </div>
-          <div className="flex gap-1.5">
-            {bandOptions.map((o) => (
-              <BandOption
-                key={o.value}
-                label={o.label}
-                active={inputs.salaryBand === o.value}
-                onClick={() => onPatch({ salaryBand: inputs.salaryBand === o.value ? '' : o.value })}
-              />
-            ))}
-          </div>
-        </div>
-        <ToggleRow
-          label={t('spTrtEligible')}
-          hint={t('spTrtHint')}
-          checked={inputs.trtEligible}
-          onToggle={() => onPatch({ trtEligible: !inputs.trtEligible })}
-        />
-      </div>
-
-      <p className="mt-[18px] mb-0 text-[0.78125rem] leading-[1.6]" style={{ color: 'var(--ink-soft)' }}>
-        {evalResult.ageYears !== null
-          ? t('spAgeLine', { age: evalResult.ageYears })
-          : evalResult.ageUnder45 === true
-            ? t('spAgeBracketUnder45')
-            : t('spAgeUnknown')}
-        {' · '}
-        {evalResult.englishOk ? t('spEnglishOk') : t('spEnglishUnknown')}
-      </p>
-
-      {jobsWithOcc.length === 0 ? (
-        <p className="mt-[18px] mb-0 text-[0.78125rem]" style={{ color: 'var(--muted)' }}>{t('spEmpty')}</p>
-      ) : (
-        <div className="mt-[26px] flex flex-col gap-[26px]">
-          {jobsWithOcc.map((jr) => {
-            const occ = findOccupation(jr.job.anzsco);
-            const tag = String.fromCharCode(65 + jr.index);
-            return (
-              <div key={jr.job.id}>
-                <div className="flex items-baseline gap-2.5 mb-1">
-                  <span className="text-[0.96875rem]" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
-                  <span className="text-[0.84375rem]" style={{ color: 'var(--ink)' }}>
-                    {occ ? (lang === 'zh' ? occ.zh : occ.en) : jr.job.anzsco}
-                  </span>
-                  <span className="text-xs tabular-nums" style={{ color: 'var(--muted)' }}>{jr.job.anzsco}</span>
-                </div>
-                {jr.streams.map((s) => {
-                  const failed = s.gates.filter((g) => !g.ok);
+        <div className="mt-[22px]">
+          <ProfileRow label={t('compareOcc')}>
+            {jobsWithOcc.length === 0 ? (
+              <span style={{ color: 'var(--muted)' }}>{t('spProfileOccEmpty')} <EditLink /></span>
+            ) : (
+              <div className="flex flex-col gap-1">
+                {jobsWithOcc.map((jr) => {
+                  const occ = findOccupation(jr.job.anzsco);
+                  const tag = String.fromCharCode(65 + jr.index);
                   return (
-                    <div
-                      key={s.code}
-                      className="grid gap-4 py-[11px] items-baseline"
-                      style={{ gridTemplateColumns: '1fr auto', borderBottom: '1px solid var(--hair-soft)' }}
-                    >
-                      <div className="min-w-0">
-                        <div className="text-[0.8125rem] leading-[1.5]" style={{ color: 'var(--ink)' }}>{t(STREAM_LABEL_KEY[s.code])}</div>
-                        {!s.eligible && (
-                          <div className="text-xs leading-[1.5] mt-[2px]" style={{ color: 'var(--muted)' }}>
-                            {failed.map((g) => t(GATE_LABEL_KEY[g.key], g.params)).join(' · ')}
-                          </div>
-                        )}
-                      </div>
-                      <span
-                        className="text-[0.6875rem] tracking-[0.1em] uppercase whitespace-nowrap"
-                        style={{ color: s.eligible ? 'var(--ink-soft)' : 'var(--danger)' }}
-                      >
-                        {s.eligible ? t('spEligible') : t('spNotEligible')}
-                      </span>
+                    <div key={jr.job.id} className="flex items-baseline gap-2.5">
+                      <span className="text-[0.8125rem]" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
+                      <span>{occ ? (lang === 'zh' ? occ.zh : occ.en) : jr.job.anzsco}</span>
+                      <span className="text-xs tabular-nums" style={{ color: 'var(--muted)' }}>{jr.job.anzsco}</span>
                     </div>
                   );
                 })}
               </div>
-            );
-          })}
+            )}
+          </ProfileRow>
+          <ProfileRow label={t('fields.english')}>
+            {evalResult.englishOk ? (
+              t(`options.english.${shared.english}`)
+            ) : (
+              <span style={{ color: 'var(--muted)' }}>{t('spProfileEnglishEmpty')} <EditLink /></span>
+            )}
+          </ProfileRow>
+          <ProfileRow label={t('fields.age')}>
+            {evalResult.ageYears !== null ? (
+              t('spAgeLine', { age: evalResult.ageYears })
+            ) : evalResult.ageUnder45 === true ? (
+              t('spAgeBracketUnder45')
+            ) : (
+              <span style={{ color: 'var(--muted)' }}>{t('spProfileAgeEmpty')} <EditLink /></span>
+            )}
+          </ProfileRow>
         </div>
-      )}
+      </section>
 
-      <p className="mt-[18px] mb-0 text-[0.71875rem] tracking-[0.03em]" style={{ color: 'var(--muted)' }}>
-        {t('spDisclaimer')}
-      </p>
-    </section>
+      {/* 02 — the sponsorship-specific checklist inputs, local to this page. */}
+      <section className="mt-[58px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.16s backwards' }}>
+        <SectionHeading num="02" title={t('spDetailsTitle')} side="DETAILS" />
+
+        {/* One coherent vertical list — a 3-across grid here would fragment
+            unevenly on wide screens since the salary picker's natural height
+            doesn't match the toggle rows either side of it. */}
+        <div className="mt-[22px]">
+          <ToggleRow
+            label={t('spHasSponsor')}
+            checked={inputs.hasSponsor}
+            onToggle={() => onPatch({ hasSponsor: !inputs.hasSponsor })}
+          />
+          <div className="py-[18px]" style={{ borderBottom: '1px solid var(--hair)' }}>
+            <div className="text-[0.71875rem] tracking-[0.16em] font-medium mb-2.5" style={{ color: 'var(--muted)' }}>
+              {t('spSalaryLabel')}
+            </div>
+            <div className="flex gap-1.5">
+              {bandOptions.map((o) => (
+                <BandOption
+                  key={o.value}
+                  label={o.label}
+                  active={inputs.salaryBand === o.value}
+                  onClick={() => onPatch({ salaryBand: inputs.salaryBand === o.value ? '' : o.value })}
+                />
+              ))}
+            </div>
+          </div>
+          <ToggleRow
+            label={t('spTrtEligible')}
+            hint={t('spTrtHint')}
+            checked={inputs.trtEligible}
+            onToggle={() => onPatch({ trtEligible: !inputs.trtEligible })}
+          />
+        </div>
+      </section>
+
+      {/* 03 — per-occupation eligibility across all four streams. */}
+      <section className="mt-[58px]" style={{ animation: 'eoiFadeUp 0.7s ease 0.24s backwards' }}>
+        <SectionHeading num="03" title={t('spEligibilityTitle')} side="ELIGIBILITY" />
+
+        {jobsWithOcc.length === 0 ? (
+          <p className="mt-[22px] mb-0 text-[0.78125rem]" style={{ color: 'var(--muted)' }}>{t('spEmpty')} <EditLink /></p>
+        ) : (
+          <div className="mt-[22px] flex flex-col gap-[26px]">
+            {jobsWithOcc.map((jr) => {
+              const occ = findOccupation(jr.job.anzsco);
+              const tag = String.fromCharCode(65 + jr.index);
+              return (
+                <div key={jr.job.id}>
+                  <div className="flex items-baseline gap-2.5 mb-1">
+                    <span className="text-[0.96875rem]" style={{ fontFamily: 'var(--font-serif)' }}>{tag}</span>
+                    <span className="text-[0.84375rem]" style={{ color: 'var(--ink)' }}>
+                      {occ ? (lang === 'zh' ? occ.zh : occ.en) : jr.job.anzsco}
+                    </span>
+                    <span className="text-xs tabular-nums" style={{ color: 'var(--muted)' }}>{jr.job.anzsco}</span>
+                  </div>
+                  {jr.streams.map((s) => {
+                    const failed = s.gates.filter((g) => !g.ok);
+                    return (
+                      <div
+                        key={s.code}
+                        className="grid gap-4 py-[11px] items-baseline"
+                        style={{ gridTemplateColumns: '1fr auto', borderBottom: '1px solid var(--hair-soft)' }}
+                      >
+                        <div className="min-w-0">
+                          <div className="text-[0.8125rem] leading-[1.5]" style={{ color: 'var(--ink)' }}>{t(STREAM_LABEL_KEY[s.code])}</div>
+                          {!s.eligible && (
+                            <div className="text-xs leading-[1.5] mt-[2px]" style={{ color: 'var(--muted)' }}>
+                              {failed.map((g) => t(GATE_LABEL_KEY[g.key], g.params)).join(' · ')}
+                            </div>
+                          )}
+                        </div>
+                        <span
+                          className="text-[0.6875rem] tracking-[0.1em] uppercase whitespace-nowrap"
+                          style={{ color: s.eligible ? 'var(--ink-soft)' : 'var(--danger)' }}
+                        >
+                          {s.eligible ? t('spEligible') : t('spNotEligible')}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <p className="mt-[22px] mb-0 text-[0.71875rem] tracking-[0.03em]" style={{ color: 'var(--muted)' }}>
+          {t('spDisclaimer')}
+        </p>
+      </section>
+    </>
   );
 }
 
