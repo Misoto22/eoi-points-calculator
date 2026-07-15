@@ -4,7 +4,7 @@ import { memo } from 'react';
 import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Evaluation } from '@/lib/points';
-import { bestPathwayForJob } from '@/lib/points';
+import { bestPathwayForJob, hasOccupation } from '@/lib/points';
 
 interface ComparisonTableProps {
   evaluation: Evaluation;
@@ -22,7 +22,7 @@ const TD_STYLE: CSSProperties = { padding: '9px 10px 9px 0', verticalAlign: 'bas
 function ComparisonTable({ evaluation }: ComparisonTableProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
-  const rows = evaluation.jobs.filter((je) => je.occupation);
+  const rows = evaluation.jobs.filter(hasOccupation);
 
   if (rows.length < 2) return null;
 
@@ -45,7 +45,7 @@ function ComparisonTable({ evaluation }: ComparisonTableProps) {
           {rows.map((je) => {
             const tag = String.fromCharCode(65 + je.index);
             const best = bestPathwayForJob(je);
-            const occ = je.occupation!;
+            const occ = je.occupation;
             return (
               <tr key={je.job.id} style={{ borderBottom: '1px solid var(--hair-soft)' }}>
                 <td style={{ ...TD_STYLE, fontFamily: 'var(--font-serif)' }}>{tag}</td>

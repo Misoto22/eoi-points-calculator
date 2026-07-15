@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { Evaluation } from '@/lib/points';
 import { drawCard, ensureCardFonts } from '@/lib/exportCard';
@@ -223,6 +224,20 @@ export default function ExportModal({ open, onClose, evaluation, goal, shared, j
           <div className="overflow-y-auto" style={{ maxHeight: '64vh', boxShadow: 'var(--overlay-shadow)' }}>
             <ReportView evaluation={evaluation} shared={shared} jobs={jobs} goal={goal} dates={dates} today={today} dateLabel={todayLabel()} />
           </div>
+        )}
+        {/*
+          On-screen preview above lives deep inside this fixed-position modal, which is fine for
+          display but hostile to printing: the modal sits on top of the whole (still-in-flow) page,
+          so hiding "everything except the report" by walking up the DOM either leaves stray blank
+          pages or (with visibility tricks) hides the report too — see globals.css history. Instead,
+          print from an independent copy portaled directly onto <body>, a sibling of <main> — trivial
+          to isolate with a single CSS rule and immune to whatever the rest of the page is doing.
+        */}
+        {mode === 'report' && typeof document !== 'undefined' && createPortal(
+          <div className="print-report">
+            <ReportView evaluation={evaluation} shared={shared} jobs={jobs} goal={goal} dates={dates} today={today} dateLabel={todayLabel()} />
+          </div>,
+          document.body,
         )}
         <div className="flex gap-2.5">
           <button

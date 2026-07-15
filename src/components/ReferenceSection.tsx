@@ -129,6 +129,9 @@ function ReferenceSection({ evaluation }: ReferenceSectionProps) {
                     >
                       {t(`programStatus.${programStatus[s.code].status}`)}
                     </span>
+                    <span className="text-[0.625rem]" style={{ color: 'var(--muted)' }}>
+                      {t('programStatus.asOf', { month: programStatus[s.code].asOf })}
+                    </span>
                     <span className="text-[0.6875rem] leading-[1.4]" style={{ color: 'var(--muted)' }}>
                       {t(`states.${s.code}.statusNote`)}
                     </span>
