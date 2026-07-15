@@ -122,7 +122,11 @@ function EmployerSponsorshipSection({ jobs, shared, dates, today, inputs, onPatc
       </div>
 
       <p className="mt-[22px] mb-0 text-[0.78125rem] leading-[1.6]" style={{ color: 'var(--ink-soft)' }}>
-        {evalResult.ageYears === null ? t('spAgeUnknown') : t('spAgeLine', { age: evalResult.ageYears })}
+        {evalResult.ageYears !== null
+          ? t('spAgeLine', { age: evalResult.ageYears })
+          : evalResult.ageUnder45 === true
+            ? t('spAgeBracketUnder45')
+            : t('spAgeUnknown')}
         {' · '}
         {evalResult.englishOk ? t('spEnglishOk') : t('spEnglishUnknown')}
       </p>

@@ -294,6 +294,7 @@
   "spTrtEligible": "I already hold a 482/457 visa with ≥2 years in this occupation for the nominating employer",
   "spTrtHint": "Temporary Residence Transition (TRT) pathway to subclass 186 — reduced from 3 to 2 years in Nov 2023; the occupation-list requirement was removed the same year.",
   "spAgeLine": "Age {{age}}",
+  "spAgeBracketUnder45": "Age bracket confirms under 45",
   "spAgeUnknown": "Age unknown — enter a birth month in section 01 to check the 186 age limit",
   "spEnglishOk": "English requirement met",
   "spEnglishUnknown": "English level not entered above",

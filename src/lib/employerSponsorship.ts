@@ -39,6 +39,19 @@ export function ageYearsFromBirth(birth: string, today: string): number | null {
   return Math.floor(monthsBetween(birth, today) / 12);
 }
 
+/**
+ * Whether the applicant is confirmed under the 186 age ceiling. Prefers the
+ * exact birth month; when that's not entered, falls back to the points-test
+ * age bracket — every selectable bracket (18-24…40-44) tops out below 45, so
+ * a bracket alone already confirms "under 45" even without an exact age.
+ * Null (unknown) only when neither is set.
+ */
+export function isUnderAgeLimit(ageYears: number | null, sharedAge: string): boolean | null {
+  if (ageYears !== null) return ageYears < ENS_AGE_LIMIT;
+  if (sharedAge !== '') return true;
+  return null;
+}
+
 export interface SponsorshipGate {
   /** i18n key suffix under spGate* */
   key: string;
@@ -61,6 +74,8 @@ export interface JobSponsorshipResult {
 
 export interface SponsorshipEvaluation {
   ageYears: number | null;
+  /** See `isUnderAgeLimit` — true/false when known (birth or bracket), null when neither is entered. */
+  ageUnder45: boolean | null;
   englishOk: boolean;
   jobs: JobSponsorshipResult[];
 }
@@ -73,18 +88,21 @@ function evaluateJobStreams(
   job: JobAssessment,
   inputs: SponsorshipInputs,
   experienceYears: number,
-  ageYears: number | null,
+  ageUnder45: boolean | null,
   englishOk: boolean,
 ): SponsorshipStreamResult[] {
   const hasOcc = job.anzsco !== '';
   const csolOk = hasOcc && isCsolListed(job.anzsco);
   const specialistGroupOk = hasOcc && isSpecialistEligibleGroup(job.anzsco);
-  const underAgeLimit = ageYears === null ? false : ageYears < ENS_AGE_LIMIT;
+  const underAgeLimit = ageUnder45 === true;
+  // CSIT applies to ENS 186 nominations lodged on/after 7 Dec 2024, same
+  // figure as the 482 Core Skills threshold — both 186 streams gate on it.
+  const meetsCsit = inputs.salaryBand === 'csitToSsit' || inputs.salaryBand === 'ssitPlus';
 
   const core: SponsorshipGate[] = [
     { key: 'sponsor', ok: inputs.hasSponsor },
     { key: 'csol', ok: csolOk },
-    { key: 'salaryCsit', ok: inputs.salaryBand === 'csitToSsit' || inputs.salaryBand === 'ssitPlus' },
+    { key: 'salaryCsit', ok: meetsCsit },
     { key: 'experience', ok: experienceYears >= EXPERIENCE_YEARS_REQUIRED['482core'], params: { years: EXPERIENCE_YEARS_REQUIRED['482core'] } },
     { key: 'english', ok: englishOk },
   ];
@@ -100,6 +118,7 @@ function evaluateJobStreams(
   const direct: SponsorshipGate[] = [
     { key: 'sponsor', ok: inputs.hasSponsor },
     { key: 'csol', ok: csolOk },
+    { key: 'salaryCsit', ok: meetsCsit },
     { key: 'experience', ok: experienceYears >= EXPERIENCE_YEARS_REQUIRED['186direct'], params: { years: EXPERIENCE_YEARS_REQUIRED['186direct'] } },
     { key: 'ageLimit', ok: underAgeLimit, params: { age: ENS_AGE_LIMIT } },
     { key: 'english', ok: englishOk },
@@ -107,6 +126,7 @@ function evaluateJobStreams(
 
   const trt: SponsorshipGate[] = [
     { key: 'trtEligible', ok: inputs.trtEligible },
+    { key: 'salaryCsit', ok: meetsCsit },
     { key: 'ageLimit', ok: underAgeLimit, params: { age: ENS_AGE_LIMIT } },
     { key: 'english', ok: englishOk },
   ];
@@ -135,6 +155,7 @@ export function evaluateSponsorship(
   today: string,
 ): SponsorshipEvaluation {
   const ageYears = ageYearsFromBirth(birth, today);
+  const ageUnder45 = isUnderAgeLimit(ageYears, shared.age);
   // Both 482 (IELTS 5) and 186 (Competent/IELTS 6) requirements sit at or
   // below the app's lowest recorded bracket, so any selected value clears both.
   const englishOk = shared.english !== '';
@@ -145,11 +166,11 @@ export function evaluateSponsorship(
       job,
       index,
       experienceYears,
-      streams: evaluateJobStreams(job, inputs, experienceYears, ageYears, englishOk),
+      streams: evaluateJobStreams(job, inputs, experienceYears, ageUnder45, englishOk),
     };
   });
 
-  return { ageYears, englishOk, jobs: jobResults };
+  return { ageYears, ageUnder45, englishOk, jobs: jobResults };
 }
 
 /** i18n key per gate — shared so every surface labels the same requirement the same way. */

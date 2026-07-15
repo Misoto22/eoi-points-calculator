@@ -131,13 +131,39 @@ describe('evaluateSponsorship', () => {
     expect(trt.gates.find((g) => g.key === 'ageLimit')?.ok).toBe(false);
   });
 
-  it('clears 186 TRT purely on the trtEligible flag, independent of occupation or CSOL', () => {
+  it('clears 186 TRT on trtEligible + CSIT salary, independent of occupation or CSOL', () => {
     const j = job({ anzsco: '134111' }); // not CSOL-listed, no work brackets set
     const shared = { ...defaultSharedCriteria, english: 'ielts6' };
-    const trtInputs: SponsorshipInputs = { hasSponsor: false, salaryBand: '', trtEligible: true };
+    const trtInputs: SponsorshipInputs = { hasSponsor: false, salaryBand: 'ssitPlus', trtEligible: true };
     const result = evaluateSponsorship([j], shared, trtInputs, '1996-07', TODAY);
     const trt = result.jobs[0].streams.find((s) => s.code === '186trt')!;
     expect(trt.eligible).toBe(true);
+  });
+
+  it('requires the CSIT salary gate for both 186 Direct Entry and TRT', () => {
+    const j = job({ anzsco: '261313', ausWork: '8-10' });
+    const shared = { ...defaultSharedCriteria, english: 'ielts6' };
+    const belowCsit: SponsorshipInputs = { hasSponsor: true, salaryBand: 'belowCsit', trtEligible: true };
+    const result = evaluateSponsorship([j], shared, belowCsit, '1996-07', TODAY);
+    const direct = result.jobs[0].streams.find((s) => s.code === '186direct')!;
+    const trt = result.jobs[0].streams.find((s) => s.code === '186trt')!;
+    expect(direct.eligible).toBe(false);
+    expect(direct.gates.find((g) => g.key === 'salaryCsit')?.ok).toBe(false);
+    expect(trt.eligible).toBe(false);
+    expect(trt.gates.find((g) => g.key === 'salaryCsit')?.ok).toBe(false);
+  });
+
+  it('falls back to the points-test age bracket to confirm under-45 when no birth month is entered', () => {
+    const j = job({ anzsco: '261313', ausWork: '8-10' });
+    const shared = { ...defaultSharedCriteria, english: 'ielts6', age: '25-32' };
+    const trtInputs: SponsorshipInputs = { hasSponsor: true, salaryBand: 'ssitPlus', trtEligible: true };
+    const result = evaluateSponsorship([j], shared, trtInputs, '', TODAY);
+    expect(result.ageYears).toBeNull();
+    expect(result.ageUnder45).toBe(true);
+    const direct = result.jobs[0].streams.find((s) => s.code === '186direct')!;
+    const trt = result.jobs[0].streams.find((s) => s.code === '186trt')!;
+    expect(direct.gates.find((g) => g.key === 'ageLimit')?.ok).toBe(true);
+    expect(trt.gates.find((g) => g.key === 'ageLimit')?.ok).toBe(true);
   });
 
   it('fails every stream but TRT when there is no sponsor', () => {
@@ -172,12 +198,13 @@ describe('evaluateSponsorship', () => {
     }
   });
 
-  it('returns a null age and unmet age gates when no birth month is entered', () => {
+  it('returns a null age and unmet age gates when neither birth nor age bracket is entered', () => {
     const j = job({ anzsco: '261313', ausWork: '8-10' });
-    const shared = { ...defaultSharedCriteria, english: 'ielts6' };
+    const shared = { ...defaultSharedCriteria, english: 'ielts6' }; // age bracket also unset
     const trtInputs: SponsorshipInputs = { ...eligibleInputs, trtEligible: true };
     const result = evaluateSponsorship([j], shared, trtInputs, '', TODAY);
     expect(result.ageYears).toBeNull();
+    expect(result.ageUnder45).toBeNull();
     const trt = result.jobs[0].streams.find((s) => s.code === '186trt')!;
     expect(trt.eligible).toBe(false);
   });

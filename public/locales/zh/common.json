@@ -294,6 +294,7 @@
   "spTrtEligible": "已持有 482/457 签证，并已在该职业为担保雇主工作满 2 年以上",
   "spTrtHint": "过渡到 186 永居的 TRT（Temporary Residence Transition）路径——工作年限已于 2023 年 11 月由 3 年降为 2 年，同年取消了职业清单门槛。",
   "spAgeLine": "年龄 {{age}}",
+  "spAgeBracketUnder45": "年龄区间已确认在 45 岁以下",
   "spAgeUnknown": "年龄未知——请在「01 · 共同条件」中填写出生月份，以核对 186 的年龄上限",
   "spEnglishOk": "已满足英语要求",
   "spEnglishUnknown": "尚未在上方填写英语水平",
