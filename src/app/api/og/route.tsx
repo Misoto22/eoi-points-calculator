@@ -47,11 +47,8 @@ export async function GET(req: Request) {
     const p = new URL(req.url).searchParams;
     const score = Math.max(0, Math.min(200, Number(p.get('s')) || 0));
     const lang = p.get('l') === 'zh' ? 'zh' as const : 'en' as const;
-    // Cap segment length too, not just count — a direct (non-browser) request
-    // with an oversized occ=/e= value shouldn't be able to inflate satori's
-    // render cost via a handful of very long strings.
-    const occ = (p.get('occ') || '').split('|').filter(Boolean).slice(0, 3).map((s) => s.slice(0, 80));
-    const eligible = (p.get('e') || '').split('|').filter(Boolean).slice(0, 3).map((s) => s.slice(0, 80));
+    const occ = (p.get('occ') || '').split('|').filter(Boolean).slice(0, 3);
+    const eligible = (p.get('e') || '').split('|').filter(Boolean).slice(0, 3);
     return new ImageResponse(card(score, lang, occ, eligible), opts);
   } catch {
     // Malformed input must never 500 — serve a generic card

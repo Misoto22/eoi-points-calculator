@@ -127,11 +127,6 @@ export default function JobCard({
   useEffect(() => {
     if (prevCollapsed.current === collapsed) return;
     prevCollapsed.current = collapsed;
-    // Deliberately keyed on `collapsed` rather than `animating`: a rapid
-    // re-toggle mid-animation must restart the 450ms window (old timer
-    // cleared, fresh one set), not leave `animating` unchanged and let the
-    // first timer cut the clip off early on the second transition.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAnimating(true);
     const timer = setTimeout(() => setAnimating(false), 450);
     return () => clearTimeout(timer);

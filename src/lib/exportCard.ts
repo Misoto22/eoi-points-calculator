@@ -1,5 +1,4 @@
 import type { Evaluation } from './points';
-import { hasOccupation, pathwayStatus } from './points';
 import { MIN_POINTS } from '@/data/pointsCriteria';
 import type { CardTheme } from '@/data/cardThemes';
 import { cardPalettes } from '@/data/cardThemes';
@@ -11,7 +10,6 @@ export interface CardLabels {
   cardGoal: string;
   cardMin: string;
   noBestPath: string;
-  noPathEligible: string;
   bestPathPrefix: string;
   cardEmpty: string;
   cardShared: string;
@@ -132,7 +130,7 @@ export function drawCard({ evaluation, goal, lang, theme, labels, dateLabel, sca
   // Best pathway line
   ctx.font = `400 28px ${SERIF}`;
   ctx.fillStyle = C.soft;
-  let bestLine = ev.jobs.some(hasOccupation) ? labels.noPathEligible : labels.noBestPath;
+  let bestLine = labels.noBestPath;
   if (ev.best) {
     const occ = ev.best.job.occupation;
     const occName = occ ? (lang === 'zh' ? occ.zh : occ.en) : '';
@@ -232,10 +230,7 @@ export function drawCard({ evaluation, goal, lang, theme, labels, dateLabel, sca
       ctx.fillText(subStr, P + 40, jy + 51);
       je.pathways.forEach((p, k) => {
         const x = W - P - slotW * (pathCount - 1 - k);
-        // Dash only for the federal-list gate (not on MLTSSL/STSOL/ROL for this pathway) — the
-        // same precedence ResultsBand and ReportView use, so the card never shows a different
-        // reason than the live UI does for the same pathway.
-        const totStr = pathwayStatus(p) === 'listNo' ? '—' : String(p.total);
+        const totStr = !je.occupation || p.listOk ? String(p.total) : '—';
         ctx.textAlign = 'right';
         ctx.font = `500 28px ${SERIF}`;
         ctx.fillStyle = p.eligible ? C.ink : C.muted;

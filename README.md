@@ -13,25 +13,13 @@
 
 </div>
 
-## 🗺️ Pages
-
-The app is three pages sharing one header nav:
-
-- **Profile** (`/profile`) — the only place shared criteria (age, English, education, partner status, bonuses) and nominated occupations/skills assessments are entered. Both other pages read this data read-only and link back here to edit it.
-- **Independent Migration** (`/`) — the points-tested result for subclass 189/190/491: score, timeline, reference info, cost estimate and the subclass 191 permanent-residence pathway.
-- **Employer Sponsorship** (`/sponsorship`) — the non-points-tested checklist for subclass 482/186, checking the occupations/English/age entered on Profile against the Core Skills Occupation List, salary thresholds, work experience and the under-45 age limit.
-
 ## ✨ Features
 
 - 📊 **Real-time Calculation**: Instant EOI points calculation based on current immigration rules
 - 🧭 **Multiple Skills Assessments**: Hold several nominated occupations side by side — shared criteria (age, English, education, partner, bonuses) apply to all, while work experience and Professional Year are entered per occupation
-- 🗺️ **Per-state Pathways**: 189 / 190 / 491 evaluated per assessment, including each state & territory's own 190/491 occupation list — the tool tags which states can nominate your occupation, alongside a snapshot of whether each state's intake is currently open, closed or limited
-- 🧮 **Occupation Comparison**: Once you enter 2+ skills assessments, a summary table lines them up by best pathway, points and eligible states
+- 🗺️ **Per-state Pathways**: 189 / 190 / 491 evaluated per assessment, including each state & territory's own 190/491 occupation list — the tool tags which states can nominate your occupation
 - 📅 **Score Timeline**: Enter real months (birth, work start, test/assessment dates) to project your score over the next 5 years — age-bracket drops, work milestones, and credential expiries (English test, skills assessment per authority, NAATI CCL) plotted on a step chart
-- 🏡 **Path to Permanent Residence**: For 491/494 holders, projects the earliest subclass 191 eligibility date from your grant month, alongside the current holding-period, income-year and application-fee requirements
-- 💰 **Cost Estimate**: A rough visa application charge + skills assessment + English test + state nomination fee budget, built from your entered criteria
-- 🤝 **Employer Sponsorship Checklist**: A separate `/sponsorship` page (own nav tab) for the non-points-tested subclass 482 (Core Skills / Specialist Skills) and 186 (Direct Entry / Temporary Residence Transition) pathways — checks the occupations, English level and age already entered on the Profile page against the Core Skills Occupation List, salary thresholds (CSIT/SSIT), work experience and the under-45 age limit, for applicants who can't yet reach 65 points
-- 🖼️ **Share Card & Report Export**: Generate a Cream or Charcoal PNG summary card, or a detailed printable report (print / save as PDF) covering the full breakdown
+- 🖼️ **Share Card Export**: Generate a Cream or Charcoal PNG summary card of your result
 - 🌐 **Bilingual Support**: Full support for English and Simplified Chinese (简体中文)
 - 📱 **Responsive Design**: Optimized for all devices from mobile to desktop
 - 🎨 **Dark/Light Mode**: System preference detection with manual override
@@ -39,7 +27,7 @@ The app is three pages sharing one header nav:
 - 💾 **Persistent Storage**: Form data saved locally for convenience
 - 🔍 **SEO Optimized**: Complete Open Graph and Twitter Cards integration, with a dynamic per-score OG image for shared links
 
-All point values, pathway rules, per-state occupation lists, program status, permanent-residence requirements, fee figures and the employer-sponsorship thresholds/occupation list live in `src/data/` (`pointsCriteria.ts`, `occupations.ts`, `stateLists.ts`, `programStatus.ts`, `pr191.ts`, `fees.ts`, `csol.ts`, `sponsorship.ts`) — nothing is hardcoded in the UI or the calculation engine.
+All point values, pathway rules and per-state occupation lists live in `src/data/` (`pointsCriteria.ts`, `occupations.ts`, `stateLists.ts`) — nothing is hardcoded in the UI or the calculation engine.
 
 ## 🛠️ Tech Stack
 

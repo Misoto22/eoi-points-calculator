@@ -69,14 +69,6 @@ describe('date serialisation', () => {
     expect(state?.dates).toEqual(dates({ birth: '1995-03', englishTest: '2024-03' }));
   });
 
-  it('round-trips the 491 grant date via the vg param', () => {
-    const qs = stateToQueryString(shared({ age: '25-32' }), [job()], dates({ visa491Grant: '2023-05' }));
-    const params = new URLSearchParams(qs);
-    expect(params.get('vg')).toBe('2023-05');
-    const state = parseStateFromParams(params);
-    expect(state?.dates).toEqual(dates({ visa491Grant: '2023-05' }));
-  });
-
   it('appends job dates as segments 5-7 and trims trailing empties', () => {
     const j = job({ anzsco: '261313', ausWorkStart: '2026-06', overseasWorkStart: '2021-11' });
     const qs = stateToQueryString(shared(), [j], dates());

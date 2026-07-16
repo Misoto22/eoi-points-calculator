@@ -7,16 +7,6 @@ import SectionHeading from './SectionHeading';
 import type { Evaluation } from '@/lib/points';
 import { invitationRounds } from '@/data/invitationRounds';
 import { states } from '@/data/stateLists';
-import { programStatus } from '@/data/programStatus';
-import type { ProgramStatus } from '@/data/programStatus';
-
-// Editorial palette has no semantic green/red — status reads as text, not a traffic light,
-// consistent with this section's existing "no pass/fail marker" stance (see roundsNote below).
-const STATUS_COLOR: Record<ProgramStatus, string> = {
-  open: 'var(--ink-soft)',
-  limited: 'var(--muted)',
-  closed: 'var(--danger)',
-};
 
 interface ReferenceSectionProps {
   evaluation: Evaluation;
@@ -122,20 +112,6 @@ function ReferenceSection({ evaluation }: ReferenceSectionProps) {
               >
                 <span className="text-[0.96875rem]" style={{ fontFamily: 'var(--font-serif)' }}>{s.code}</span>
                 <div className="min-w-0">
-                  <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 mb-1">
-                    <span
-                      className="text-[0.625rem] tracking-[0.12em] font-medium uppercase"
-                      style={{ color: STATUS_COLOR[programStatus[s.code].status] }}
-                    >
-                      {t(`programStatus.${programStatus[s.code].status}`)}
-                    </span>
-                    <span className="text-[0.625rem]" style={{ color: 'var(--muted)' }}>
-                      {t('programStatus.asOf', { month: programStatus[s.code].asOf })}
-                    </span>
-                    <span className="text-[0.6875rem] leading-[1.4]" style={{ color: 'var(--muted)' }}>
-                      {t(`states.${s.code}.statusNote`)}
-                    </span>
-                  </div>
                   <div className="text-[0.8125rem] leading-[1.5]" style={{ color: 'var(--ink)' }}>
                     {t(`states.${s.code}.how`)}
                   </div>

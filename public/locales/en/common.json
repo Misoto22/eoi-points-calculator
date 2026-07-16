@@ -4,33 +4,15 @@
   "themeHint": "Toggle theme",
   "chipHint": "View result",
   "placeholder": "Select",
-  "navLabel": "Primary",
-  "navProfile": "Profile",
-  "navIndependent": "Independent",
-  "navSponsorship": "Sponsorship",
   "sections": {
     "shared": "Shared criteria",
     "jobs": "Skills assessments",
     "result": "Result",
     "reference": "Reference",
-    "timeline": "Score timeline",
-    "pr191": "Path to permanent residence",
-    "fees": "Cost estimate"
+    "timeline": "Score timeline"
   },
-  "profilePageTitle": "Your Profile",
-  "profilePageSubtitle": "Shared across every pathway — age, English, education, partner status and nominated occupations",
-  "profileSeeResults": "See how this scores:",
-  "profileReset": "Reset profile",
-  "homeNoProfile": "No nominated occupation yet.",
   "sharedNote": "These belong to you as the applicant and apply to every assessment: age, English, qualification, partner status, plus STEM, Australian study, regional study and NAATI bonuses.",
   "jobsNote": "An applicant may hold several skills assessments. Work experience and the Professional Year must relate to the nominated occupation, so they are entered per occupation.",
-  "compareTitle": "COMPARE",
-  "compareTag": "",
-  "compareOcc": "Occupation",
-  "compareList": "List",
-  "compareBest": "Best pathway",
-  "compareStates": "States",
-  "compareNone": "No eligible pathway yet",
   "fields": {
     "age": "Age",
     "english": "English proficiency",
@@ -116,7 +98,6 @@
   "statusMin": "{{n}} points short of your goal",
   "statusBelowMin": "Below the 65-point threshold by {{n}}",
   "noBestPath": "Select a nominated occupation to compute visa pathways",
-  "noPathEligible": "No pathway eligible yet — see the requirements below",
   "bestPathPrefix": "Best pathway",
   "sharedCaps": "SHARED BREAKDOWN",
   "sharedSubtotal": "Shared subtotal",
@@ -148,54 +129,41 @@
   "statesIntro": "Federal lists (MLTSSL / STSOL / ROL) are only the entry ticket: each state and territory keeps its own occupation list, selection method and extra requirements (residence, local work, higher English or points), adjusted through the year. 20,350 nomination places nationally in 2025–26. Once you pick an occupation, the states that can nominate it are tagged below.",
   "statesNote": "A 2025–26 snapshot — always check each state's official page.",
   "visit": "Website",
-  "programStatus": {
-    "open": "Open",
-    "closed": "Closed",
-    "limited": "Limited",
-    "asOf": "as of {{month}}"
-  },
   "states": {
     "NSW": {
       "how": "Separate 190 & 491 skills lists (no priority tiers)",
-      "tip": "NSW work valued; ICT, health, engineering, construction first",
-      "statusNote": "2025–26 allocation fully committed; 2026-27 settings under review"
+      "tip": "NSW work valued; ICT, health, engineering, construction first"
     },
     "VIC": {
       "how": "No fixed list · ROI selection (Live in Melbourne)",
-      "tip": "Health, teaching, STEM prioritised; local work & study count",
-      "statusNote": "ROI intake stopped 30 Apr 2026 (allocation met); 2026-27 not yet open"
+      "tip": "Health, teaching, STEM prioritised; local work & study count"
     },
     "QLD": {
       "how": "QSOL · onshore / offshore / graduate streams",
-      "tip": "Onshore usually needs 6+ months of QLD work",
-      "statusNote": "ROI intake closed, 2025–26 allocation exhausted"
+      "tip": "Onshore usually needs 6+ months of QLD work"
     },
     "WA": {
       "how": "WASMOL Schedule 1 / 2 + graduate list",
-      "tip": "General stream often needs a 6-month WA contract; mining, construction, health",
-      "statusNote": "Still running invitation rounds under the 2025–26 program"
+      "tip": "General stream often needs a 6-month WA contract; mining, construction, health"
     },
     "SA": {
       "how": "Broadest state list (hundreds of onshore roles)",
-      "tip": "Per-occupation extra requirements; monthly invitation data",
-      "statusNote": "ROI intake closed 2 Jun 2026; 2026-27 list not yet published"
+      "tip": "Per-occupation extra requirements; monthly invitation data"
     },
     "TAS": {
       "how": "Pathway-based (employment / residence), no single list",
-      "tip": "Usually 6–9 months of TAS work; settlement focus",
-      "statusNote": "2025–26 places fully used; ROI Gateway closed for maintenance pending 2026-27"
+      "tip": "Usually 6–9 months of TAS work; settlement focus"
     },
     "ACT": {
       "how": "ACT Nominated Migration Program Occupation List + Canberra Matrix",
-      "tip": "Canberra residence & work history required; mostly local invitees",
-      "statusNote": "Portal offline for the 2026-27 transition, reopening late Jul 2026"
+      "tip": "Canberra residence & work history required; mostly local invitees"
     },
     "NT": {
       "how": "Offshore MOL · onshore needs NT connection",
-      "tip": "About 1,650 places in 2025–26; onshore applicants need NT ties",
-      "statusNote": "Portal closed — 2025–26 allocation reached; 2026-27 pending confirmation"
+      "tip": "About 1,650 places in 2025–26; onshore applicants need NT ties"
     }
   },
+  "suggestionCaps": "HOW TO GAIN MORE POINTS",
   "sug": {
     "ielts7": "Improve English to Proficient (IELTS 7 each)",
     "ielts8": "Improve English to Superior (IELTS 8 each)",
@@ -215,9 +183,6 @@
   "cardCream": "Cream",
   "cardCharcoal": "Charcoal",
   "cardPreviewAlt": "EOI share card preview",
-  "exportModeCard": "Card",
-  "exportModeReport": "Report",
-  "printReport": "PRINT / SAVE AS PDF",
   "roundsTitle": "Recent invitation rounds (189)",
   "roundsDate": "Date",
   "roundsVisa": "Visa",
@@ -228,8 +193,12 @@
   "tlBirth": "Birth month",
   "tlTestShort": "TEST MONTH",
   "tlCertShort": "CREDENTIAL MONTH",
+  "tlEnglishTest": "English test month",
+  "tlNaatiCert": "NAATI CCL credential month",
   "tlNaatiHint": "Enabled with the NAATI bonus above",
   "tlNaatiExpires": "Expires {{date}}",
+  "tlAusStart": "Australian work start",
+  "tlOvsStart": "Overseas work start",
   "tlAssessDate": "Assessment issue month",
   "jobStartMonth": "START MONTH",
   "tlOngoing": "ongoing…",
@@ -239,6 +208,7 @@
   "tlExpiresOn": "{{authority}} · valid {{years}} yrs · expires {{date}}",
   "tlAuthorityNote": "{{authority}} · assessments valid {{years}} yrs",
   "tlEnglishExpires": "Expires {{date}} (valid 3 years)",
+  "tlInvalidDate": "Enter a month like 2026-07",
   "tlPickMonth": "Select month…",
   "tlClear": "Clear",
   "tlThisMonth": "This month",
@@ -265,64 +235,6 @@
   "tlGoalLine": "Goal {{n}}",
   "tlMinLine": "Minimum {{n}}",
   "tlChartSummary": "Projected score timeline from {{from}} to {{to}}, starting at {{score}} points with {{n}} events.",
-  "pr191Note": "Subclass 491/494 is provisional — after {{years}} years of regional-compliant residence, holders can apply for the permanent Subclass 191. Enter your 491/494 grant month to project your earliest eligibility date.",
-  "pr191GrantLabel": "491 / 494 grant month",
-  "pr191Empty": "Enter a grant month to see your projected eligibility date.",
-  "pr191EligibleNow": "You've held the visa long enough — eligible now, subject to the conditions below.",
-  "pr191EligibleFrom": "Earliest eligible {{date}} — {{n}} months from now.",
-  "pr191ReqTitle": "Conditions beyond the holding period",
-  "pr191ReqRegional": "Compliance with visa condition 8579 throughout: live, work and study only in a designated regional area (excludes Sydney, Melbourne, Brisbane, Gold Coast and Perth).",
-  "pr191ReqIncome": "{{n}} lodged ATO Notices of Assessment within the visa's {{validity}}-year validity — any reported income counts, there is no fixed minimum-income figure.",
-  "pr191ReqHealth": "Standard health and character (police clearance) requirements at time of application.",
-  "pr191Fee": "Application charge: {{primary}} primary applicant · +{{partner}} partner (18+) · +{{child}} child, from 1 Jul 2026.",
-  "pr191Disclaimer": "A guide only — this cannot verify your actual regional residence or income-year compliance. Confirm current requirements with the Department of Home Affairs before applying.",
-  "feesNote": "A rough order-of-magnitude budget from the criteria and occupations you've entered above — not a quote. Each occupation you've entered gets its own skills-assessment fee (you'd need a separate assessment for each one you keep as an option); the visa application and state nomination fees apply once, for whichever pathway currently scores highest. Real costs vary by assessing body, agent fees (if any) and exchange rate.",
-  "feesEmpty": "Select an occupation above to see an estimate.",
-  "feesVisaCharge": "Visa application charge ({{visa}}, primary applicant)",
-  "feesPartnerCharge": "Partner (secondary applicant, 18+)",
-  "feesAssessment": "{{tag}} skills assessment · {{authority}}",
-  "feesAssessmentRange": "typical range, not this occupation's exact fee",
-  "feesEnglishTest": "English test (IELTS / PTE)",
-  "feesNaati": "NAATI CCL test",
-  "feesNomination": "State nomination fee",
-  "feesNominationFree": "free in at least one eligible state",
-  "feesTotal": "Estimated total",
-  "feesDisclaimer": "Figures are AUD estimates compiled 2026-07 from public fee schedules and may already be out of date — confirm current charges with the Department of Home Affairs, your assessing authority and the nominating state before budgeting.",
-  "spNote": "189/190/491 are points-tested; 482 and 186 are not — an employer sponsors you directly against a checklist (occupation gate, salary threshold, experience, age, English). This page checks the occupations, English level and age already entered on the Profile page against all four streams — a different segment of the migration system worth knowing about if you can't yet reach 65 points.",
-  "spPageTitle": "Employer Sponsorship Checklist",
-  "spPageSubtitle": "Visa subclasses 482 · 186 — a separate, non-points-tested pathway",
-  "spProfileEditLink": "Edit on Profile →",
-  "spDetailsTitle": "Sponsorship details",
-  "spEligibilityTitle": "Eligibility",
-  "spHasSponsor": "I have (or a prospective employer has offered) sponsorship",
-  "spSalaryLabel": "OFFERED SALARY",
-  "spSalaryBelowCsit": "Below {{csit}}",
-  "spSalaryCsitToSsit": "{{csit}}–{{ssit}}",
-  "spSalarySsitPlus": "{{ssit}} or above",
-  "spTrtEligible": "I already hold a 482/457 visa with ≥2 years in this occupation for the nominating employer",
-  "spTrtHint": "Temporary Residence Transition (TRT) pathway to subclass 186 — reduced from 3 to 2 years in Nov 2023; the occupation-list requirement was removed the same year.",
-  "spAgeLine": "Age {{age}}",
-  "spAgeBracketUnder45": "Age bracket confirms under 45",
-  "spAgeUnknown": "Age unknown — enter a birth month on the Profile page to check the 186 age limit",
-  "spEnglishOk": "English requirement met",
-  "spEnglishUnknown": "English level not entered",
-  "spEmpty": "No occupation entered yet — nothing to check yet.",
-  "spEligible": "Eligible",
-  "spNotEligible": "Not yet",
-  "spStream482Core": "482 · Core Skills",
-  "spStream482Specialist": "482 · Specialist Skills",
-  "spStream186Direct": "186 · Direct Entry",
-  "spStream186Trt": "186 · Temporary Residence Transition",
-  "spGateSponsor": "Needs a sponsoring employer",
-  "spGateCsol": "Occupation not on the Core Skills Occupation List (CSOL)",
-  "spGateSalaryCsit": "Salary must reach the Core Skills Income Threshold",
-  "spGateSalarySsit": "Salary must reach the Specialist Skills Income Threshold",
-  "spGateSpecialistGroup": "Occupation is a Technician/Trades, Machinery Operator or Labourer role (excluded from Specialist Skills)",
-  "spGateExperience": "Needs {{years}}+ years of relevant work experience",
-  "spGateAgeLimit": "Must be under {{age}}",
-  "spGateEnglish": "Needs a recorded English level (Profile page)",
-  "spGateTrtEligible": "Needs ≥2 years on a 482/457 with the nominating employer in this occupation",
-  "spDisclaimer": "A screening checklist only, not a nomination assessment — reuses the occupations, English level and age entered on the Profile page (so CSOL-only occupations outside that list aren't checkable here), and approximates work experience from the Australian/overseas work brackets entered there rather than counting employment in the last 5 years exactly as the visa criteria define it. CSIT/SSIT and the 456-occupation CSOL are current as of 2026-07; some CSOL occupations carry extra salary or duty caveats not modelled here. Confirm eligibility with your employer and a registered migration agent before proceeding.",
   "disclaimer": "This calculator is for reference only. Immigration rules change frequently — always verify with the Department of Home Affairs or a registered migration agent.",
   "cardFoot": "Reference only · verify with the Department of Home Affairs",
   "cardGoal": "Goal",

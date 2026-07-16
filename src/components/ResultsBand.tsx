@@ -5,7 +5,6 @@ import type { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 import SectionHeading from './SectionHeading';
 import type { Evaluation, PathwayResult } from '@/lib/points';
-import { PATHWAY_STATUS_LABEL_KEY, hasOccupation, pathwayStatus } from '@/lib/points';
 import type { SharedCriteria } from '@/lib/types';
 import { suggestionsFor } from '@/lib/suggestions';
 import { GOAL_RANGE, MIN_POINTS } from '@/data/pointsCriteria';
@@ -20,8 +19,7 @@ interface ResultsBandProps {
   onOpenExport: () => void;
   onCopyLink: () => void;
   copied: boolean;
-  /** Omit where this page doesn't own enough of the scored data for "reset" to mean anything (see Independent Migration, which reads shared/jobs read-only from the Profile page). */
-  onReset?: () => void;
+  onReset: () => void;
   bandRef?: RefObject<HTMLDivElement | null>;
 }
 
@@ -45,20 +43,18 @@ function presentPath(p: PathwayResult): PathPresentation {
     dotBorder: 'var(--band-muted)',
     totalColor: 'var(--band-muted)',
   };
-  const status = pathwayStatus(p);
-  const statusKey = PATHWAY_STATUS_LABEL_KEY[status];
-  if (status === 'noOcc') {
-    return { statusKey, totalText: String(p.total), ...mutedRow };
+  if (!p.hasOccupation) {
+    return { statusKey: 'pathNoOcc', totalText: String(p.total), ...mutedRow };
   }
-  if (status === 'listNo') {
-    return { statusKey, totalText: '—', ...mutedRow };
+  if (!p.listOk) {
+    return { statusKey: 'pathListNo', totalText: '—', ...mutedRow };
   }
-  if (status === 'noState') {
-    return { statusKey, totalText: String(p.total), ...mutedRow };
+  if (p.code !== '189' && p.states.length === 0) {
+    return { statusKey: 'pathNoState', totalText: String(p.total), ...mutedRow };
   }
-  if (status === 'low') {
+  if (p.total < MIN_POINTS) {
     return {
-      statusKey,
+      statusKey: 'pathLow',
       totalText: String(p.total),
       statusColor: 'var(--band-danger)',
       dotBg: 'transparent',
@@ -67,7 +63,7 @@ function presentPath(p: PathwayResult): PathPresentation {
     };
   }
   return {
-    statusKey,
+    statusKey: 'pathOk',
     totalText: String(p.total),
     statusColor: 'var(--band-ink)',
     dotBg: 'var(--band-ink)',
@@ -77,8 +73,8 @@ function presentPath(p: PathwayResult): PathPresentation {
 }
 
 /**
- * Compact results band — the single results view on every breakpoint,
- * leading the Independent Migration page at a fixed compact width.
+ * Compact results band — the single results view on every breakpoint:
+ * inline on narrow screens, the sticky right panel on wide ones.
  */
 function ResultsBand({
   evaluation, shared, goal, displayTotal,
@@ -98,11 +94,7 @@ function ResultsBand({
   else if (total < MIN_POINTS) statusLine = t('statusBelowMin', { n: MIN_POINTS - total });
   else statusLine = t('statusMin', { n: goal - total });
 
-  // `evaluation.best` is null both when no occupation is entered yet AND when
-  // one is entered but nothing clears the list/state/points gates — those
-  // need different copy, or a user who's already picked an occupation gets
-  // told to go pick one.
-  let bestPathLine = evaluation.jobs.some(hasOccupation) ? t('noPathEligible') : t('noBestPath');
+  let bestPathLine = t('noBestPath');
   if (evaluation.best) {
     const occ = evaluation.best.job.occupation;
     const occName = occ ? (lang === 'zh' ? occ.zh : occ.en) : '';
@@ -304,7 +296,7 @@ function ResultsBand({
           >
             {copied ? t('copied') : t('copyLink')}
           </button>
-          {onReset && total > 0 && (
+          {total > 0 && (
             <button
               type="button"
               onClick={onReset}
