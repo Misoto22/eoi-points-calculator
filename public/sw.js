@@ -2,7 +2,7 @@
 // iOS note: Safari evicts SW caches aggressively under storage pressure and
 // after ~weeks of non-use. Every strategy below treats the cache as a bonus,
 // never as the source of truth — a cold cache only costs a network round-trip.
-const CACHE_NAME = 'eoi-calc-v5';
+const CACHE_NAME = 'eoi-calc-v4';
 
 // Minimal app shell: enough to render something offline.
 const SHELL = [
@@ -45,9 +45,6 @@ self.addEventListener('fetch', (event) => {
   // cached shell copy on success, fall back to it offline. On "lie-fi" the
   // request can hang far past usefulness — race it against a timeout and
   // serve the cached shell instead of a blank wait.
-  // Cached (and matched) by the request's own URL, not a hardcoded '/' —
-  // there's more than one route (/, /sponsorship), and a shared-key cache
-  // would serve the wrong page offline for every route but whichever loaded last.
   if (request.mode === 'navigate') {
     const NAV_TIMEOUT_MS = 3000;
     event.respondWith(
@@ -55,7 +52,7 @@ self.addEventListener('fetch', (event) => {
         const network = fetch(request).then((response) => {
           if (response.ok) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+            caches.open(CACHE_NAME).then((cache) => cache.put('/', clone));
           }
           return response;
         });
@@ -65,9 +62,8 @@ self.addEventListener('fetch', (event) => {
             new Promise((_, reject) => setTimeout(() => reject(new Error('nav-timeout')), NAV_TIMEOUT_MS)),
           ]);
         } catch {
-          // Cold cache: fall back to this route's cached copy, then the app
-          // shell ('/'), then let the in-flight network attempt settle.
-          return (await caches.match(request)) || (await caches.match('/')) || network;
+          // Cold cache: nothing to fall back to — let the network attempt settle
+          return (await caches.match('/')) || network;
         }
       })()
     );

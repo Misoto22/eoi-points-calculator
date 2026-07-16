@@ -16,7 +16,7 @@ const FLAG_PARAMS: Record<string, keyof SharedCriteria> = {
   rs: 'regionalStudy',
   cl: 'communityLanguage',
 };
-const DATE_PARAMS: Record<string, keyof PlanningDates> = { b: 'birth', et: 'englishTest', nc: 'naatiCert', vg: 'visa491Grant' };
+const DATE_PARAMS: Record<string, keyof PlanningDates> = { b: 'birth', et: 'englishTest', nc: 'naatiCert' };
 
 const V2_SHARED_KEY = 'eoi-v2-shared';
 const V2_JOBS_KEY = 'eoi-v2-jobs';
@@ -146,44 +146,11 @@ function lsGet<T>(key: string): T | null {
   }
 }
 
-// Each page's `dates` state is captured once at mount and never refreshed,
-// so a stale copy of a field it doesn't own can linger in memory across a
-// long-open tab. Persisting must only ever overwrite the field(s) the
-// calling page actually owns, read-modify-write against whatever the other
-// page most recently stored — never the caller's full (possibly-stale)
-// object — or an edit made in one tab can be silently clobbered by a write
-// from another tab that's had different fields open longer.
-const PROFILE_OWNED_DATE_FIELDS: (keyof PlanningDates)[] = ['birth', 'englishTest', 'naatiCert'];
-const HOME_OWNED_DATE_FIELDS: (keyof PlanningDates)[] = ['visa491Grant'];
-
-function mergeOwnedDates(dates: PlanningDates, ownedFields: (keyof PlanningDates)[]): PlanningDates {
-  const stored = lsGet<Partial<PlanningDates>>(V2_DATES_KEY);
-  const merged: PlanningDates = { ...defaultPlanningDates, ...stored };
-  for (const field of ownedFields) merged[field] = dates[field];
-  return merged;
-}
-
-/** Writes `shared`+`jobs` in full (Profile owns both) plus only its own date fields. */
 export function persistState(shared: SharedCriteria, jobs: JobAssessment[], dates: PlanningDates): void {
   try {
     localStorage.setItem(V2_SHARED_KEY, JSON.stringify(shared));
     localStorage.setItem(V2_JOBS_KEY, JSON.stringify(jobs));
-    localStorage.setItem(V2_DATES_KEY, JSON.stringify(mergeOwnedDates(dates, PROFILE_OWNED_DATE_FIELDS)));
-  } catch {
-    // Ignore quota errors
-  }
-}
-
-/**
- * Narrower than `persistState`: writes only `dates`, and only the
- * Independent Migration page's own field (`visa491Grant`) — it reads
- * `shared`/`jobs`/the other date fields but never owns them (that's the
- * Profile page), so it must not write stale copies of those back over an
- * edit made there, e.g. in another tab.
- */
-export function persistDates(dates: PlanningDates): void {
-  try {
-    localStorage.setItem(V2_DATES_KEY, JSON.stringify(mergeOwnedDates(dates, HOME_OWNED_DATE_FIELDS)));
+    localStorage.setItem(V2_DATES_KEY, JSON.stringify(dates));
   } catch {
     // Ignore quota errors
   }

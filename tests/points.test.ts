@@ -1,11 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
-  bestPathwayForJob,
   calculateSharedPoints,
   calculateJobPoints,
   evaluate,
   findOccupation,
-  pathwayStatus,
 } from '@/lib/points';
 import { defaultSharedCriteria, newJob } from '@/lib/types';
 import type { JobAssessment, SharedCriteria } from '@/lib/types';
@@ -210,20 +208,6 @@ describe('evaluate', () => {
     expect(ev.bestTotal).toBe(90);
   });
 
-  it('bestPathwayForJob returns the highest-scoring eligible pathway per job', () => {
-    const shared = makeShared({ age: '25-32', english: 'ielts7', education: 'bachelor', partnerStatus: 'single' }); // 65
-    const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
-    const best = bestPathwayForJob(ev.jobs[0]);
-    expect(best?.code).toBe('491');
-    expect(best?.total).toBe(80);
-  });
-
-  it('bestPathwayForJob returns null when nothing is eligible', () => {
-    const shared = makeShared({ age: '40-44' }); // 15, below the 65-point floor
-    const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
-    expect(bestPathwayForJob(ev.jobs[0])).toBeNull();
-  });
-
   it('falls back to highest base when nothing is eligible', () => {
     // No occupation selected → no pathway eligible, bestTotal = base
     const shared = makeShared({ age: '25-32', english: 'ielts8' }); // 50
@@ -237,28 +221,6 @@ describe('evaluate', () => {
     const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
     expect(ev.jobs[0].pathways.every((p) => !p.eligible)).toBe(true);
     expect(ev.best).toBeNull();
-  });
-});
-
-describe('pathwayStatus', () => {
-  it('distinguishes the federal-list gate from a plain points shortfall', () => {
-    // 65+ points but 121111 Aquaculture Farmer is ROL — not on the 189/190 federal lists
-    const shared = makeShared({ age: '25-32', english: 'ielts8', education: 'phd', partnerStatus: 'single' }); // 80
-    const ev = evaluate(shared, [makeJob({ anzsco: '121111' })]);
-    const by = (code: string) => ev.jobs[0].pathways.find((p) => p.code === code)!;
-    expect(pathwayStatus(by('189'))).toBe('listNo'); // not "low" — the occupation just isn't on the list
-    expect(pathwayStatus(by('491'))).toBe('ok');
-  });
-
-  it('reports low points only once the occupation and state gates already pass', () => {
-    const shared = makeShared({ age: '40-44' }); // 15, below the 65-point floor
-    const ev = evaluate(shared, [makeJob({ anzsco: '261313' })]);
-    expect(pathwayStatus(ev.jobs[0].pathways.find((p) => p.code === '491')!)).toBe('low');
-  });
-
-  it('reports noOcc when nothing is selected', () => {
-    const ev = evaluate(makeShared(), [makeJob()]);
-    expect(pathwayStatus(ev.jobs[0].pathways[0])).toBe('noOcc');
   });
 });
 

@@ -5,8 +5,7 @@
 @theme {
   --font-serif: var(--font-noto-serif), 'Songti SC', 'Noto Serif SC', serif;
   --font-sans: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
-  /* Desktop breakpoint for minor spacing bumps — every page is a single
-     reading column at every width, so this is no longer a layout switch. */
+  /* Two-column desktop layout kicks in here (inputs left, sticky results right) */
   --breakpoint-wide: 75rem;
 }
 
@@ -199,23 +198,5 @@ input::placeholder {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-}
-
-/* Print only the detailed report (ExportModal "Report" mode). `.print-report`
-   is portaled directly onto <body> (a sibling of <main>, not nested inside
-   the modal — see ExportModal.tsx) specifically so this rule can stay this
-   simple: hide body's other direct children, show only the portal. Scoped
-   with :has() so printing the page normally (Ctrl+P without the export
-   modal open) is unaffected — there's no `.print-report` to switch on. */
-.print-report {
-  display: none;
-}
-@media print {
-  body:has(.print-report) > :not(.print-report) {
-    display: none;
-  }
-  .print-report {
-    display: block;
   }
 }

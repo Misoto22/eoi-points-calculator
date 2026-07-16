@@ -1,11 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
-import { useMounted } from '@/hooks/useMounted';
 
 export function todayLabel(): string {
   const d = new Date();
@@ -13,20 +10,14 @@ export function todayLabel(): string {
   return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}`;
 }
 
-interface HeaderProps {
-  /** Defaults to the points-tested calculator's own title/subtitle (t('title')/t('subtitle')) */
-  titleKey?: string;
-  subtitleKey?: string;
-}
-
-export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }: HeaderProps) {
+export default function Header() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
-  const pathname = usePathname();
 
   // Theme is only known on the client; render the pre-mount state identically
   // to the server markup to avoid hydration mismatches.
-  const mounted = useMounted();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Hairline under the sticky bar only once the page has scrolled.
   // In standalone mode the body is the scroller (see globals.css), so
@@ -69,22 +60,6 @@ export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }:
     </button>
   );
 
-  const navLink = (href: string, label: string) => {
-    const active = pathname === href;
-    return (
-      <Link
-        href={href}
-        aria-current={active ? 'page' : undefined}
-        className="text-xs tracking-[0.1em] px-1 -mx-1 py-[14px] -my-[11px] hover:text-[var(--ink)]"
-        style={{ color: active ? 'var(--ink)' : 'var(--muted)' }}
-      >
-        <span style={{ borderBottom: active ? '1px solid var(--ink)' : '1px solid transparent', paddingBottom: 2 }}>
-          {label}
-        </span>
-      </Link>
-    );
-  };
-
   return (
     // Fragment: the nav bar must be a direct child of the page container so
     // position:sticky can pin it for the whole page, not just the header.
@@ -103,9 +78,9 @@ export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }:
         }}
       >
         <div className="flex justify-between items-center gap-4">
-          <Link href="/" className="text-[0.71875rem] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
+          <div className="text-[0.71875rem] tracking-[0.24em] font-medium" style={{ color: 'var(--ink)' }}>
             EOI&nbsp;POINTS
-          </Link>
+          </div>
           <div className="flex items-center gap-3.5">
             <div className="flex items-center gap-2.5 text-xs">
               {langButton('zh', '中文')}
@@ -134,16 +109,6 @@ export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }:
             </button>
           </div>
         </div>
-
-        {/* Own row on every viewport — inline with the logo it either wraps
-            labels mid-word on narrow screens or forces a two-line jump when
-            the lang/theme cluster overflows. A dedicated row scales cleanly
-            down to mobile without either problem. */}
-        <nav className="flex items-center gap-4 mt-3" aria-label={t('navLabel')}>
-          {navLink('/profile', t('navProfile'))}
-          {navLink('/', t('navIndependent'))}
-          {navLink('/sponsorship', t('navSponsorship'))}
-        </nav>
       </div>
 
       <header style={{ animation: 'eoiFadeUp 0.7s ease backwards' }}>
@@ -156,14 +121,14 @@ export default function Header({ titleKey = 'title', subtitleKey = 'subtitle' }:
           letterSpacing: '0.01em',
         }}
       >
-        {t(titleKey)}
+        {t('title')}
       </h1>
       <div
         className="flex justify-between items-baseline gap-4 flex-wrap mt-[26px] pt-3.5"
         style={{ borderTop: '1px solid var(--hair)' }}
       >
         <p className="m-0 text-[0.8125rem] tracking-[0.02em]" style={{ color: 'var(--muted)' }}>
-          {t(subtitleKey)}
+          {t('subtitle')}
         </p>
         <span className="text-xs tabular-nums tracking-[0.1em]" style={{ color: 'var(--muted)' }}>
           {todayLabel()}
