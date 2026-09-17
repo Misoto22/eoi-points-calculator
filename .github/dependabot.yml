@@ -1,0 +1,13 @@
+# Keep the pinned reusable-workflow SHAs and third-party actions current.
+#
+# Dependabot rewrites both the 40-character SHA and the trailing `# vX.Y.Z`
+# comment when they sit on the same line, which is why every `uses:` in this
+# repository is written that way.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
