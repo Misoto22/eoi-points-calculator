@@ -388,7 +388,7 @@ const PageContent = () => {
             {[
               { href: 'https://github.com/Misoto22/eoi-points-calculator', label: 'GitHub' },
               { href: 'https://www.linkedin.com/in/henry-misoto22/', label: 'LinkedIn' },
-              { href: 'https://www.misoto22.com/', label: 'Website' },
+              { href: 'https://misoto22.com/r/eoi', label: 'Website' },
             ].map((link) => (
               <a
                 key={link.label}
